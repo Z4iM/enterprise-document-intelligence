@@ -2,6 +2,11 @@ from io import BytesIO
 from pypdf import PdfReader
 from docx import Document
 from pptx import Presentation
+from app.ingestion.ocr import (
+    extract_image_text,
+    extract_scanned_pdf_text,
+)
+
 
 
 def extract_pdf_text(file_bytes: bytes) -> str:
@@ -66,21 +71,37 @@ def shape_generator(slide):
         else:
             yield shape
 
+def needs_ocr(text: str) -> bool:
+    cleaned_text = text.strip()
+
+    if not cleaned_text:
+        return True
+
+    if len(cleaned_text) < 50:
+        return True
+
+    return False
+
 def extract_text(file_bytes: bytes, file_type: str) -> str:
 
     if file_type == "pdf":
-        return extract_pdf_text(file_bytes)
+        native_text = extract_pdf_text(file_bytes)
+
+        if not needs_ocr(native_text):
+            return native_text,"native_pdf"
+
+        return extract_scanned_pdf_text(file_bytes),"OCR_PDF"
 
     if file_type == "docx":
-        return extract_docx_text(file_bytes)
+        return extract_docx_text(file_bytes),"docx_parser"
 
     if file_type == "txt":
-        return extract_txt_text(file_bytes)
+        return extract_txt_text(file_bytes),"txt_decoder"
 
     if file_type == "pptx":
-        return extract_pptx_text(file_bytes)
+        return extract_pptx_text(file_bytes),"pptx_parser"
 
     if file_type == "image":
-        return ""
+        return extract_image_text(file_bytes),"OCR_Image"
 
     raise ValueError(f"Unsupported extraction type: {file_type}")

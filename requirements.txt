@@ -7,3 +7,7 @@ pypdf
 python-docx
 Pillow
 python-pptx
+pytesseract
+pdf2image
+requests
+python-dotenv

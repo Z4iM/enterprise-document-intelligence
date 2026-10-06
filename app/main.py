@@ -1,6 +1,11 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from app.ingestion.file_detector import detect_file_type
 from app.ingestion.text_extractor import extract_text
+from app.classification.classifier import (
+    classify_document,
+    get_review_status,
+)
+from app.extraction.router import extract_structured_data
 
 app = FastAPI(
     title="Enterprise Document Intelligence API",
@@ -35,10 +40,30 @@ async def upload_document(file: UploadFile = File(...)):
     file_bytes = await file.read()
 
     try:
-        extracted_text = extract_text(
+        extracted_text, extraction_method = extract_text(
             file_bytes=file_bytes,
             file_type=file_type
         )
+
+        document_type, classification_confidence = classify_document(
+            extracted_text
+        )
+
+        review_status = get_review_status(
+            classification_confidence
+        )
+
+        (
+            structured_data,
+            structured_extraction_method,
+            extraction_failed
+        ) = extract_structured_data(
+            text=extracted_text,
+            document_type=document_type
+        )
+
+        if extraction_failed:
+            review_status = "needs_review"
 
     except Exception as error:
         raise HTTPException(
@@ -50,6 +75,12 @@ async def upload_document(file: UploadFile = File(...)):
         "filename": file.filename,
         "content_type": file.content_type,
         "detected_type": file_type,
+        "extraction_method": extraction_method,
+        "document_type": document_type,
+        "classification_confidence": classification_confidence,
+        "structured_extraction_method": structured_extraction_method,
+        "review_status": review_status,
+        "structured_data": structured_data,
         "file_size_bytes": len(file_bytes),
         "text_length": len(extracted_text),
         "text_preview": extracted_text[:1000]
