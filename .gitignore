@@ -10,3 +10,6 @@ data/uploads/
 
 .DS_Store
 commands.txt
+enterprise_document_llm.ipynb
+*.sqlite
+*.sqlite3
