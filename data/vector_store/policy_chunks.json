@@ -1,0 +1,128 @@
+[
+  {
+    "chunk_id": "695ec113-4296-41ed-867d-b1a2dfbabf3c",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 0,
+    "text": "EMPLOYEE POLICY HANDBOOK\nNorthstar Analytics Ltd.\nVersion 1.0 | Effective 1 October 2026\nSynthetic policy document created for AI/RAG testing.\nPurpose\nThis handbook defines workplace expectations, employee benefits, expense rules, information-security requirements, and review procedures. It is intended to provide clear, searchable policy statements for employees and managers.\nQuick Reference: Key Policy Limits"
+  },
+  {
+    "chunk_id": "4916182b-9dbf-429d-b75c-401d1871eef7",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 1,
+    "text": "1. Working Hours and Attendance\nStandard working hours are 9:00 AM to 5:00 PM, Monday through Friday, with a one-hour lunch break. Employees are expected to be available during core collaboration hours from 10:00 AM to 3:00 PM unless an approved schedule applies.\nEmployees should notify their manager as soon as possible when they expect to be late or absent.\nThree unexcused late arrivals within a rolling 30-day period may trigger an attendance review.\nRepeated unreported absences may be treated as misconduct and escalated to Human Resources.\nOvertime must be approved in advance by the employee's manager unless there is an emergency."
+  },
+  {
+    "chunk_id": "20892d71-dd17-43e6-81b6-3584ac5a8ab3",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 2,
+    "text": "2. Remote and Hybrid Work\nEligible employees may work remotely for up to two days per week. The remaining working days should normally be performed from the assigned office or approved client site.\nMore than two remote days in a week requires written manager approval.\nEmployees working remotely must remain reachable through company communication tools during working hours.\nConfidential company information must not be displayed or discussed in public places where unauthorized people may view or hear it.\nCompany laptops must use the approved VPN when accessing internal systems from outside company premises."
+  },
+  {
+    "chunk_id": "b6b7798d-7ff4-465b-99bd-cf519168b87c",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 3,
+    "text": "3. Leave and Time Off"
+  },
+  {
+    "chunk_id": "19437069-4343-4aa2-b1e6-6ba7f404c976",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 4,
+    "text": "3.1 Annual Leave\nFull-time employees receive 20 working days of paid annual leave per calendar year. Leave requests should normally be submitted at least five working days before the requested start date. Managers may decline or reschedule leave when critical operational coverage is required."
+  },
+  {
+    "chunk_id": "21b2cc8a-74d4-4fff-9865-1518a553749e",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 5,
+    "text": "3.2 Sick Leave\nEmployees may use up to 10 paid sick days per calendar year. A medical certificate is required when sick leave exceeds two consecutive working days. Employees should notify their manager before the normal start of the workday whenever reasonably possible."
+  },
+  {
+    "chunk_id": "54819dd0-42ec-4e40-aaba-166028289848",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 6,
+    "text": "3.3 Emergency Leave\nUp to three working days of emergency leave may be granted for urgent family or personal circumstances. Additional time may be approved by Human Resources based on the situation."
+  },
+  {
+    "chunk_id": "6f03b2cc-4a2a-43ce-84e3-dcdd116619d2",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 7,
+    "text": "4. Business Expenses and Reimbursement\nBusiness expenses must be reasonable, necessary, and directly related to approved company activity. Employees should submit expense claims within 15 calendar days of the transaction whenever possible."
+  },
+  {
+    "chunk_id": "c0cb9a55-c665-4656-a68c-b75f58f52f97",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 8,
+    "text": "4.1 Meals\nMeal expenses are reimbursable up to $100 per person per day during approved business travel or authorized client activity. Any meal expense above $100 requires manager approval before reimbursement. Alcohol is not reimbursable unless specifically approved for a formal client event."
+  },
+  {
+    "chunk_id": "96e8a7aa-af2a-49df-b59b-985e2bda289b",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 9,
+    "text": "4.2 Hotels\nHotel accommodation is reimbursable up to $220 per night before taxes. A room rate above $220 per night requires director approval unless no reasonable alternative is available in the destination area."
+  },
+  {
+    "chunk_id": "affeabdb-f33e-4413-a956-16b93a3cd80b",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 10,
+    "text": "4.3 Ground Transportation\nTaxi and rideshare expenses are reimbursable up to $80 per trip when used for approved business travel. A receipt is required for any ground-transport expense above $25."
+  },
+  {
+    "chunk_id": "b9ea44f5-369c-44be-bef2-9ce086946d42",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 11,
+    "text": "4.4 Receipts and Missing Documentation\nReceipts are required for individual expenses of $25 or more. When a receipt is unavailable, the employee must provide a written explanation and obtain manager approval before the expense can be reimbursed."
+  },
+  {
+    "chunk_id": "a74f02df-148e-4dcb-9a50-554b3aaf9ef5",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 12,
+    "text": "5. Purchasing and Approval Authority\nEmployees may not commit the company to purchases outside their delegated authority. Purchase requests must follow the approval thresholds below.\nPurchases up to $2,500 may be approved by a department manager.\nPurchases above $2,500 and up to $10,000 require department-head approval.\nPurchases above $10,000 require director approval.\nPurchases above $50,000 require both director approval and Finance review.\nSplitting one purchase into multiple smaller transactions to avoid an approval threshold is prohibited."
+  },
+  {
+    "chunk_id": "f286caff-921f-40a7-9ad7-c679c3eb7999",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 13,
+    "text": "6. Information Security and Acceptable Use\nEmployees are responsible for protecting company information, customer data, credentials, and devices. Access should be limited to information required for legitimate job responsibilities.\nMulti-factor authentication must be enabled where the company provides it.\nPasswords must not be shared with colleagues, contractors, friends, or family members.\nConfidential files must not be uploaded to unapproved cloud storage or personal email accounts.\nLost or stolen company devices must be reported to IT and the employee's manager immediately.\nSuspected phishing, malware, credential theft, or unauthorized access must be reported to the security team as soon as possible.\nEmployees must lock their workstation when leaving it unattended."
+  },
+  {
+    "chunk_id": "beb5a0e1-6b8e-49fa-bc0c-73c282a06b8c",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 14,
+    "text": "7. Data Privacy and Confidentiality\nPersonal and confidential information must be collected, accessed, used, retained, and disclosed only for legitimate business purposes and in accordance with applicable law and company procedures.\nEmployee records may be accessed only by authorized HR, management, Finance, legal, or security personnel with a business need.\nCustomer personal data should not be copied into test systems unless it has been properly anonymized or explicitly approved for testing.\nConfidential information remains confidential after employment ends.\nDocuments containing sensitive personal data should be stored only in approved company systems."
+  },
+  {
+    "chunk_id": "1d980921-e3b4-416f-8fc1-c9b12f536eb3",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 15,
+    "text": "8. Workplace Conduct, Harassment, and Misconduct\nNorthstar Analytics is committed to a professional workplace where employees are treated with respect. Harassment, discrimination, intimidation, retaliation, violence, fraud, deliberate data misuse, and theft are prohibited.\nEmployees who experience or witness misconduct should report it to their manager, Human Resources, or another designated reporting channel.\nRetaliation against a person who raises a good-faith concern is prohibited.\nSerious misconduct may result in immediate suspension pending investigation and may lead to termination of employment.\nInvestigations should be handled confidentially to the extent reasonably possible."
+  },
+  {
+    "chunk_id": "77130764-29eb-4ebd-94c1-2b7cabf4f79f",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 16,
+    "text": "9. Training and Professional Development\nThe company supports relevant professional development. Eligible employees may receive reimbursement of up to $1,500 per calendar year for approved courses, certifications, conferences, or technical training.\nTraining reimbursement requires written approval before purchase or enrollment.\nThe training should be relevant to the employee's current role, planned career path, or company capability needs.\nProof of payment is required for reimbursement.\nWhere a course includes an examination, reimbursement may require reasonable evidence of completion or attendance."
+  },
+  {
+    "chunk_id": "8ae52eda-0a87-40d9-8f9e-406fe01012b0",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 17,
+    "text": "10. Company Equipment and Asset Return\nCompany laptops, phones, access cards, software licenses, and other equipment remain company property unless explicitly transferred in writing.\nEmployees must take reasonable care of company equipment and use it primarily for authorized business purposes.\nCompany equipment must not be sold, loaned, or transferred without written authorization.\nAll company property must be returned on or before the employee's final working day unless HR provides different instructions."
+  },
+  {
+    "chunk_id": "29b632d9-209b-44e5-8156-fac46b0e7f67",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 18,
+    "text": "11. Performance and Corrective Action\nManagers are expected to provide regular feedback and clearly communicate performance expectations. Where performance or conduct does not meet expectations, the company may use coaching, written warnings, performance improvement plans, suspension, or other corrective action depending on the circumstances.\nCorrective action should be proportionate to the seriousness and frequency of the issue.\nA serious breach of security, fraud, violence, or deliberate misconduct may result in immediate escalation without prior warning."
+  },
+  {
+    "chunk_id": "84254949-a053-49a2-bc97-bc9710f4d3c6",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 19,
+    "text": "12. Separation of Employment\nEmployees leaving the company must complete offboarding requirements, return company property, and protect confidential information after their employment ends. Access to company systems may be removed on or before the final working day depending on business and security requirements.\nManagers should notify HR promptly when an employee resigns or when a separation decision has been approved.\nOutstanding company expenses should be submitted before the final payroll cut-off where practical.\nConfidentiality, intellectual-property, and data-protection obligations may continue after employment ends."
+  },
+  {
+    "chunk_id": "b413ba2e-a7b3-4999-961b-43e40f697fc0",
+    "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+    "chunk_index": 20,
+    "text": "13. Policy Exceptions and Review\nA policy exception requires documented approval from the appropriate authority. Employees should not assume that a previous exception creates a permanent entitlement or changes the written policy.\nManagers may approve exceptions only within their delegated authority.\nHigh-risk exceptions involving security, privacy, legal obligations, or major financial commitments should be escalated to the relevant specialist function.\nThis handbook should be reviewed at least annually and may be updated when business, legal, security, or operational requirements change.\nEmployee Acknowledgement\nEmployees are expected to read this handbook and ask questions when a policy is unclear. Receipt of this handbook does not create a fixed-term employment guarantee and does not prevent the company from updating its policies where permitted by law."
+  }
+]

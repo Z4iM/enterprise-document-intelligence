@@ -11,3 +11,6 @@ pytesseract
 pdf2image
 requests
 python-dotenv
+sqlalchemy
+sentence-transformers
+faiss-cpu

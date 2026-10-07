@@ -23,6 +23,7 @@ class ReceiptSchema(BaseModel):
     date: Optional[str] = None
     total: Optional[str] = None
     payment_method: Optional[str] = None
+    expense_category: Optional[str] = None
 
 
 class ContractSchema(BaseModel):

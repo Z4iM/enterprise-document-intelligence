@@ -21,10 +21,11 @@ SCHEMAS = {
 
     "receipt": """
 {
-  "merchant": null,
+"merchant": null,
   "date": null,
   "total": null,
-  "payment_method": null
+  "payment_method": null,
+  "expense_category": null
 }
 """,
 
@@ -61,6 +62,9 @@ FIELD_INSTRUCTIONS = {
 - date: transaction date
 - total: final amount paid including currency
 - payment_method: Visa, Mastercard, cash, etc.
+- expense_category: classify the expense when possible, such as
+  "meal", "hotel", "ground_transportation", "office_purchase",
+  or another clearly supported category
 """,
 
     "contract": """

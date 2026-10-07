@@ -129,3 +129,110 @@ class AuditEvent(Base):
         DateTime,
         default=datetime.utcnow
     )
+class HumanReview(Base):
+    __tablename__ = "human_reviews"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+
+    document_id: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    decision: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    reviewer: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True
+    )
+
+    before_data: Mapped[dict | None] = mapped_column(
+        JSON,
+        nullable=True
+    )
+
+    corrections: Mapped[dict | None] = mapped_column(
+        JSON,
+        nullable=True
+    )
+
+    after_data: Mapped[dict | None] = mapped_column(
+        JSON,
+        nullable=True
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow
+    )
+class PolicyDocument(Base):
+    __tablename__ = "policy_documents"
+
+    id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True
+    )
+
+    original_filename: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    stored_file_path: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    mime_type: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True
+    )
+
+    file_hash: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    extracted_text: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow
+    )
+class PolicyChunk(Base):
+    __tablename__ = "policy_chunks"
+
+    id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True
+    )
+
+    policy_id: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    chunk_index: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False
+    )
+
+    text: Mapped[str] = mapped_column(
+        Text,
+        nullable=False
+    )
