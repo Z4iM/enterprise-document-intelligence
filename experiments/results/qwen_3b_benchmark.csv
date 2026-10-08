@@ -1,0 +1,9 @@
+Metric,Value
+verification_passed,1.0
+operator_correct,1.0
+threshold_correct,1.0
+category_correct,1.0
+action_correct,1.0
+approval_role_correct,1.0
+decision_correct,1.0
+average_latency_seconds,12.333

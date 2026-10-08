@@ -1,0 +1,69 @@
+[
+  {
+    "id": "MEAL-001",
+    "policy_text": "4.1 Meals\nAny meal expense above $100 requires manager approval before reimbursement.",
+    "category": "meal",
+    "expected_operator": ">",
+    "expected_threshold": "100.00",
+    "expected_action": "requires_approval",
+    "expected_approval_role": "manager",
+    "test_amount": "$175",
+    "expected_triggered": true
+  },
+  {
+    "id": "MEAL-002",
+    "policy_text": "4.1 Meals\nAny meal expense above $100 requires manager approval before reimbursement.",
+    "category": "meal",
+    "expected_operator": ">",
+    "expected_threshold": "100.00",
+    "expected_action": "requires_approval",
+    "expected_approval_role": "manager",
+    "test_amount": "$100",
+    "expected_triggered": false
+  },
+  {
+    "id": "HOTEL-001",
+    "policy_text": "4.2 Hotels\nA room rate above $220 per night requires director approval.",
+    "category": "hotel",
+    "expected_operator": ">",
+    "expected_threshold": "220.00",
+    "expected_action": "requires_approval",
+    "expected_approval_role": "director",
+    "test_amount": "$250",
+    "expected_triggered": true
+  },
+  {
+    "id": "TRANSPORT-001",
+    "policy_text": "4.3 Ground Transportation\nA receipt is required for any ground-transport expense above $25.",
+    "category": "ground_transportation",
+    "expected_operator": ">",
+    "expected_threshold": "25.00",
+    "expected_action": "requires_documentation",
+    "expected_approval_role": null,
+    "test_amount": "$30",
+    "expected_triggered": true
+  },
+  {
+    "id": "RECEIPT-001",
+    "policy_text": "4.4 Receipts and Missing Documentation\nReceipts are required for individual expenses of $25 or more.",
+    "category": "meal",
+    "expected_rule_scope": "all_expenses",
+    "expected_operator": ">=",
+    "expected_threshold": "25.00",
+    "expected_action": "requires_documentation",
+    "expected_approval_role": null,
+    "test_amount": "$25",
+    "expected_triggered": true
+  },
+  {
+    "id": "PURCHASE-001",
+    "policy_text": "5. Purchasing and Approval Authority\nPurchases above $10,000 require director approval.",
+    "category": "purchase",
+    "expected_operator": ">",
+    "expected_threshold": "10000.00",
+    "expected_action": "requires_approval",
+    "expected_approval_role": "director",
+    "test_amount": "$12000",
+    "expected_triggered": true
+  }
+]
