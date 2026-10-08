@@ -29,12 +29,14 @@ from app.database.models import (
     HumanReview,
     PolicyDocument,
     PolicyChunk,
+    PolicyValidation,
 )
 from app.database.storage.policy_storage import (
     generate_policy_id,
     save_policy_file,
 )
 from app.rag.chunking import chunk_text
+from app.rag.validation_service import run_policy_validation
 
 app = FastAPI(
     title="Enterprise Document Intelligence API",
@@ -660,3 +662,54 @@ async def upload_policy(file: UploadFile = File(...)):
         "text_length": len(extracted_text),
         "chunks_created": len(chunks)
     }
+@app.post("/documents/{document_id}/validate-policy")
+def validate_document_policy(document_id: str):
+
+    with SessionLocal() as db:
+
+        document = db.get(
+            Document,
+            document_id
+        )
+
+        if document is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Document not found"
+            )
+
+        if document.processing_status != "completed":
+            raise HTTPException(
+                status_code=409,
+                detail="Document processing is not completed"
+            )
+
+        if (
+            not document.structured_data
+            or document.structured_extraction_method
+            == "regex_fallback"
+        ):
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    "Reliable structured data is unavailable. "
+                    "Human review is required before policy validation."
+                )
+            )
+
+        try:
+            result = run_policy_validation(
+                db=db,
+                document_id=document.id,
+                document_type=document.document_type,
+                structured_data=document.structured_data,
+                document_text=document.extracted_text or ""
+            )
+
+        except Exception as error:
+            raise HTTPException(
+                status_code=503,
+                detail="Policy validation service unavailable"
+            ) from error
+
+        return result

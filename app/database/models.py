@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy import (
     String,
     Integer,
+    Column,
     Float,
     Text,
     DateTime,
@@ -235,4 +236,38 @@ class PolicyChunk(Base):
     text: Mapped[str] = mapped_column(
         Text,
         nullable=False
+    )
+class PolicyValidation(Base):
+    __tablename__ = "policy_validations"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+
+    document_id = Column(
+        String,
+        nullable=False,
+        index=True
+    )
+
+    status = Column(
+        String,
+        nullable=False
+    )
+
+    validation_result = Column(
+        JSON,
+        nullable=False
+    )
+
+    retrieved_chunks = Column(
+        JSON,
+        nullable=False
+    )
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow
     )

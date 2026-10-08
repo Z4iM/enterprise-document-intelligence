@@ -13,3 +13,5 @@ commands.txt
 enterprise_document_llm.ipynb
 *.sqlite
 *.sqlite3
+data/database.db
+*.db-journal

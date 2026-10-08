@@ -3,6 +3,8 @@ import json
 from app.llm.base import LLMProvider
 from app.rag.retriever import retrieve_policy_context
 from app.llm.validator import clean_json_response
+from decimal import Decimal
+from app.validation.business_rules import parse_money
 
 
 def validate_against_policy(
@@ -249,6 +251,61 @@ JSON structure.
     result = json.loads(
         cleaned_response
     )
+    # ------------------------------------------
+    # Deterministic business-rule validation
+    # ------------------------------------------
+
+    category = str(
+        structured_data.get("expense_category") or ""
+    ).strip().lower()
+
+    # Only apply our current hardcoded rules when
+    # validating a receipt against the matching
+    # Northstar Analytics employee policy.
+
+    NORTHSTAR_POLICY_ID = (
+        "153b2620-111d-473e-991d-94b4734024b2"
+    )
+
+    has_matching_policy = any(
+        chunk.get("policy_id") == NORTHSTAR_POLICY_ID
+        for chunk in retrieved_chunks
+    )
+
+    has_meal_policy = any(
+        chunk.get("policy_id") == NORTHSTAR_POLICY_ID
+        and chunk.get("text", "").lstrip().startswith("4.1 Meals")
+        for chunk in retrieved_chunks
+    )
+
+    if (
+        document_type == "receipt"
+        and category == "meal"
+        and has_matching_policy
+        and has_meal_policy
+    ):
+        rules_result = evaluate_expense_rules(
+            structured_data
+        )
+
+        # For our supported meal-limit rule, Python
+        # is authoritative over Qwen's decision.
+        result["status"] = rules_result["status"]
+        result["summary"] = rules_result["summary"]
+        result["violations"] = rules_result["violations"]
+        result["required_actions"] = rules_result["required_actions"]
+
+        # Retain only citations supporting this decision.
+        result["source_chunk_ids"] = [
+            chunk["chunk_id"]
+            for chunk in retrieved_chunks
+            if (
+                chunk.get("policy_id") == NORTHSTAR_POLICY_ID
+                and chunk.get("text", "").lstrip().startswith("4.1 Meals")
+            )
+        ]
+
+        result["deterministic_checks"] = rules_result["checks"]
 
     # -------------------------------------------------
     # 10. Return validation + evidence
@@ -257,6 +314,57 @@ JSON structure.
     # 10. Apply deterministic consistency guardrails
     # -------------------------------------------------
 
+    # Deterministic verification for policy section 4.4
+    NORTHSTAR_POLICY_ID = (
+        "153b2620-111d-473e-991d-94b4734024b2"
+    )
+
+    receipt_policy_chunks = [
+        chunk for chunk in retrieved_chunks
+        if (
+            chunk.get("policy_id") == NORTHSTAR_POLICY_ID
+            and chunk.get("text", "").lstrip().startswith(
+                "4.4 Receipts and Missing Documentation"
+            )
+        )
+    ]
+
+    if document_type == "receipt" and receipt_policy_chunks:
+
+        amount = parse_money(structured_data.get("total"))
+
+        if amount is not None:
+
+            receipt_required = amount >= Decimal("25.00")
+
+            result["status"] = (
+                "needs_review" if receipt_required
+                else "compliant"
+            )
+
+            result["violations"] = []
+            result["required_actions"] = []
+
+            result["summary"] = (
+                "Receipt documentation is required; "
+                "documentation availability has not been verified."
+                if receipt_required
+                else
+                "The expense is below the $25 receipt "
+                "documentation threshold."
+            )
+
+            result["deterministic_checks"] = [{
+                "rule": "4.4 Receipts and Missing Documentation",
+                "amount": str(amount),
+                "threshold": "25.00",
+                "receipt_required": receipt_required
+            }]
+
+            result["source_chunk_ids"] = [
+                chunk["chunk_id"]
+                for chunk in receipt_policy_chunks
+            ]
     violations = result.get(
         "violations",
         []
