@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, UTC
+
 
 from sqlalchemy import (
     String,
@@ -8,6 +9,9 @@ from sqlalchemy import (
     Text,
     DateTime,
     JSON,
+    ForeignKey,
+    UniqueConstraint,
+    CheckConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -270,4 +274,81 @@ class PolicyValidation(Base):
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+class StoredPolicyRule(Base):
+    __tablename__ = "stored_policy_rules"
+
+    id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+    )
+
+    policy_id: Mapped[str] = mapped_column(
+        ForeignKey("policy_documents.id"),
+        nullable=False,
+        index=True,
+    )
+
+    rule_id: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+    )
+
+    # Serialized PolicyRule, including the original
+    # source quotation and source chunk reference.
+    rule_data: Mapped[dict] = mapped_column(
+        JSON,
+        nullable=False,
+    )
+
+    verification_status: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+        default="pending",
+    )
+
+    approval_status: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+        default="pending",
+    )
+
+    approved_by: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    approved_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+        nullable=False,
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "policy_id",
+            "rule_id",
+            name="uq_policy_rule_per_policy",
+        ),
+        CheckConstraint(
+            "verification_status IN "
+            "('pending', 'verified', 'rejected')",
+            name="ck_policy_rule_verification_status",
+        ),
+        CheckConstraint(
+            "approval_status IN "
+            "('pending', 'approved', 'rejected')",
+            name="ck_policy_rule_approval_status",
+        ),
+        CheckConstraint(
+            "approval_status != 'approved' "
+            "OR verification_status = 'verified'",
+            name="ck_approval_requires_verification",
+        ),
     )

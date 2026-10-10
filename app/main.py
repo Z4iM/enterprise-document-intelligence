@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Body
 from app.ingestion.file_detector import detect_file_type
 from app.ingestion.text_extractor import extract_text
 from app.classification.classifier import (
@@ -714,3 +714,98 @@ def validate_document_policy(document_id: str):
             ) from error
 
         return result
+
+@app.post("/documents/{document_id}/validate-approved-policy")
+def validate_document_approved_policy(
+    document_id: str,
+    policy_id: str = Body(..., embed=True, min_length=1),
+):
+    from app.validation.document_policy_service import (
+        validate_document_with_approved_rules,
+    )
+    from app.validation.approved_rule_repository import (
+        PolicyRuleIntegrityError,
+    )
+
+    with SessionLocal() as db:
+
+        # Verify document exists.
+        document = db.get(Document, document_id)
+
+        if document is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Document not found",
+            )
+
+        # Verify selected policy exists.
+        policy = db.get(PolicyDocument, policy_id)
+
+        if policy is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Policy not found",
+            )
+
+        try:
+            return validate_document_with_approved_rules(
+                db=db,
+                document_id=document_id,
+                policy_id=policy_id,
+            )
+
+        except PolicyRuleIntegrityError as error:
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    "Approved policy rules contain invalid "
+                    "data or evidence. Review is required."
+                ),
+            ) from error
+
+        except ValueError as error:
+            raise HTTPException(
+                status_code=409,
+                detail=str(error),
+            ) from error
+
+@app.post("/policies/{policy_id}/rules/extract-candidates")
+def extract_policy_candidates(
+    policy_id: str,
+    chunk_index: int = Body(0, embed=True, ge=0),
+):
+    import logging
+
+    from app.llm.http_provider import HTTPModelProvider
+    from app.validation.candidate_rule_service import (
+        extract_and_store_candidates,
+    )
+
+    with SessionLocal() as db:
+        try:
+            provider = HTTPModelProvider()
+
+            return extract_and_store_candidates(
+                db=db,
+                policy_id=policy_id,
+                chunk_index=chunk_index,
+                provider=provider,
+            )
+
+        except LookupError as error:
+            raise HTTPException(
+                status_code=404,
+                detail=str(error),
+            ) from error
+
+        except Exception as error:
+            db.rollback()
+
+            logging.getLogger(__name__).exception(
+                "Candidate rule extraction failed."
+            )
+
+            raise HTTPException(
+                status_code=503,
+                detail="Policy rule extraction failed.",
+            ) from error

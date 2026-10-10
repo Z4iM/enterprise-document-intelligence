@@ -28,10 +28,15 @@ class PolicyRule(BaseModel):
     source_chunk_id: str
 
 
+
 class RuleEvaluation(BaseModel):
     rule_id: str
     applicable: bool
-    triggered: bool | None = None
+    # True: rule condition matched
+    # False: condition did not match
+    # None: cannot determine / not applicable
+    triggered: bool | None
+
     status: Literal[
         "passed",
         "requires_approval",

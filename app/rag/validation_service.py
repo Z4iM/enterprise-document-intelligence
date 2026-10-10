@@ -34,7 +34,7 @@ def run_policy_validation(
 
         validation = result["validation"]
         retrieved_chunks = result["retrieved_chunks"]
-
+        
         print("[4] Saving validation to SQLite")
 
         record = PolicyValidation(
