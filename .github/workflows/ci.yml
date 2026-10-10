@@ -11,9 +11,13 @@ permissions:
   contents: read
 
 jobs:
-  unit-tests:
+  tests:
     name: Python Tests and Code Quality
     runs-on: ubuntu-latest
+
+    env:
+      LLM_API_URL: "http://127.0.0.1:9999"
+      LLM_API_KEY: "ci-test-placeholder"
 
     steps:
       - name: Checkout repository
@@ -33,8 +37,8 @@ jobs:
 
       - name: Ruff lint checks
         run: |
-          python -m ruff check app/validation/rule_evaluator.py app/validation/source_verifier.py tests/unit --select E4,E7,E9,F
+          python -m ruff check app/validation/rule_evaluator.py app/validation/source_verifier.py tests/unit tests/integration --select E4,E7,E9,F
 
-      - name: Run unit tests
+      - name: Run unit and integration tests
         run: |
-          python -m pytest tests/unit -v
+          python -m pytest tests/unit tests/integration -v

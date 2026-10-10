@@ -36,7 +36,7 @@ from app.database.storage.policy_storage import (
     save_policy_file,
 )
 from app.rag.chunking import chunk_text
-from app.rag.validation_service import run_policy_validation
+
 
 app = FastAPI(
     title="Enterprise Document Intelligence API",
@@ -696,9 +696,10 @@ def validate_document_policy(document_id: str):
                     "Human review is required before policy validation."
                 )
             )
-
+        from app.rag.validation_service import run_policy_validation
         try:
             result = run_policy_validation(
+                
                 db=db,
                 document_id=document.id,
                 document_type=document.document_type,
