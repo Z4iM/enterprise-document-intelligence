@@ -14,3 +14,4 @@ python-dotenv
 sqlalchemy
 sentence-transformers
 faiss-cpu
+google-genai

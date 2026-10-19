@@ -4,10 +4,7 @@ from app.extraction.receipt_extractor import extract_receipt_data
 from app.extraction.contract_extractor import extract_contract_data
 
 from app.extraction.llm_extractor import extract_with_llm
-from app.llm.http_provider import HTTPModelProvider
-
-
-provider = HTTPModelProvider()
+from app.llm.factory import get_llm_provider
 
 
 def extract_with_rules(text: str, document_type: str):
@@ -43,6 +40,8 @@ def extract_structured_data(
         return None, "none", True
 
     try:
+        provider = get_llm_provider()
+
         structured_data = extract_with_llm(
             text=text,
             document_type=document_type,
