@@ -1,36 +1,36 @@
-from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
 class CVSchema(BaseModel):
-    name: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
+    name: str | None = None
+    email: str | None = None
+    phone: str | None = None
     skills: list[str] = Field(default_factory=list)
     education: list[str] = Field(default_factory=list)
 
 
 class InvoiceSchema(BaseModel):
-    invoice_number: Optional[str] = None
-    vendor: Optional[str] = None
-    invoice_date: Optional[str] = None
-    due_date: Optional[str] = None
-    total: Optional[str] = None
+    invoice_number: str | None = None
+    vendor: str | None = None
+    invoice_date: str | None = None
+    due_date: str | None = None
+    total: str | None = None
 
 
 class ReceiptSchema(BaseModel):
-    merchant: Optional[str] = None
-    date: Optional[str] = None
-    total: Optional[str] = None
-    payment_method: Optional[str] = None
-    expense_category: Optional[str] = None
+    merchant: str | None = None
+    date: str | None = None
+    total: str | None = None
+    payment_method: str | None = None
+    expense_category: str | None = None
 
 
 class ContractSchema(BaseModel):
     parties: list[str] = Field(default_factory=list)
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-    signature_status: Optional[str] = None
+    start_date: str | None = None
+    end_date: str | None = None
+    signature_status: str | None = None
 
 
 SCHEMA_MAP = {

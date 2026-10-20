@@ -4,14 +4,13 @@ import re
 
 from app.llm.base import LLMProvider
 from app.llm.validator import clean_json_response
-
-from app.validation.rule_schemas import PolicyRule
 from app.validation.evidence_extractor import extract_policy_evidence
-from app.validation.source_verifier import (
-    verify_rule,
-    normalize_whitespace,
-)
 from app.validation.rule_retry import retry_rule_extraction
+from app.validation.rule_schemas import PolicyRule
+from app.validation.source_verifier import (
+    normalize_whitespace,
+    verify_rule,
+)
 
 
 def extract_verified_rules(
@@ -110,16 +109,15 @@ CATEGORY RULES:
 - Choose the category using the source evidence, including its section heading.
 - Do not use "all_expenses" merely because a specific expense is mentioned.
 """
-
+    raw_response = provider.generate(prompt)
     try:
-        raw_response = provider.generate(prompt)
 
         cleaned = clean_json_response(raw_response)
 
         parsed = json.loads(cleaned)
 
         if not isinstance(parsed, dict):
-            raise ValueError("Expected a JSON object.")
+            raise TypeError("Expected a JSON object.")
 
         # Preserve original source evidence
         parsed["source_quote"] = evidence
@@ -157,7 +155,7 @@ CATEGORY RULES:
 
         rule = PolicyRule.model_validate(parsed)
 
-    except Exception as error:
+    except (ValueError, TypeError) as error:
         return {
             "evidence": evidence,
             "verified_rules": [],
@@ -217,7 +215,7 @@ CATEGORY RULES:
             retry_data = json.loads(cleaned_retry)
 
             if not isinstance(retry_data, dict):
-                raise ValueError(
+                raise TypeError(
                     "Retry must return a JSON object."
                 )
 
@@ -257,7 +255,7 @@ CATEGORY RULES:
                     }
                 )
 
-        except Exception as error:
+        except (ValueError, TypeError) as error:
 
             rejected_rules.append(
                 {

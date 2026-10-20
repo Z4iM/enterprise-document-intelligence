@@ -1,12 +1,13 @@
 from io import BytesIO
-from pypdf import PdfReader
+
 from docx import Document
 from pptx import Presentation
+from pypdf import PdfReader
+
 from app.ingestion.ocr import (
     extract_image_text,
     extract_scanned_pdf_text,
 )
-
 
 
 def extract_pdf_text(file_bytes: bytes) -> str:
@@ -66,8 +67,7 @@ def shape_generator(slide):
     """Helper function to find shapes, including those nested inside groups."""
     for shape in slide.shapes:
         if shape.shape_type == 6:  # 6 represents a GroupShape
-            for sub_shape in shape.shapes:
-                yield sub_shape
+            yield from shape.shapes
         else:
             yield shape
 
@@ -77,10 +77,8 @@ def needs_ocr(text: str) -> bool:
     if not cleaned_text:
         return True
 
-    if len(cleaned_text) < 50:
-        return True
+    return len(cleaned_text) < 50
 
-    return False
 
 def extract_text(file_bytes: bytes, file_type: str) -> str:
 

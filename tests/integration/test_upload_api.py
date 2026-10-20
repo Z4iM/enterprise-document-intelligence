@@ -118,9 +118,10 @@ def test_upload_invoice_end_to_end(tmp_path, monkeypatch):
                 files={
                     "file": (
                         "sample_invoice.docx",
-                        invoice_bytes,
+                        invoice_bytes,(
                         "application/vnd.openxmlformats-officedocument."
-                        "wordprocessingml.document",
+                        "wordprocessingml.document"
+                        ),
                     )
                 },
             )
@@ -183,9 +184,10 @@ def test_upload_invoice_end_to_end(tmp_path, monkeypatch):
                 files={
                     "file": (
                         "sample_invoice.docx",
-                        invoice_bytes,
+                        invoice_bytes,(
                         "application/vnd.openxmlformats-officedocument."
-                        "wordprocessingml.document",
+                        "wordprocessingml.document"
+                        ),
                     )
                 },
             )

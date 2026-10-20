@@ -3,7 +3,6 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-
 DATABASE_PATH = Path("data/database.db")
 
 DATABASE_PATH.parent.mkdir(

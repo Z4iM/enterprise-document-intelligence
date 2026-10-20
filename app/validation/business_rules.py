@@ -1,6 +1,4 @@
 from decimal import Decimal, InvalidOperation
-from typing import Optional
-
 
 # Baseline rules from our employee policy.
 # Later these should come from versioned policy configuration.
@@ -8,7 +6,7 @@ MEAL_LIMIT = Decimal("100.00")
 RECEIPT_THRESHOLD = Decimal("25.00")
 
 
-def parse_money(value) -> Optional[Decimal]:
+def parse_money(value) -> Decimal | None:
     """
     Convert monetary values into Decimal.
 

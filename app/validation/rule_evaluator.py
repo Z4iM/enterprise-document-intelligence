@@ -1,13 +1,12 @@
-
+import re
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
+from app.validation.category_normalizer import normalize_category
 from app.validation.rule_schemas import (
     PolicyRule,
     RuleEvaluation,
 )
-from app.validation.category_normalizer import normalize_category
-
 
 OPERATORS = {
     ">": lambda a, b: a > b,
@@ -18,14 +17,37 @@ OPERATORS = {
 }
 
 
-def parse_decimal(value: Any) -> Decimal | None:
-    """Convert a document value into a Decimal."""
+def parse_decimal(
+    value: Any,
+    expected_currency: str = "USD",
+) -> Decimal | None:
+    """Parse a monetary amount with optional currency information."""
 
     if value is None or isinstance(value, bool):
         return None
 
+    cleaned = str(value).strip()
+
+    # Extract an optional trailing currency code.
+    currency_match = re.search(
+        r"\s+([A-Za-z]{3})$",
+        cleaned,
+    )
+
+    if currency_match:
+        actual_currency = currency_match.group(1).upper()
+
+        if actual_currency != expected_currency.upper():
+            return None
+
+        cleaned = cleaned[:currency_match.start()].strip()
+
+    # The dollar symbol is treated as USD in this parser.
+    if "$" in cleaned and expected_currency.upper() != "USD":
+        return None
+
     cleaned = (
-        str(value)
+        cleaned
         .replace("$", "")
         .replace(",", "")
         .strip()
@@ -100,7 +122,10 @@ def evaluate_rule(
     ):
         field_value = document_data.get("total")
 
-    actual = parse_decimal(field_value)
+    actual = parse_decimal(
+        field_value,
+        expected_currency=rule.currency,
+    )
 
     if actual is None:
         return RuleEvaluation(

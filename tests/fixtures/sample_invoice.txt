@@ -1,0 +1,14 @@
+﻿INVOICE
+
+Invoice Number: INV-2026-TEST-001
+Vendor: Northstar Office Supplies
+Invoice Date: 2026-10-10
+
+Item: Office Keyboard
+Quantity: 2
+Unit Price: $45.00
+
+Subtotal: $90.00
+Tax: $9.00
+Total: $99.00
+Currency: USD

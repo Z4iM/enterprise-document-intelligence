@@ -12,11 +12,11 @@ from app.database.models import (
     PolicyDocument,
     StoredPolicyRule,
 )
-from app.validation.rule_schemas import PolicyRule
 from app.validation.approved_rule_repository import (
     PolicyRuleIntegrityError,
     load_approved_rules,
 )
+from app.validation.rule_schemas import PolicyRule
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ def create_test_rule(db):
         category="meal",
         field="total",
         operator=">",
-        threshold=Decimal("100"),
+        threshold=Decimal(100),
         action="requires_approval",
         approval_role="manager",
         source_quote=quote,
@@ -104,7 +104,7 @@ def test_only_approved_rules_are_loaded(db):
 
     assert len(rules) == 1
     assert rules[0].rule_id == "MEAL-001"
-    assert rules[0].threshold == Decimal("100")
+    assert rules[0].threshold == Decimal(100)
 
     # Rules must be scoped to the requested policy.
     assert load_approved_rules(db, "another-policy") == []

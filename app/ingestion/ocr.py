@@ -1,8 +1,8 @@
 from io import BytesIO
 
-from PIL import Image, ImageOps, ImageEnhance
 import pytesseract
 from pdf2image import convert_from_bytes
+from PIL import Image, ImageEnhance, ImageOps
 
 
 def preprocess_image(image: Image.Image) -> Image.Image:

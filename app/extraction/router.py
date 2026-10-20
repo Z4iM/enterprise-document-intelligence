@@ -1,10 +1,13 @@
+import logging
+
+from app.extraction.contract_extractor import extract_contract_data
 from app.extraction.cv_extractor import extract_cv_data
 from app.extraction.invoice_extractor import extract_invoice_data
-from app.extraction.receipt_extractor import extract_receipt_data
-from app.extraction.contract_extractor import extract_contract_data
-
 from app.extraction.llm_extractor import extract_with_llm
+from app.extraction.receipt_extractor import extract_receipt_data
 from app.llm.factory import get_llm_provider
+
+logger = logging.getLogger(__name__)
 
 
 def extract_with_rules(text: str, document_type: str):
@@ -50,15 +53,16 @@ def extract_structured_data(
 
         return structured_data, "llm", False
 
-    except Exception as error:
-        print(
-            f"LLM extraction failed. "
-            f"Using regex fallback. Error: {error}"
+    except Exception:
+        logger.exception(
+            "LLM extraction failed for document type '%s'; "
+            "using rule-based fallback.",
+            document_type,
         )
 
         fallback_data = extract_with_rules(
             text=text,
-            document_type=document_type
+            document_type=document_type,
         )
 
         return fallback_data, "regex_fallback", True

@@ -1,9 +1,8 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 import faiss
 import numpy as np
-
 
 VECTOR_DIR = Path("data/vector_store")
 

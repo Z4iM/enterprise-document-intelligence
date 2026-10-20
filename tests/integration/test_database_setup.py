@@ -2,7 +2,6 @@ from sqlalchemy import create_engine, inspect
 
 # Import models so SQLAlchemy registers the tables
 import app.database.models  # noqa: F401
-
 from app.database.database import Base
 
 

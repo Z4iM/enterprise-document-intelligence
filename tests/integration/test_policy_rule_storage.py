@@ -30,7 +30,7 @@ def test_policy_rule_storage_and_approval_constraint(tmp_path):
         category="meal",
         field="total",
         operator=">",
-        threshold=Decimal("100"),
+        threshold=Decimal(100),
         currency="USD",
         action="requires_approval",
         approval_role="manager",

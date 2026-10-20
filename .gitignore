@@ -15,3 +15,19 @@ enterprise_document_llm.ipynb
 *.sqlite3
 data/database.db
 *.db-journal
+
+# Next.js frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/coverage/
+frontend/.env*
+!frontend/.env.example
+
+# Database backups and temporary files
+data/database.db*
+*.db.bak
+
+# Python testing caches
+.pytest_cache/
+.ruff_cache/

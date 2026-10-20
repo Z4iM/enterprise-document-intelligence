@@ -1,4 +1,5 @@
-from typing import Literal, Optional
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -18,7 +19,7 @@ class ReviewRequest(BaseModel):
 class PolicyValidationSchema(BaseModel):
     status: str
 
-    summary: Optional[str] = None
+    summary: str | None = None
 
     violations: list[str] = Field(
         default_factory=list

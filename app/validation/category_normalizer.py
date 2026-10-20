@@ -1,6 +1,5 @@
 import re
 
-
 CATEGORY_ALIASES = {
     "meal": {
         "meal",
@@ -32,6 +31,8 @@ CATEGORY_ALIASES = {
     "purchasing",
     "procurement",
     "purchase expense",
+    "office purchase",
+    "office purchases",
     },
 
     "all_expenses": {
