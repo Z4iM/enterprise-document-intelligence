@@ -1,42 +1,39 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, Body
-from app.ingestion.file_detector import detect_file_type
-from app.ingestion.text_extractor import extract_text
+import logging
+import uuid
+from pathlib import Path
+from typing import Annotated, Literal
+
+from fastapi import Body, FastAPI, File, Header, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+
 from app.classification.classifier import (
     classify_document,
     get_review_status,
 )
-from app.extraction.router import extract_structured_data
-from app.database.database import create_tables, SessionLocal
-from app.database import models
-from app.database.storage.file_storage import (
-    generate_document_id,
-    calculate_file_hash,
-    save_original_file,
-)
-from sqlalchemy import select
-from pathlib import Path
-from fastapi.responses import FileResponse
+from app.database.database import SessionLocal, create_tables
 from app.database.models import (
-    Document,
     AuditEvent,
-    HumanReview,
-)
-from app.review.schemas import ReviewRequest
-import uuid
-from app.database.models import (
     Document,
-    AuditEvent,
     HumanReview,
-    PolicyDocument,
     PolicyChunk,
-    PolicyValidation,
+    PolicyDocument,
+)
+from app.database.storage.file_storage import (
+    calculate_file_hash,
+    generate_document_id,
+    save_original_file,
 )
 from app.database.storage.policy_storage import (
     generate_policy_id,
     save_policy_file,
 )
+from app.extraction.router import extract_structured_data
+from app.ingestion.file_detector import detect_file_type
+from app.ingestion.text_extractor import extract_text
 from app.rag.chunking import chunk_text
-
+from app.review.schemas import ReviewRequest
 
 app = FastAPI(
     title="Enterprise Document Intelligence API",
@@ -281,7 +278,9 @@ def get_document_reviews(document_id: str):
             for review in reviews
         ]
 @app.post("/documents/upload")
-async def upload_document(file: UploadFile = File(...)):
+async def upload_document(
+    file: Annotated[UploadFile, File()],
+):
 
     file_type = detect_file_type(file.filename)
 
@@ -425,24 +424,55 @@ async def upload_document(file: UploadFile = File(...)):
             db.commit()
 
         except Exception as error:
-
-            document.processing_status = "failed"
-            document.review_status = "needs_review"
-
-            db.add(
-                AuditEvent(
-                    document_id=document_id,
-                    event_type="processing_failed",
-                    message=str(error)
-                )
+            # Log the original exception and its traceback.
+            logging.getLogger(__name__).exception(
+                "Document processing failed: document_id=%s",
+                document_id,
             )
 
-            db.commit()
+            # Reset any failed or uncommitted transaction.
+            db.rollback()
 
+            # Best-effort recording of the failed processing attempt.
+            try:
+                failed_document = db.get(
+                    Document,
+                    document_id,
+                )
+
+                if failed_document is not None:
+                    failed_document.processing_status = "failed"
+                    failed_document.review_status = "needs_review"
+
+                    db.add(
+                        AuditEvent(
+                            document_id=document_id,
+                            event_type="processing_failed",
+                            message=(
+                                "Document processing failed. "
+                                "See server logs for details."
+                            ),
+                        )
+                    )
+
+                    db.commit()
+
+            except SQLAlchemyError:
+                # Failure logging must not hide the original error.
+                db.rollback()
+
+                logging.getLogger(__name__).exception(
+                    "Could not persist processing failure: "
+                    "document_id=%s",
+                    document_id,
+                )
+
+            # Never expose the original exception to API clients.
             raise HTTPException(
                 status_code=500,
-                detail=f"Failed to process document: {str(error)}"
-            )
+                detail="Document processing failed.",
+            ) from error
+
 
     return {
         "document_id": document_id,
@@ -580,7 +610,9 @@ def review_document(
             "corrections": review.corrections
         }
 @app.post("/policies/upload")
-async def upload_policy(file: UploadFile = File(...)):
+async def upload_policy(
+    file: Annotated[UploadFile, File()],
+):
 
     file_type = detect_file_type(file.filename)
 
@@ -720,11 +752,11 @@ def validate_document_approved_policy(
     document_id: str,
     policy_id: str = Body(..., embed=True, min_length=1),
 ):
-    from app.validation.document_policy_service import (
-        validate_document_with_approved_rules,
-    )
     from app.validation.approved_rule_repository import (
         PolicyRuleIntegrityError,
+    )
+    from app.validation.document_policy_service import (
+        validate_document_with_approved_rules,
     )
 
     with SessionLocal() as db:
@@ -776,14 +808,14 @@ def extract_policy_candidates(
 ):
     import logging
 
-    from app.llm.http_provider import HTTPModelProvider
+    from app.llm.factory import get_llm_provider
     from app.validation.candidate_rule_service import (
         extract_and_store_candidates,
     )
 
     with SessionLocal() as db:
         try:
-            provider = HTTPModelProvider()
+            provider = get_llm_provider()
 
             return extract_and_store_candidates(
                 db=db,
@@ -809,3 +841,119 @@ def extract_policy_candidates(
                 status_code=503,
                 detail="Policy rule extraction failed.",
             ) from error
+
+@app.get("/policies/{policy_id}/rules")
+def list_policy_rules(policy_id: str):
+    from app.database.models import StoredPolicyRule
+
+    with SessionLocal() as db:
+        policy = db.get(PolicyDocument, policy_id)
+
+        if policy is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Policy not found.",
+            )
+
+        statement = (
+            select(StoredPolicyRule)
+            .where(StoredPolicyRule.policy_id == policy_id)
+            .order_by(StoredPolicyRule.rule_id)
+        )
+
+        stored_rules = db.scalars(statement).all()
+
+        return {
+            "policy_id": policy_id,
+            "total_rules": len(stored_rules),
+            "rules": [
+                {
+                    "id": rule.id,
+                    "rule_id": rule.rule_id,
+                    "rule_data": rule.rule_data,
+                    "verification_status": rule.verification_status,
+                    "approval_status": rule.approval_status,
+                    "approved_by": rule.approved_by,
+                }
+                for rule in stored_rules
+            ],
+        }
+
+@app.post("/policies/{policy_id}/rules/{stored_rule_id}/review")
+def review_candidate_policy_rule(
+    policy_id: str,
+    stored_rule_id: str,
+    request: Request,
+    decision: Literal["approve", "reject"] = Body(...),
+    notes: str | None = Body(None),
+    x_dev_review_token: str | None = Header(default=None),
+):
+    import logging
+    import os
+    import secrets
+
+    from dotenv import load_dotenv
+
+    from app.validation.rule_review_service import review_policy_rule
+
+    load_dotenv()
+
+    # Disabled unless explicitly enabled for local development.
+    if os.getenv("ENABLE_DEV_POLICY_REVIEW") != "true":
+        raise HTTPException(status_code=404, detail="Not found.")
+
+    # Never expose this temporary approval route remotely.
+    if (
+        request.client is None
+        or request.client.host not in {"127.0.0.1", "::1"}
+    ):
+        raise HTTPException(status_code=403, detail="Local access only.")
+
+    expected_token = os.getenv("DEV_REVIEW_TOKEN")
+
+    if (
+        not expected_token
+        or not x_dev_review_token
+        or not secrets.compare_digest(
+            x_dev_review_token,
+            expected_token,
+        )
+    ):
+        raise HTTPException(status_code=403, detail="Access denied.")
+
+    reviewer = os.getenv("DEV_REVIEWER_ID", "local-reviewer")
+
+    with SessionLocal() as db:
+        try:
+            return review_policy_rule(
+                db=db,
+                policy_id=policy_id,
+                stored_rule_id=stored_rule_id,
+                decision=decision,
+                reviewer=reviewer,
+                notes=notes,
+            )
+
+        except LookupError as error:
+            db.rollback()
+            raise HTTPException(
+                status_code=404,
+                detail=str(error),
+            ) from error
+
+        except ValueError as error:
+            db.rollback()
+            raise HTTPException(
+                status_code=409,
+                detail=str(error),
+            ) from error
+
+        except Exception:
+            db.rollback()
+            logging.getLogger(__name__).exception(
+                "Policy rule review failed."
+            )
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to review policy rule.",
+            )

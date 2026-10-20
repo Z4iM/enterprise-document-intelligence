@@ -108,7 +108,7 @@ Example output:
     parsed = json.loads(cleaned)
 
     if not isinstance(parsed, list):
-        raise ValueError(
+        raise TypeError(
             "Expected a JSON array of policy rules."
         )
 

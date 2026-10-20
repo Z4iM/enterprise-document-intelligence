@@ -1,7 +1,6 @@
-from pathlib import Path
 import hashlib
 import uuid
-
+from pathlib import Path
 
 UPLOAD_ROOT = Path("data/uploads")
 

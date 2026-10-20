@@ -8,15 +8,15 @@ from sqlalchemy.orm import Session
 from app.database.database import Base
 from app.database.models import (
     Document,
-    PolicyDocument,
     PolicyChunk,
+    PolicyDocument,
     PolicyValidation,
     StoredPolicyRule,
 )
-from app.validation.rule_schemas import PolicyRule
 from app.validation.document_policy_service import (
     validate_document_with_approved_rules,
 )
+from app.validation.rule_schemas import PolicyRule
 
 
 def test_document_policy_validation_is_persisted(tmp_path):
@@ -66,7 +66,7 @@ def test_document_policy_validation_is_persisted(tmp_path):
                     category="meal",
                     field="total",
                     operator=">",
-                    threshold=Decimal("100"),
+                    threshold=Decimal(100),
                     action="requires_approval",
                     approval_role="manager",
                     source_quote=(
@@ -80,7 +80,7 @@ def test_document_policy_validation_is_persisted(tmp_path):
                     category="all_expenses",
                     field="total",
                     operator=">=",
-                    threshold=Decimal("25"),
+                    threshold=Decimal(25),
                     action="requires_documentation",
                     source_quote=(
                         "Expenses of $25 or more require a receipt."

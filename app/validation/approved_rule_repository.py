@@ -1,13 +1,14 @@
 
+from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from pydantic import ValidationError
 
 from app.database.models import (
     PolicyChunk,
     StoredPolicyRule,
 )
 from app.validation.rule_schemas import PolicyRule
+from app.validation.source_verifier import normalize_whitespace
 
 
 class PolicyRuleIntegrityError(Exception):
@@ -75,7 +76,8 @@ def load_approved_rules(
         if (
             not rule.source_quote
             or not rule.source_quote.strip()
-            or rule.source_quote not in chunk.text
+            or normalize_whitespace(rule.source_quote)
+            not in normalize_whitespace(chunk.text)
         ):
             raise PolicyRuleIntegrityError(
                 f"Rule {rule.rule_id} has a missing "

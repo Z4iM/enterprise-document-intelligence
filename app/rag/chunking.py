@@ -1,6 +1,5 @@
 import re
 
-
 HEADING_PATTERN = re.compile(
     r"^\d+(?:\.\d+)*\.?\s+.+$"
 )

@@ -1,0 +1,90 @@
+
+@import "tailwindcss";
+
+/* NEXUS EDI Design System */
+@theme {
+  --color-ink: #131b31;
+  --color-muted: #67728b;
+  --color-primary: #5c5bf4;
+  --color-stroke: #e6e9f2;
+
+  --shadow-soft: 0 14px 36px -22px rgba(21, 32, 62, 0.24);
+
+  --radius-xl2: 1.25rem;
+}
+
+/* Global Styles */
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f7f8fc;
+  color: #131b31;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #d7d4ff;
+  color: #252263;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid #a5a1ff;
+  outline-offset: 3px;
+}
+
+/* Interactive Tables */
+.interactive-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.interactive-table th {
+  font-size: 11px;
+  font-weight: 650;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  color: #8791a6;
+  padding: 14px 20px;
+  background: #fafbfe;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.interactive-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f0f2f7;
+  font-size: 13px;
+}
+
+.interactive-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.interactive-table tbody tr:hover {
+  background: #fcfcff;
+}
+
+/* Scrollbars */
+.smooth-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.smooth-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #d5d9e5;
+}

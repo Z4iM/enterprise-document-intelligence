@@ -6,7 +6,6 @@ import pytest
 from app.validation.rule_schemas import PolicyRule
 from app.validation.source_verifier import verify_rule
 
-
 MEAL_POLICY = (
     "Any meal expense above $100 requires "
     "manager approval before reimbursement."
@@ -24,7 +23,7 @@ def make_meal_rule(**overrides):
         "category": "meal",
         "field": "total",
         "operator": ">",
-        "threshold": Decimal("100"),
+        "threshold": Decimal(100),
         "currency": "USD",
         "action": "requires_approval",
         "approval_role": "manager",
@@ -52,7 +51,7 @@ def test_correct_meal_rule():
             "Operator mismatch",
         ),
         (
-            {"threshold": Decimal("150")},
+            {"threshold": Decimal(150)},
             "Threshold not supported",
         ),
         (
@@ -98,7 +97,7 @@ def test_general_receipt_rule():
         category="all_expenses",
         field="amount",
         operator=">=",
-        threshold=Decimal("25"),
+        threshold=Decimal(25),
         action="requires_documentation",
         approval_role=None,
         source_quote=RECEIPT_POLICY,
@@ -116,7 +115,7 @@ def test_wrong_receipt_scope_is_rejected():
         category="purchase",
         field="amount",
         operator=">=",
-        threshold=Decimal("25"),
+        threshold=Decimal(25),
         action="requires_documentation",
         approval_role=None,
         source_quote=RECEIPT_POLICY,

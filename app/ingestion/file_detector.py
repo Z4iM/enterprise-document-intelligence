@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 SUPPORTED_EXTENSIONS = {
     ".pdf": "pdf",
     ".docx": "docx",
@@ -8,7 +7,7 @@ SUPPORTED_EXTENSIONS = {
     ".jpeg": "image",
     ".png": "image",
     ".pptx": "pptx",
-    ".txt.": "Text Document"
+    ".txt": "Text Document"
 }
 
 

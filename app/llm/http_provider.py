@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 from app.llm.base import LLMProvider
 
-
 load_dotenv()
 
 

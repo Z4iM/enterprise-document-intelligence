@@ -5,12 +5,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.models import (
-    PolicyDocument,
     PolicyChunk,
+    PolicyDocument,
     StoredPolicyRule,
 )
 from app.llm.base import LLMProvider
 from app.validation.rule_schemas import PolicyRule
+from app.validation.source_verifier import normalize_whitespace
 from app.validation.two_stage_extractor import extract_verified_rules
 
 
@@ -65,8 +66,10 @@ def extract_and_store_candidates(
         if (
             rule.source_chunk_id != chunk.id
             or not rule.source_quote
-            or rule.source_quote not in chunk.text
-        ):
+            or not rule.source_quote.strip()
+            or normalize_whitespace(rule.source_quote)
+            not in normalize_whitespace(chunk.text)
+            ):
             rejected_rules.append({
                 "rule_id": rule.rule_id,
                 "reason": "Invalid or missing source evidence.",

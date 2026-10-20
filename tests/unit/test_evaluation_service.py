@@ -141,17 +141,17 @@ def test_individual_statuses(
 def test_real_meal_and_receipt_rules_together():
     from decimal import Decimal
 
-    from app.validation.rule_schemas import PolicyRule
     from app.validation.evaluation_service import (
         evaluate_verified_rules,
     )
+    from app.validation.rule_schemas import PolicyRule
 
     meal_rule = PolicyRule(
         rule_id="MEAL-001",
         category="meal",
         field="total",
         operator=">",
-        threshold=Decimal("100"),
+        threshold=Decimal(100),
         currency="USD",
         action="requires_approval",
         approval_role="manager",
@@ -166,7 +166,7 @@ def test_real_meal_and_receipt_rules_together():
         category="all_expenses",
         field="total",
         operator=">=",
-        threshold=Decimal("25"),
+        threshold=Decimal(25),
         currency="USD",
         action="requires_documentation",
         source_quote=(

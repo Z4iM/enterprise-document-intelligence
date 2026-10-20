@@ -3,8 +3,8 @@ from decimal import Decimal
 
 import pytest
 
-from app.validation.rule_schemas import PolicyRule
 from app.validation.rule_evaluator import evaluate_rule
+from app.validation.rule_schemas import PolicyRule
 
 
 @pytest.mark.parametrize(
@@ -87,7 +87,7 @@ def test_missing_amount_requires_review():
         category="meal",
         field="total",
         operator=">",
-        threshold=Decimal("100"),
+        threshold=Decimal(100),
         action="requires_approval",
         approval_role="manager",
         source_chunk_id="test-chunk",
@@ -110,7 +110,7 @@ def test_unrelated_category_is_not_applicable():
         category="hotel",
         field="total",
         operator=">",
-        threshold=Decimal("220"),
+        threshold=Decimal(220),
         action="requires_approval",
         approval_role="director",
         source_chunk_id="test-chunk",
