@@ -1,0 +1,14 @@
+
+{
+  "case_id": "invoice_001",
+  "filename": "sample_invoice.docx",
+  "file_path": "tests/fixtures/sample_invoice.docx",
+  "expected_document_type": "invoice",
+  "expected_fields": {
+    "invoice_number": "INV-2026-TEST-001",
+    "vendor": "Northstar Office Supplies",
+    "invoice_date": "2026-10-10",
+    "due_date": null,
+    "total": "$99.00"
+  }
+}

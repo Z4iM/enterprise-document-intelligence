@@ -1,9 +1,8 @@
-
 name: Enterprise Document Intelligence CI
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   pull_request:
     branches: [main]
 
@@ -34,11 +33,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-ci.txt
+          python -m pip check
 
       - name: Ruff lint checks
         run: |
-          python -m ruff check app/validation/rule_evaluator.py app/validation/source_verifier.py tests/unit tests/integration --select E4,E7,E9,F
+          python -m ruff check app/workflows tests
+          python -m ruff check app/validation/rule_evaluator.py app/validation/source_verifier.py --select E4,E7,E9,F
 
-      - name: Run unit and integration tests
+      - name: Run complete backend test suite
         run: |
-          python -m pytest tests/unit tests/integration -v
+          python -m pytest -q

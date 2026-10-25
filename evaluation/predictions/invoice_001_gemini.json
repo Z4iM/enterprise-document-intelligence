@@ -1,0 +1,15 @@
+
+{
+  "case_id": "invoice_001",
+  "provider": "gemini",
+  "predicted_document_type": "invoice",
+  "classification_score": 0.6,
+  "extraction_method": "docx_parser",
+  "predicted_fields": {
+    "invoice_number": "INV-2026-TEST-001",
+    "vendor": "Northstar Office Supplies",
+    "invoice_date": "2026-10-10",
+    "due_date": null,
+    "total": "$99.00 USD"
+  }
+}

@@ -15,3 +15,5 @@ sqlalchemy
 sentence-transformers
 faiss-cpu
 google-genai
+langgraph
+langgraph-checkpoint-sqlite

@@ -17,3 +17,5 @@ pdf2image
 
 requests
 python-dotenv
+langgraph
+langgraph-checkpoint-sqlite
