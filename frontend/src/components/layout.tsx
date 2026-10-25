@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, ArrowUpRight, BookOpenCheck, BrainCircuit, ChevronRight, FileStack, LayoutDashboard, Menu, ScanText, ShieldCheck, Sparkles, X } from "lucide-react";
+import { Activity, ArrowUpRight, BookOpenCheck, BrainCircuit, ChevronRight, FileStack, FileSearch, LayoutDashboard, Menu, ScanText, ShieldCheck, Sparkles, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { api } from "@/lib/api";
@@ -14,6 +14,7 @@ const nav = [
   { href: "/upload", label: "New upload", icon: ScanText },
   { href: "/reviews", label: "Review center", icon: ShieldCheck },
   { href: "/policies", label: "Policy library", icon: BookOpenCheck },
+  { href: "/investigate", label: "AI Investigation", icon: FileSearch },
   { href: "/workflows", label: "Agent workflows", icon: BrainCircuit },
 ];
 
