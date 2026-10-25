@@ -2,8 +2,8 @@ import argparse
 import json
 from collections import Counter
 from pathlib import Path
-from app.database.database import SessionLocal
 
+from app.database.database import SessionLocal
 from app.database.models import PolicyDocument
 from app.validation.approved_rule_repository import load_approved_rules
 from app.validation.evaluation_service import evaluate_verified_rules

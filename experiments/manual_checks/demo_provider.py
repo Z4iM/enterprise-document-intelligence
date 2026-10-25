@@ -1,6 +1,5 @@
 from app.llm.http_provider import HTTPModelProvider
 
-
 provider = HTTPModelProvider()
 
 response = provider.generate(

@@ -19,3 +19,4 @@ requests
 python-dotenv
 langgraph
 langgraph-checkpoint-sqlite
+google-genai>=1,<3

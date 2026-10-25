@@ -1,7 +1,4 @@
-from app.validation.business_rules import (
-    evaluate_expense_rules
-)
-
+from app.validation.business_rules import evaluate_expense_rules
 
 test_cases = [
     {

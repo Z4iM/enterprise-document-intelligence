@@ -1,6 +1,5 @@
 from app.validation.scope_verifier import verify_rule_scope
 
-
 cases = [
     (
         "Any meal expense above $100 requires manager approval.",

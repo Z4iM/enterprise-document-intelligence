@@ -1,10 +1,7 @@
-from app.llm.http_provider import HTTPModelProvider
-from app.validation.two_stage_extractor import (
-    extract_verified_rules
-)
-
 import json
 
+from app.llm.http_provider import HTTPModelProvider
+from app.validation.two_stage_extractor import extract_verified_rules
 
 provider = HTTPModelProvider()
 

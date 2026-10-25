@@ -1,7 +1,6 @@
 from app.rag.embeddings import EmbeddingService
 from app.rag.vector_store import PolicyVectorStore
 
-
 embedding_service = EmbeddingService()
 
 vector_store = PolicyVectorStore()

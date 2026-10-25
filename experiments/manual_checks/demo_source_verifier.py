@@ -1,7 +1,6 @@
 from app.validation.rule_schemas import PolicyRule
 from app.validation.source_verifier import verify_rule
 
-
 policy_text = """
 4.1 Meals
 Any meal expense above $100 requires manager approval

@@ -1,24 +1,27 @@
-from app.validation.action_verifier import (
-    detect_policy_action
-)
-
+from app.validation.action_verifier import detect_policy_action
 
 cases = [
     (
-        "Any meal expense above $100 requires "
-        "manager approval before reimbursement.",
-        "requires_approval"
+        (
+            "Any meal expense above $100 requires "
+            "manager approval before reimbursement."
+        ),
+        "requires_approval",
     ),
     (
-        "A receipt is required for any ground-transport "
-        "expense above $25.",
-        "requires_documentation"
+        (
+            "A receipt is required for any ground-transport "
+            "expense above $25."
+        ),
+        "requires_documentation",
     ),
     (
-        "Receipts are required for individual expenses "
-        "of $25 or more.",
-        "requires_documentation"
-    )
+        (
+            "Receipts are required for individual expenses "
+            "of $25 or more."
+        ),
+        "requires_documentation",
+    ),
 ]
 
 

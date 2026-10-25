@@ -1,7 +1,6 @@
 from app.llm.http_provider import HTTPModelProvider
 from app.rag.policy_validator import validate_against_policy
 
-
 provider = HTTPModelProvider()
 
 

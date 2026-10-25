@@ -4,11 +4,10 @@ import time
 from pathlib import Path
 
 from app.llm.http_provider import HTTPModelProvider
-from app.validation.two_stage_extractor import extract_verified_rules
-from app.validation.rule_schemas import PolicyRule
-from app.validation.rule_evaluator import evaluate_rule
 from app.validation.category_normalizer import normalize_category
-
+from app.validation.rule_evaluator import evaluate_rule
+from app.validation.rule_schemas import PolicyRule
+from app.validation.two_stage_extractor import extract_verified_rules
 
 DATASET_PATH = Path("tests/data/policy_benchmark.json")
 RESULTS_DIR = Path("experiments/results")
@@ -46,7 +45,9 @@ def run_benchmark():
 
             error = None
 
-        except Exception as exc:
+        # A failed extraction is recorded so the remaining
+        # benchmark cases can still be evaluated.
+        except Exception as exc:  # noqa: BLE001
             extraction = {
                 "status": "error",
                 "verified_rules": [],

@@ -1,7 +1,6 @@
 from app.llm.http_provider import HTTPModelProvider
 from app.validation.rule_extractor import extract_policy_rules
 
-
 provider = HTTPModelProvider()
 
 policy_text = """
