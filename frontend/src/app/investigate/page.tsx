@@ -447,9 +447,29 @@ export default function InvestigationPage() {
                       key={`${step.tool}-${index}`}
                       className="flex items-start gap-3"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#eff8f3] text-[#2e9870]">
-                        <CheckCircle2 size={18} />
+
+                      <div
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                          step.status === "ready" || step.status === "passed"
+                            ? "bg-[#eff8f3] text-[#2e9870]"
+                            : [
+                                "access_denied",
+                                "not_found",
+                                "invalid_arguments",
+                                "unknown_tool",
+                                "policy_violation",
+                              ].includes(step.status)
+                            ? "bg-[#fff1f2] text-[#be123c]"
+                            : "bg-[#fff7e6] text-[#b7791f]"
+                        }`}
+                      >
+                        {step.status === "ready" || step.status === "passed" ? (
+                          <CheckCircle2 size={18} />
+                        ) : (
+                          <AlertCircle size={18} />
+                        )}
                       </div>
+
 
                       <div className="min-w-0 flex-1">
                         <div className="break-words text-[12px] font-semibold text-ink">
