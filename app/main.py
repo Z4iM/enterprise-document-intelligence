@@ -7,6 +7,7 @@ from fastapi import Body, FastAPI, File, Header, HTTPException, Request, UploadF
 from fastapi.responses import FileResponse
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
+from app.agents.api import router as agent_router
 
 from app.classification.classifier import (
     classify_document,
@@ -40,6 +41,7 @@ app = FastAPI(
     description="API for processing and analyzing enterprise documents.",
     version="0.1.0"
 )
+app.include_router(agent_router)
 app.include_router(workflow_router)
 create_tables()
 
