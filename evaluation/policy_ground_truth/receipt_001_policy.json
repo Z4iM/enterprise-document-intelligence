@@ -1,0 +1,32 @@
+
+{
+  "case_id": "receipt_001",
+  "policy_id": "153b2620-111d-473e-991d-94b4734024b2",
+  "expected_status": "requires_approval",
+  "expected_rules_evaluated": 2,
+  "expected_applicable_rules": 2,
+  "expected_required_actions": [
+    {
+      "rule_id": "CHUNK-008-RULE-001",
+      "action": "requires_approval"
+    },
+    {
+      "rule_id": "CHUNK-011-RULE-001",
+      "action": "requires_documentation"
+    }
+  ],
+  "expected_rule_results": [
+    {
+      "rule_id": "CHUNK-008-RULE-001",
+      "applicable": true,
+      "triggered": true,
+      "status": "requires_approval"
+    },
+    {
+      "rule_id": "CHUNK-011-RULE-001",
+      "applicable": true,
+      "triggered": true,
+      "status": "requires_documentation"
+    }
+  ]
+}

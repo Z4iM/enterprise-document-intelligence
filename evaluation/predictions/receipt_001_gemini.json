@@ -1,0 +1,14 @@
+{
+  "case_id": "receipt_001",
+  "provider": "gemini",
+  "predicted_document_type": "receipt",
+  "classification_score": 0.4,
+  "extraction_method": "docx_parser",
+  "predicted_fields": {
+    "merchant": "City Cafe",
+    "date": "2026-10-20",
+    "total": "$175.00",
+    "payment_method": null,
+    "expense_category": "meal"
+  }
+}

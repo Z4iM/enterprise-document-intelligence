@@ -1,0 +1,14 @@
+
+{
+  "case_id": "receipt_001",
+  "filename": "meal_receipt_175.docx",
+  "file_path": "tests/fixtures/meal_receipt_175.docx",
+  "expected_document_type": "receipt",
+  "expected_fields": {
+    "merchant": "City Cafe",
+    "date": "2026-10-20",
+    "total": "$175.00",
+    "payment_method": null,
+    "expense_category": "meal"
+  }
+}

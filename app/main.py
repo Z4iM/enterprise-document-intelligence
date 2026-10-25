@@ -2,7 +2,7 @@ import logging
 import uuid
 from pathlib import Path
 from typing import Annotated, Literal
-
+from app.workflows.api import router as workflow_router
 from fastapi import Body, FastAPI, File, Header, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy import select
@@ -40,6 +40,7 @@ app = FastAPI(
     description="API for processing and analyzing enterprise documents.",
     version="0.1.0"
 )
+app.include_router(workflow_router)
 create_tables()
 
 @app.get("/")
