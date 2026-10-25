@@ -16,7 +16,6 @@ from app.database.models import (
 )
 from app.validation.rule_schemas import PolicyRule
 
-
 POLICY_QUOTE = (
     "Meals above $100 require manager approval."
 )
@@ -67,7 +66,7 @@ def add_rule(
         category="meal",
         field="total",
         operator=">",
-        threshold=Decimal("100"),
+        threshold=Decimal(100),
         currency="USD",
         action="requires_approval",
         approval_role="manager",

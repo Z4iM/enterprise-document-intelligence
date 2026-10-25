@@ -2,13 +2,13 @@ import logging
 import uuid
 from pathlib import Path
 from typing import Annotated, Literal
-from app.workflows.api import router as workflow_router
+
 from fastapi import Body, FastAPI, File, Header, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from app.agents.api import router as agent_router
 
+from app.agents.api import router as agent_router
 from app.classification.classifier import (
     classify_document,
     get_review_status,
@@ -35,6 +35,7 @@ from app.ingestion.file_detector import detect_file_type
 from app.ingestion.text_extractor import extract_text
 from app.rag.chunking import chunk_text
 from app.review.schemas import ReviewRequest
+from app.workflows.api import router as workflow_router
 
 app = FastAPI(
     title="Enterprise Document Intelligence API",

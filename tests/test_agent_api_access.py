@@ -7,7 +7,6 @@ from fastapi.testclient import TestClient
 
 from app.agents import api as agent_api
 
-
 URL = "/agent/investigate"
 
 VALID_HEADERS = {

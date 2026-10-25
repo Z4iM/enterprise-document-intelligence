@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 from app.agents.gemini_tools import build_gemini_tools
 from app.agents.tool_dispatcher import dispatch_tool_call
 
-
 MAX_TOOL_CALLS = 5
 MAX_MODEL_TURNS = 7
 MAX_TOOL_RESULT_CHARS = 12000

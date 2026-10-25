@@ -58,6 +58,8 @@ try:
     print("\nVERIFICATION RESULT:")
     print(result)
 
-except Exception as exc:
+# Diagnostic demo: show unexpected failures without
+# hiding their exception type and error message.
+except Exception as exc:  # noqa: BLE001
     print("\nRETRY FAILED:")
     print(type(exc).__name__, str(exc))

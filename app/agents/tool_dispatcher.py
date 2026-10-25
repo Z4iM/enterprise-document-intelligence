@@ -5,7 +5,6 @@ from app.agents.tools.document_tools import inspect_document
 from app.agents.tools.evaluation_tools import evaluate_document_policy
 from app.agents.tools.policy_tools import get_policy_evidence
 
-
 # Explicit allowlist: no dynamic imports, eval, or arbitrary calls.
 TOOL_ARGUMENTS = {
     "inspect_document": {"document_id"},

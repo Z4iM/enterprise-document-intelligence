@@ -20,7 +20,6 @@ from app.database.models import (
 )
 from app.validation.rule_schemas import PolicyRule
 
-
 DOCUMENT_ID = "synthetic-receipt"
 POLICY_ID = "synthetic-policy"
 

@@ -13,7 +13,6 @@ from app.agents.verified_investigation import (
 )
 from app.database.database import SessionLocal
 
-
 load_dotenv()
 
 logger = logging.getLogger(__name__)

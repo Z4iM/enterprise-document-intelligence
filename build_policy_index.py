@@ -2,10 +2,8 @@ from sqlalchemy import select
 
 from app.database.database import SessionLocal
 from app.database.models import PolicyChunk
-
 from app.rag.embeddings import EmbeddingService
 from app.rag.vector_store import PolicyVectorStore
-
 
 embedding_service = EmbeddingService()
 

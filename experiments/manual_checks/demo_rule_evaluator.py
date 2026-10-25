@@ -1,6 +1,5 @@
-from app.validation.rule_schemas import PolicyRule
 from app.validation.rule_evaluator import evaluate_rule
-
+from app.validation.rule_schemas import PolicyRule
 
 rules = [
     PolicyRule(
