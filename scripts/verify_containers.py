@@ -32,7 +32,7 @@ def run(command, env, *, capture=False, input_text=None):
     )
 
 
-def http_check(command, env, port):
+def http_check(command, env, port, *, semantic=False):
     """Exercise real frontend bridge/auth/upload/worker, with synthetic fixture accounts."""
     password = secrets.token_urlsafe(32)
     # stdin keeps even synthetic passwords out of the command line and output.
@@ -44,6 +44,7 @@ from app.auth.api import passwords
 with SessionLocal() as db:
     assert set(db.scalars(select(User.id))) == {{'edi-smoke-employee', 'edi-smoke-reviewer'}}
     db.get(User, 'edi-smoke-employee').password_hash = passwords.hash({password!r})
+    db.get(User, 'edi-smoke-reviewer').password_hash = passwords.hash({password!r})
     db.commit()
 """
     run(command + ["exec", "-T", "api", "python", "-"], env, input_text=program)
@@ -128,6 +129,88 @@ with SessionLocal() as db:
     # Persisted session and original remain usable after all services restart.
     assert json.loads(request(path)[1])["processing_status"] == "completed"
     assert request(path + "/original")[1] == original
+    # Normal authenticated policy upload remains searchable with rule inference disabled.
+    token = json.loads(request("/api/bridge/auth/csrf")[1])["csrf_token"]
+    request(
+        "/api/bridge/auth/logout",
+        data=b"{}",
+        headers={
+            "Content-Type": "application/json",
+            "x-csrf-token": token,
+            "Origin": base,
+        },
+    )
+    token = json.loads(request("/api/bridge/auth/csrf")[1])["csrf_token"]
+    request(
+        "/api/bridge/auth/login",
+        data=json.dumps(
+            {"email": "edi-smoke-reviewer@synthetic.test", "password": password}
+        ).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "x-csrf-token": token,
+            "Origin": base,
+        },
+    )
+    token = json.loads(request("/api/bridge/auth/csrf")[1])["csrf_token"]
+    policy_text = "تتطلب مصروفات الوجبات التي تتجاوز مائة دولار موافقة المدير."
+    boundary = "edi-policy-" + uuid.uuid4().hex
+    upload = (
+        f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="synthetic-search-policy.txt"\r\nContent-Type: text/plain\r\n\r\n'.encode()
+        + policy_text.encode()
+        + f"\r\n--{boundary}--\r\n".encode()
+    )
+    status, body = request(
+        "/api/bridge/policies/upload",
+        data=upload,
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "x-csrf-token": token,
+            "Origin": base,
+        },
+    )
+    assert status == 202
+    policy = json.loads(body)["policy_id"]
+    for _ in range(90):
+        state = json.loads(request(f"/api/bridge/policies/{policy}/index")[1])
+        if state["state"] == "ready":
+            break
+        assert state["state"] != "failed", "Synthetic indexing failed."
+        time.sleep(1)
+    else:
+        raise RuntimeError("Search index did not become ready.")
+    status, body = request(
+        "/api/bridge/evidence/search",
+        data=json.dumps(
+            {"query": "موافقة المدير للوجبات", "policy_ids": [policy]}
+        ).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "x-csrf-token": token,
+            "Origin": base,
+        },
+    )
+    result = json.loads(body)
+    assert status == 200 and result["results"][0]["quote"] == policy_text
+    assert result["mode"] == ("hybrid" if semantic else "lexical")
+    citation = result["results"][0]["citation_id"]
+    assert (
+        json.loads(request(f"/api/bridge/evidence/citations/{citation}")[1])["quote"]
+        == policy_text
+    )
+    run(command + ["restart", "api"], env)
+    for _ in range(30):
+        try:
+            if request("/api/bridge/ready")[0] == 200:
+                break
+        except (OSError, urllib.error.HTTPError):
+            time.sleep(1)
+    assert (
+        json.loads(request(f"/api/bridge/evidence/citations/{citation}")[1])["quote"]
+        == policy_text
+    )
+    assert request(f"/api/bridge/policies/{policy}/original")[1] == policy_text.encode()
+    print("Policy upload/index/Arabic search/citation checks passed.", flush=True)
     print(
         "HTTP bridge/session/202 upload/worker/Arabic/original/restart checks passed.",
         flush=True,
@@ -138,6 +221,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--docker", default=shutil.which("docker"))
     parser.add_argument("--run-id", default=uuid.uuid4().hex[:12])
+    parser.add_argument(
+        "--model-directory",
+        help="Optional existing verified model directory, mounted read-only; never downloaded by the runner.",
+    )
     parser.add_argument(
         "--phase", choices=["build", "default", "compact", "all"], default="all"
     )
@@ -176,7 +263,12 @@ def main():
     override.write_text(
         "services:\n"
         + "".join(
-            f"  {name}:\n    image: {backend}\n    environment:\n      EDI_ALLOWED_ORIGINS: http://127.0.0.1:{port}\n"
+            f"  {name}:\n    image: {backend}\n    environment:\n      EDI_ALLOWED_ORIGINS: http://127.0.0.1:{port}\n      EDI_RETRIEVAL_MODEL_DIR: {json.dumps('/srv/models/retrieval' if args.model_directory else '')}\n"
+            + (
+                f"    volumes:\n      - type: bind\n        source: {json.dumps(str(Path(args.model_directory).resolve()))}\n        target: /srv/models/retrieval\n        read_only: true\n"
+                if args.model_directory
+                else ""
+            )
             for name in ("api", "worker", "migrate")
         )
         + f'  frontend:\n    image: {frontend}\n    ports: !override\n      - "127.0.0.1:{port}:3000"\n'
@@ -266,7 +358,7 @@ def main():
                 + ["exec", "-T", "api", "python", "-m", "app.jobs.smoke", "--verify"],
                 env,
             )
-            http_check(command, env, port)
+            http_check(command, env, port, semantic=bool(args.model_directory))
             print(
                 f"{name.capitalize()} profile: all container checks passed.", flush=True
             )

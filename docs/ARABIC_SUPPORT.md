@@ -27,6 +27,10 @@ from Gemini. The interface can remain English; document content must read correc
 
 ## Current limits
 
+M4 adds measured bilingual retrieval: 20 Arabic queries, exact Unicode quotations and
+84.4% Arabic hybrid Recall@5. Unanswerable Arabic abstention is only 50% (2/4). This is
+candidate retrieval, not semantic-policy certification. See [results](RETRIEVAL.md).
+
 The existing keyword classifier, regex fallback and policy source verifier primarily
 recognize English wording and currency patterns. Arabic text can be preserved now, but
 Arabic field/rule interpretation is **not yet accepted end to end**. Unsupported source

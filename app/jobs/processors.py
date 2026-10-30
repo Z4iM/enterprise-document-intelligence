@@ -46,6 +46,10 @@ def process(db, job):
         raise ValueError("Original integrity failure.")
     kind = detect_file_type(resource.original_filename)
     text, method = extract_text_isolated(raw, kind)
+    if job.kind == "policy_index":
+        from app.rag.indexing import build_index
+        build_index(db, resource, text)
+        return
     if job.kind == "document":
         document_type, confidence = classify_document(text)
         data, structured_method, fallback = extract_structured_data(

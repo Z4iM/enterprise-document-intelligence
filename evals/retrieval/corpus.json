@@ -1,0 +1,440 @@
+{
+  "version": "edi-synthetic-policy-retrieval-v1",
+  "purpose": "Fixed synthetic retrieval smoke benchmark; no claim of production model accuracy.",
+  "documents": [
+    {
+      "id": "meal-en",
+      "topic": "meal",
+      "language": "en",
+      "text": "Meal expenses above 100 USD require written manager approval. Keep an itemized restaurant receipt for each reimbursed dinner."
+    },
+    {
+      "id": "meal-ar",
+      "topic": "meal",
+      "language": "ar",
+      "text": "تتطلب مصروفات الوجبات التي تتجاوز ١٠٠ دولار أمريكي موافقة خطية من المدير. يجب الاحتفاظ بفاتورة المطعم المفصلة لكل عشاء مطلوب تعويضه."
+    },
+    {
+      "id": "hotel-en",
+      "topic": "hotel",
+      "language": "en",
+      "text": "Hotel accommodation is reimbursed up to 180 USD per night. Submit the hotel invoice showing the guest name and dates of stay."
+    },
+    {
+      "id": "hotel-ar",
+      "topic": "hotel",
+      "language": "ar",
+      "text": "يتم تعويض الإقامة في الفندق بحد أقصى ١٨٠ دولار أمريكي لليلة الواحدة. يجب تقديم فاتورة الفندق موضحاً بها اسم النزيل وتواريخ الإقامة."
+    },
+    {
+      "id": "taxi-en",
+      "topic": "taxi",
+      "language": "en",
+      "text": "Taxi and ride-hailing fares for business trips require a receipt showing the pickup point and destination. Personal taxi rides are not reimbursed."
+    },
+    {
+      "id": "taxi-ar",
+      "topic": "taxi",
+      "language": "ar",
+      "text": "تتطلب أجرة سيارات الأجرة وتطبيقات النقل لرحلات العمل إيصالاً يبين نقطة الانطلاق والوجهة. لا يتم تعويض الرحلات الشخصية."
+    },
+    {
+      "id": "flight-en",
+      "topic": "flight",
+      "language": "en",
+      "text": "Employees must book economy class for flights under six hours. Business class on longer flights requires director authorization before booking."
+    },
+    {
+      "id": "flight-ar",
+      "topic": "flight",
+      "language": "ar",
+      "text": "يجب حجز الدرجة السياحية للرحلات الجوية التي تقل مدتها عن ست ساعات. تتطلب درجة رجال الأعمال للرحلات الأطول موافقة مدير الإدارة قبل الحجز."
+    },
+    {
+      "id": "mileage-en",
+      "topic": "mileage",
+      "language": "en",
+      "text": "Business travel in a personal vehicle is reimbursed at 0.40 USD per kilometre. Record the travel date, route and total distance in the mileage log."
+    },
+    {
+      "id": "mileage-ar",
+      "topic": "mileage",
+      "language": "ar",
+      "text": "يتم تعويض استخدام السيارة الشخصية في مهام العمل بمعدل ٠٫٤٠ دولار لكل كيلومتر. يجب تسجيل تاريخ الرحلة والمسار وإجمالي المسافة في سجل القيادة."
+    },
+    {
+      "id": "purchase-en",
+      "topic": "purchase",
+      "language": "en",
+      "text": "Office equipment purchases above 500 USD require a purchase order approved by procurement. Split purchases intended to avoid this limit are prohibited."
+    },
+    {
+      "id": "purchase-ar",
+      "topic": "purchase",
+      "language": "ar",
+      "text": "تتطلب مشتريات المعدات المكتبية التي تتجاوز ٥٠٠ دولار أمر شراء معتمداً من قسم المشتريات. يمنع تقسيم المشتريات بهدف تجنب هذا الحد."
+    },
+    {
+      "id": "training-en",
+      "topic": "training",
+      "language": "en",
+      "text": "Professional training courses may be reimbursed up to 800 USD annually. Obtain your supervisor's consent and attach proof of course attendance."
+    },
+    {
+      "id": "training-ar",
+      "topic": "training",
+      "language": "ar",
+      "text": "يمكن تعويض الدورات التدريبية المهنية بحد أقصى ٨٠٠ دولار سنوياً. يلزم الحصول على موافقة المشرف وإرفاق إثبات حضور الدورة."
+    },
+    {
+      "id": "internet-en",
+      "topic": "internet",
+      "language": "en",
+      "text": "Remote employees may claim up to 35 USD monthly for home internet service. Attach the internet provider's bill; entertainment subscriptions are excluded."
+    },
+    {
+      "id": "internet-ar",
+      "topic": "internet",
+      "language": "ar",
+      "text": "يجوز للموظفين العاملين عن بعد المطالبة بتعويض خدمة الإنترنت المنزلية حتى ٣٥ دولار شهرياً. يجب إرفاق فاتورة مزود الخدمة وتستثنى اشتراكات الترفيه."
+    },
+    {
+      "id": "deadline-en",
+      "topic": "deadline",
+      "language": "en",
+      "text": "Submit expense claims within thirty calendar days after the business trip ends. Late submissions need a written explanation reviewed by finance."
+    },
+    {
+      "id": "deadline-ar",
+      "topic": "deadline",
+      "language": "ar",
+      "text": "يجب تقديم مطالبات المصروفات خلال ثلاثين يوماً تقويمياً من انتهاء رحلة العمل. تتطلب المطالبات المتأخرة تفسيراً مكتوباً يراجعه القسم المالي."
+    },
+    {
+      "id": "currency-en",
+      "topic": "currency",
+      "language": "en",
+      "text": "Convert foreign-currency expenses using the central bank exchange rate on the transaction date. Attach the exchange-rate evidence to the claim."
+    },
+    {
+      "id": "currency-ar",
+      "topic": "currency",
+      "language": "ar",
+      "text": "تحول المصروفات بالعملات الأجنبية وفق سعر الصرف المعلن من البنك المركزي في تاريخ المعاملة. يجب إرفاق دليل سعر الصرف بالمطالبة."
+    },
+    {
+      "id": "lost-en",
+      "topic": "lost",
+      "language": "en",
+      "text": "For a lost receipt, submit a signed missing-receipt declaration explaining the expense. Finance may request additional proof before review."
+    },
+    {
+      "id": "lost-ar",
+      "topic": "lost",
+      "language": "ar",
+      "text": "عند فقدان إيصال، يجب تقديم إقرار موقع يوضح المصروف وسبب غياب الإيصال. يحق للقسم المالي طلب أدلة إضافية قبل المراجعة."
+    },
+    {
+      "id": "alcohol-en",
+      "topic": "alcohol",
+      "language": "en",
+      "text": "Alcoholic beverages are excluded from meal reimbursement. Separate alcohol charges from the restaurant bill before submitting a claim."
+    },
+    {
+      "id": "alcohol-ar",
+      "topic": "alcohol",
+      "language": "ar",
+      "text": "تستثنى المشروبات الكحولية من تعويض الوجبات. يجب فصل تكلفة هذه المشروبات عن فاتورة المطعم قبل تقديم المطالبة."
+    },
+    {
+      "id": "parking-en",
+      "topic": "parking",
+      "language": "en",
+      "text": "Parking fees during authorized business visits are reimbursable with a dated ticket. Traffic fines and parking penalties are never reimbursed."
+    },
+    {
+      "id": "parking-ar",
+      "topic": "parking",
+      "language": "ar",
+      "text": "يمكن تعويض رسوم مواقف السيارات خلال زيارات العمل المعتمدة عند تقديم تذكرة مؤرخة. لا يتم تعويض المخالفات المرورية أو غرامات الوقوف."
+    },
+    {
+      "id": "gift-en",
+      "topic": "gift",
+      "language": "en",
+      "text": "Client gifts must cost no more than 50 USD and require ethics approval. Cash gifts and gift cards are prohibited regardless of their value."
+    },
+    {
+      "id": "gift-ar",
+      "topic": "gift",
+      "language": "ar",
+      "text": "يجب ألا تتجاوز قيمة هدايا العملاء ٥٠ دولاراً مع ضرورة موافقة لجنة الأخلاقيات. تمنع الهدايا النقدية وبطاقات الهدايا مهما كانت قيمتها."
+    },
+    {
+      "id": "medical-en",
+      "topic": "medical",
+      "language": "en",
+      "text": "Emergency medical treatment during overseas business travel is handled by travel insurance. Contact the insurer's assistance line before arranging reimbursement."
+    },
+    {
+      "id": "medical-ar",
+      "topic": "medical",
+      "language": "ar",
+      "text": "يغطي تأمين السفر العلاج الطبي الطارئ خلال رحلات العمل الخارجية. يجب الاتصال بخط مساعدة شركة التأمين قبل ترتيب التعويض."
+    },
+    {
+      "id": "mixed-en",
+      "topic": "mixed",
+      "language": "mixed",
+      "text": "سياسة الشهادات المهنية / Certification policy: Exam registration fees need HR approval and a passing certificate. رسوم إعادة الاختبار غير مشمولة بالتعويض."
+    },
+    {
+      "id": "mixed-ar",
+      "topic": "mixed",
+      "language": "ar",
+      "text": "تتطلب رسوم التسجيل في اختبارات الشهادات المهنية موافقة الموارد البشرية وإثبات النجاح. لا يتم تعويض رسوم إعادة الاختبار."
+    }
+  ],
+  "queries": [
+    {
+      "id": "meal-en",
+      "language": "en",
+      "query": "Who must authorize an expensive business dinner?",
+      "topic": "meal"
+    },
+    {
+      "id": "meal-ar",
+      "language": "ar",
+      "query": "مَن يعتمد تكلفة عشاء العمل إذا كانت مرتفعة؟",
+      "topic": "meal"
+    },
+    {
+      "id": "hotel-en",
+      "language": "en",
+      "query": "What is the nightly accommodation spending limit?",
+      "topic": "hotel"
+    },
+    {
+      "id": "hotel-ar",
+      "language": "ar",
+      "query": "ما الحد الأقصى لتعويض السكن في الفندق لكل ليلة؟",
+      "topic": "hotel"
+    },
+    {
+      "id": "taxi-en",
+      "language": "en",
+      "query": "Which evidence is required for an Uber business ride?",
+      "topic": "taxi"
+    },
+    {
+      "id": "taxi-ar",
+      "language": "ar",
+      "query": "ما الإثبات المطلوب لرحلة أوبر في مهمة عمل؟",
+      "topic": "taxi"
+    },
+    {
+      "id": "flight-en",
+      "language": "en",
+      "query": "When may I reserve business class airfare?",
+      "topic": "flight"
+    },
+    {
+      "id": "flight-ar",
+      "language": "ar",
+      "query": "متى يمكن حجز تذكرة طيران على درجة رجال الأعمال؟",
+      "topic": "flight"
+    },
+    {
+      "id": "mileage-en",
+      "language": "en",
+      "query": "How much can I claim for driving my own car on company travel?",
+      "topic": "mileage"
+    },
+    {
+      "id": "mileage-ar",
+      "language": "ar",
+      "query": "كيف أحسب التعويض عن قيادة سيارتي الخاصة للعمل؟",
+      "topic": "mileage"
+    },
+    {
+      "id": "purchase-en",
+      "language": "en",
+      "query": "Do costly office equipment orders need procurement approval?",
+      "topic": "purchase"
+    },
+    {
+      "id": "purchase-ar",
+      "language": "ar",
+      "query": "هل تحتاج طلبات المعدات المكتبية الغالية إلى موافقة المشتريات؟",
+      "topic": "purchase"
+    },
+    {
+      "id": "training-en",
+      "language": "en",
+      "query": "What is the annual allowance for professional courses?",
+      "topic": "training"
+    },
+    {
+      "id": "training-ar",
+      "language": "ar",
+      "query": "ما المبلغ السنوي المتاح للدورات المهنية؟",
+      "topic": "training"
+    },
+    {
+      "id": "internet-en",
+      "language": "en",
+      "query": "Can remote staff recover home broadband charges?",
+      "topic": "internet"
+    },
+    {
+      "id": "internet-ar",
+      "language": "ar",
+      "query": "هل يمكن استرداد تكلفة اتصال الإنترنت المنزلي للعمل عن بعد؟",
+      "topic": "internet"
+    },
+    {
+      "id": "deadline-en",
+      "language": "en",
+      "query": "How long after returning from a trip may I submit expenses?",
+      "topic": "deadline"
+    },
+    {
+      "id": "deadline-ar",
+      "language": "ar",
+      "query": "ما المهلة لتسليم المطالبة بعد العودة من رحلة العمل؟",
+      "topic": "deadline"
+    },
+    {
+      "id": "currency-en",
+      "language": "en",
+      "query": "Which exchange rate applies to a payment made abroad?",
+      "topic": "currency"
+    },
+    {
+      "id": "currency-ar",
+      "language": "ar",
+      "query": "بأي سعر صرف أحول المبالغ المدفوعة بالعملة الأجنبية؟",
+      "topic": "currency"
+    },
+    {
+      "id": "lost-en",
+      "language": "en",
+      "query": "What should I do if I misplaced a receipt?",
+      "topic": "lost"
+    },
+    {
+      "id": "lost-ar",
+      "language": "ar",
+      "query": "ماذا أفعل إذا ضاع مني إيصال المصروف؟",
+      "topic": "lost"
+    },
+    {
+      "id": "alcohol-en",
+      "language": "en",
+      "query": "Can I include wine with a restaurant expense?",
+      "topic": "alcohol"
+    },
+    {
+      "id": "alcohol-ar",
+      "language": "ar",
+      "query": "هل يمكن تعويض ثمن النبيذ مع وجبة المطعم؟",
+      "topic": "alcohol"
+    },
+    {
+      "id": "parking-en",
+      "language": "en",
+      "query": "Are traffic fines covered alongside business parking fees?",
+      "topic": "parking"
+    },
+    {
+      "id": "parking-ar",
+      "language": "ar",
+      "query": "هل تعوض مخالفات المرور مع تكلفة موقف السيارة؟",
+      "topic": "parking"
+    },
+    {
+      "id": "gift-en",
+      "language": "en",
+      "query": "Are cash presents for customers allowed?",
+      "topic": "gift"
+    },
+    {
+      "id": "gift-ar",
+      "language": "ar",
+      "query": "هل يسمح بتقديم نقود كهدية للعميل؟",
+      "topic": "gift"
+    },
+    {
+      "id": "medical-en",
+      "language": "en",
+      "query": "Who handles urgent medical bills during overseas business travel?",
+      "topic": "medical"
+    },
+    {
+      "id": "medical-ar",
+      "language": "ar",
+      "query": "إلى مَن أتوجه لمصاريف علاج عاجل أثناء السفر خارج البلاد؟",
+      "topic": "medical"
+    },
+    {
+      "id": "mixed-en",
+      "language": "en",
+      "query": "What documents are needed to reimburse a certification examination?",
+      "topic": "mixed"
+    },
+    {
+      "id": "mixed-ar",
+      "language": "ar",
+      "query": "ما المطلوب لتعويض رسوم امتحان شهادة مهنية؟",
+      "topic": "mixed"
+    },
+    {
+      "id": "negative-0",
+      "language": "en",
+      "query": "How are quantum computing processors manufactured?",
+      "topic": null
+    },
+    {
+      "id": "negative-1",
+      "language": "en",
+      "query": "What are the rules of chess castling?",
+      "topic": null
+    },
+    {
+      "id": "negative-2",
+      "language": "en",
+      "query": "Does the company reimburse pet grooming?",
+      "topic": null
+    },
+    {
+      "id": "negative-3",
+      "language": "en",
+      "query": "What is the cryptocurrency staking allowance?",
+      "topic": null
+    },
+    {
+      "id": "negative-4",
+      "language": "ar",
+      "query": "كيف تصنع معالجات الحوسبة الكمومية؟",
+      "topic": null
+    },
+    {
+      "id": "negative-5",
+      "language": "ar",
+      "query": "ما شروط التبييت في لعبة الشطرنج؟",
+      "topic": null
+    },
+    {
+      "id": "negative-6",
+      "language": "ar",
+      "query": "هل تعوض الشركة العناية بالحيوانات الأليفة؟",
+      "topic": null
+    },
+    {
+      "id": "negative-7",
+      "language": "ar",
+      "query": "ما بدل الاستثمار في العملات المشفرة؟",
+      "topic": null
+    }
+  ]
+}

@@ -29,7 +29,8 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
       headers.set("x-csrf-token", security["x-csrf-token"]);
     }
     response = await fetch(`${ROOT}${path}`, { cache: "no-store", ...init, headers });
-  } catch {
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError("Cannot reach the frontend API proxy. Is Next.js running?", 0, null);
   }
   const body: unknown = await response.json().catch(() => null);
@@ -40,8 +41,11 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export async function csrfHeaders(): Promise<Record<string, string>> {
   const response = await fetch(`${ROOT}/auth/csrf`, { cache: "no-store" });
-  if (!response.ok) throw new Error("Cannot establish a secure session.");
-  const data = await response.json() as { csrf_token: string };
+  const data: unknown = await response.json().catch(() => null);
+  if (!response.ok) throw new ApiError(detailMessage(data, `Cannot establish a secure session (${response.status}).`), response.status, data);
+  if (!data || typeof data !== "object" || !("csrf_token" in data) || typeof data.csrf_token !== "string" || !data.csrf_token) {
+    throw new ApiError("The session service returned an invalid response.", response.status, null);
+  }
   return { "x-csrf-token": data.csrf_token };
 }
 

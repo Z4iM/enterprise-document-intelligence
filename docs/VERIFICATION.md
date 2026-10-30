@@ -1,5 +1,92 @@
 # Milestone 1 verification — 2026-10-30
 
+## Milestone 4 checkpoint (2026-10-30, local working branch)
+
+Local verification used `feat/edi-authorized-retrieval`, based on merged `fb1487c`,
+before publication of the milestone PR. No deployment, live Gemini call or real
+user-data migration. All test sources/accounts are
+synthetic; databases/volumes isolated. No private environment files were read.
+
+- Full Ruff passed. Full backend **315 passed, 9 opt-in PostgreSQL skipped** in 162.76 s.
+- Final dedicated PostgreSQL run **9 passed in 13.91 s**, covering fresh/repeated
+  migrations, metadata compatibility, import, sessions, retrieval JSON/scope/removal and
+  stale indexing completion rollback after removal in a separate transaction.
+- Native TypeScript/build passed in a clean D: directory containing selected public
+  frontend files and dependencies, excluding private `.env*`. Docker frontend likewise
+  passed both checks. **14 Edge/Playwright journeys passed in 46.7 s**, including Arabic
+  upload/search/exact evidence/removal/original access and prior auth/approval guards.
+- Fixed an observed duplicate React key that duplicated the search form across policy
+  changes. A later resource-starved parallel browser run hit a Node allocation failure;
+  rerunning with a bounded 512 MB Node heap passed. No application guards were loosened.
+- Real pinned local ONNX benchmark: 32 synthetic policies / 40 labeled queries (20 per
+  language), keyword/semantic/hybrid comparison. Hybrid Recall@5 **87.5%**, MRR **0.9635**,
+  quotation integrity **100%**; Arabic Recall@5 **84.4%**, unanswerable abstention only
+  **50% (2/4)**. Relevance precision **43.75%**. See RETRIEVAL.md and raw benchmark JSON;
+  quotation integrity does not certify relevance or answer correctness. Percentile
+  aggregation uses nearest rank over recorded individual timings, without new inference.
+- Clean Linux runtime install and `pip check` passed in Docker. The initial 768 MB API
+  cap caused a confirmed Docker OOM during model initialization; the 1 GB cap subsequently
+  passed both normal and compact profiles' real-model upload/index/search/citation/
+  original/session/restart checks. Owned verification containers were stopped afterward;
+  synthetic volumes/images and ignored logs were retained, with no broad Docker cleanup.
+- CI now reproduces the keyword corpus without model/network inference and retains
+  PostgreSQL, browser and both-profile container gates. M4 remote CI was **not observed
+  at this local verification checkpoint**; see the PR checks for subsequent CI results.
+- Final TypeScript and production build repeated successfully after backend gates;
+  native `pip check` and final diff/credential-pattern review passed. This is not an
+  independent security audit or a full dependency-vulnerability scan.
+
+Limits: exact scans cap at 5,000 authorized candidates; no large-corpus/concurrent load
+SLO, independent security certification, Arabic semantic extraction/rule interpretation
+or generative answer-quality claim. HTTP search concurrency is bounded to one per API
+process (429 when busy). Original files/chunk IDs/approvals and investigation dev guards
+remain authoritative. Derived index removal is not deletion of policy data.
+
+Demo: migrate a backed-up native DB or start Compose (automatic migrations); configure
+the optional local model as documented in RETRIEVAL.md. Upload a synthetic policy as
+reviewer, wait for search readiness, ask in Arabic/English, inspect the original, then
+confirm removal and verify the original/rules remain. Reviewers can restore indexing.
+
+### Local login error follow-up
+
+Observed running local services: `/health` 200, `/ready` 503 `Database migrations required.`,
+and direct/bridged `/auth/csrf` 503 `Configure HTTPS application origins.`. Next.js was
+reachable; the request helper caught the CSRF exception and mislabeled it as a proxy
+network failure. Preserve backend status/detail through `ApiError`; reject malformed
+successful CSRF responses before any mutation. HTTPS/session/CSRF guards remain intact.
+Local HTTP requires explicit backend development mode and loopback origins, with the
+same database configuration for migration and server. No real database/environment
+files, passwords or running server configuration were changed by this follow-up.
+
+Observed: Ruff passed; backend **315 passed, 9 opt-in skips (193.02 s)**; TypeScript and
+production build passed in the isolated D: frontend; **17 Playwright checks passed
+(59.2 s)**, including three new CSRF/network/error regressions. Diff review/check passed.
+
+### Admin-only name editing follow-up
+
+Restricted POST `/auth/profile` to administrators through the shared authorization
+guard; `/admin/users/{id}/profile` retains administrator and organization checks.
+Employee/reviewer menus display the assigned name and an admin-managed notice, while
+activity, password changes and logout remain available. Admins retain self-name editing
+and organization user-name management. Valid direct requests and injected role fields
+cannot let non-admins change their persisted name. No schema/dependency change.
+
+Observed: profile/policy subset **25 passed**; full backend **315 passed, 9 opt-in skips
+(160.36 s)**; Ruff, TypeScript, production build and diff check passed. **19 Playwright
+checks passed (1.2 min)**, including employee/reviewer name-control absence and the
+existing admin self-rename/password journey. Verification used isolated synthetic data;
+no real accounts were edited. Runtime permission changes require a backend restart.
+
+### Overview contrast and employee document-scope check
+
+Replaced the unsupported overview gradient class with explicit CSS plus a solid purple
+fallback, white heading and light lavender supporting text. TypeScript/production build
+passed; inspected synthetic desktop/mobile banner screenshots and computed colors.
+Ruff/diff checks passed. Four existing employee-isolation cases passed (6.32 s), verifying
+own-only document lists and denied peer/foreign details, originals, audit and reviews.
+Backend code is unchanged from the preceding 315-test run. Organization policies remain
+shared read-only; employee document ownership is separate from policy visibility.
+
 Branch: `feat/edi-trust-baseline`, based on `009cb2e`. Local working changes only;
 no commit, push, deployment or real model invocation was performed.
 

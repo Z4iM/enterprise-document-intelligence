@@ -61,6 +61,58 @@ def test_real_postgres_migrations_repeat_and_match_models(postgres):
         )
 
 
+def test_real_postgres_scoped_index_vectors_citations_and_removal(postgres):
+    from app.database.models import PolicyDocument, PolicySearchIndex
+    from app.jobs.queue import finish
+    from app.rag.indexing import build_index, remove_index, request_index
+    from app.rag.search import search_evidence
+    from tests.test_authorized_retrieval import SyntheticEncoder, seed_index
+
+    sessions = sessionmaker(bind=postgres, autoflush=False)
+    encoder = SyntheticEncoder()
+    seed_index(sessions, encoder=encoder)
+    seed_index(
+        sessions,
+        identifier="foreign",
+        organization="org-b",
+        text="hidden-fixture-marker",
+        encoder=encoder,
+    )
+    with sessions() as db:
+        actor = Principal("pg-user", "org-a", "employee")
+        result = search_evidence(db, actor, "موافقة المدير", encoder=encoder)
+        assert result["mode"] == "hybrid"
+        assert {hit["policy_id"] for hit in result["results"]} == {"search-policy"}
+        assert result["results"][0]["source_verified"]
+        remove_index(db, "search-policy")
+        db.commit()
+        assert (
+            search_evidence(db, actor, "موافقة المدير", encoder=encoder)["status"]
+            == "no_evidence"
+        )
+        request_index(
+            db, "search-policy", Principal("reviewer", "org-a", "reviewer"), force=True
+        )
+        db.commit()
+    identifier, token = claim(sessions)
+    with sessions() as stale:
+        job = stale.get(ProcessingJob, identifier)
+        policy = stale.get(PolicyDocument, "search-policy")
+        index = stale.get(PolicySearchIndex, policy.id)
+        assert index.enabled
+        with sessions() as other:
+            remove_index(other, policy.id)
+            other.commit()
+        build_index(stale, policy, policy.extracted_text, encoder=encoder)
+        with pytest.raises(RuntimeError, match="lease"):
+            finish(stale, job, token)
+    with sessions() as db:
+        assert not db.get(PolicySearchIndex, "search-policy").enabled
+        assert not search_evidence(db, actor, "موافقة المدير", encoder=encoder)[
+            "results"
+        ]
+
+
 def test_real_postgres_readiness_handles_missing_migration_table(postgres, monkeypatch):
     from fastapi.testclient import TestClient
 

@@ -44,6 +44,9 @@ jobs:
       - name: Run complete backend test suite
         run: python -m pytest -q
 
+      - name: Reproduce synthetic keyword retrieval baseline (no model/network)
+        run: python evals/retrieval/run.py --output .local/retrieval-lexical-ci.json
+
   # ==========================================
   # Frontend: TypeScript and Production Build
   # ==========================================

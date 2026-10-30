@@ -7,9 +7,10 @@ against verified company rules, and explains the result with original-source evi
 It combines FastAPI, a Next.js dashboard, bounded Gemini investigation tools,
 LangGraph human-review checkpoints and durable background processing.
 
-**Status — October 30, 2026:** milestones 1–3 implemented and locally verified.
-**Showcase target — November 6, 2026:** bilingual evidence retrieval, cooperating
-specialists and measured evaluation remain planned. Production readiness has separate gates.
+**Status — October 30, 2026:** milestones 1–4 implemented and locally verified;
+milestone 4 awaits review.
+**Showcase target — November 6, 2026:** cooperating specialists and broader evaluation remain planned.
+Production readiness has separate gates.
 
 [Architecture](docs/ARCHITECTURE.md) · [Verification evidence](docs/VERIFICATION.md) ·
 [Detailed roadmap](docs/ROADMAP.md) · [Security](docs/SECURITY.md) ·
@@ -58,17 +59,22 @@ background processing and persistence.*
 |---|---|---|
 | Intake and extraction | Bounded PDF, DOCX, PPTX, UTF-8 TXT and image intake; OCR; heuristic classification; configured-model extraction and review-gated fallback | Accuracy is not established by functional tests; tables/scans need broader evaluation |
 | Policy checking | Automatic candidates, source verification, confirmed human decisions and cited deterministic evaluation | Current verifier supports a narrow set of English monetary expense statements |
-| Identity and UI | Session login/logout, Employee/Reviewer/Admin roles, scoped accounts, names, personal statistics, password changes and audit history | SSO/MFA/account recovery and independent security review remain production work |
+| Identity and UI | Session login/logout, Employee/Reviewer/Admin roles, scoped accounts, admin-managed names, personal statistics, password changes and audit history | SSO/MFA/account recovery and independent security review remain production work |
 | Investigation | Existing bounded Gemini agent with three scoped read-only tools and account-derived resource selection | Local development only; cooperating specialists are milestone 5 work |
 | Workflows | LangGraph human-review interruption, persistence and resume | Full orchestration/status/trace UI is planned for milestone 5 |
 | Reliability | PostgreSQL/SQLite business storage, Alembic, safe backup-import rehearsal, durable jobs, processing UI and retry | Single-host design; production backup/restore and load/SLO verification remain |
 | Containers | Frontend/API/worker/PostgreSQL, private backend networking, loopback UI, readiness, volumes and normal/compact profiles | Both profiles passed local build/start/restart checks; public deployment is not certified |
 | Arabic | Unicode preservation, native TXT/DOCX checks, bilingual OCR configuration and automatic source-text direction | Arabic semantic extraction, policy verification and measured OCR accuracy remain required work |
-| Retrieval and MLOps | Experimental retrieval code retained; automated security/integration/browser/container checks | Authorized hybrid retrieval, quality benchmarks and operational telemetry are planned |
+| Retrieval | Authorized policy search, optional pinned multilingual ONNX encoder, BM25/cosine/RRF, exact quotations and scoped index lifecycle | Synthetic benchmark: 87.5% Recall@5; Arabic unanswerable abstention only 50% (2/4); candidate sources, never decisions |
+| MLOps | Automated security/integration/browser/container checks and reproducible retrieval benchmark | Broader extraction/agent evaluation and operational telemetry remain planned |
 
 The worker executes queued jobs; the existing Gemini agent chooses permitted investigation
 tools. Specialist coordination is planned for milestone 5. See
 [Arabic acceptance](docs/ARABIC_SUPPORT.md) for the remaining bilingual requirements.
+
+See [retrieval setup, metrics and limitations](docs/RETRIEVAL.md) to enable the optional
+267 MB local encoder. Default search is explicitly keyword-only; no request-time model
+downloads. Older policies need indexing; new uploads queue it automatically.
 
 ## Architecture
 
@@ -221,6 +227,14 @@ $env:LLM_PROVIDER = 'disabled'
 
 In another terminal, run `npm run dev` from `frontend` and open
 [127.0.0.1:3000](http://127.0.0.1:3000). The embedded worker starts with FastAPI.
+
+For local HTTP login, the **backend terminal** must keep `EDI_ENV=development` and
+the allowed loopback origins above, even when Next.js uses a production build. A 503
+`Configure HTTPS application origins.` means the backend is requiring HTTPS; it does
+not mean Next.js is offline. `/ready` returning `Database migrations required.` is a
+separate issue: back up the configured database and migrate it using the same database
+environment as the server. Do not change database URLs or bootstrap another account
+as a workaround; an unsigned `/auth/me` returning 401 is expected.
 OCR needs Tesseract with `eng` and `ara` packs; scanned PDFs also need Poppler on PATH.
 TXT/native DOCX processing needs neither binary nor a GPU. Backend API documentation is
 at [127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). `/health` is liveness; `/ready`

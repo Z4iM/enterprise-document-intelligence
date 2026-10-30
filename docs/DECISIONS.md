@@ -181,3 +181,25 @@ Arabic support is required across later milestones, starting here with bounded U
 ingestion, explicit OCR language selection, Unicode persistence and automatic text direction.
 English monetary rule verification and classification still limit Arabic semantics; do
 not present these foundations as measured bilingual quality. See ARABIC_SUPPORT.md.
+
+## ADR 011 — Bounded authorized hybrid retrieval (2026-10-30)
+
+Replace the experimental global English FAISS path for product search with scoped SQL
+passages, BM25 and normalized 384-dimensional multilingual MiniLM cosine, fused with RRF.
+Keep the legacy experiment separate and existing approved-rule tools unchanged. JSON
+vectors plus exact scans work in SQLite/PostgreSQL without another service/extension;
+the explicit 5,000-candidate ceiling is the trade-off. Adopt scoped pgvector ANN only
+when measured scale warrants it. Do not silently rank a truncated global corpus.
+
+Use the quantized ONNX model registered by [FastEmbed](https://qdrant.github.io/fastembed/examples/Supported_Models/),
+with fixed repository revision and verified local assets. Token-aware windows stay below
+its context limit; no PyTorch/GPU or request-time downloads. Public weights occupy 267 MB.
+Derived indexing has its own fenced database job so provider outage does not block search.
+Removal invalidates the claim and preserves authoritative originals/rules.
+
+[Measured results and limits](RETRIEVAL.md) show higher bilingual recall but weaker Arabic
+unanswerable abstention. Thus search presents candidate quotations, never model decisions.
+Exact quote integrity does not imply relevance. Relevance calibration/reranking need
+separate held-out data; broad Arabic semantics remain M5/M6 gates. Container testing
+found a genuine 768 MB API startup OOM; API/worker caps are now 1 GB, with actual runtime
+verification required before acceptance.

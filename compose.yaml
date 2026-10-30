@@ -8,7 +8,7 @@ x-backend: &backend
   pids_limit: 128
   security_opt: ["no-new-privileges:true"]
   cap_drop: ["ALL"]
-  volumes: ["edi_files:/srv/data"]
+  volumes: ["edi_files:/srv/data", "edi_models:/srv/models"]
   secrets: [app_password]
   environment: &backend-env
     EDI_ENV: development
@@ -17,6 +17,7 @@ x-backend: &backend
     EDI_ALLOWED_ORIGINS: http://127.0.0.1:3000
     EDI_PROCESSING_MODE: external
     EDI_OCR_LANGUAGES: eng+ara
+    EDI_RETRIEVAL_MODEL_DIR: ${EDI_RETRIEVAL_MODEL_DIR:-}
     LLM_PROVIDER: disabled
     EDI_ENABLE_DEV_AGENT: "false"
     EDI_ENABLE_DEV_WORKFLOWS: "false"
@@ -62,7 +63,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    mem_limit: 512m
+    mem_limit: 1024m
     cpus: 1
   worker:
     <<: *backend
@@ -72,7 +73,7 @@ services:
     depends_on:
       db: {condition: service_healthy}
       migrate: {condition: service_completed_successfully}
-    mem_limit: 768m
+    mem_limit: 1024m
     cpus: 1
   frontend:
     build: ./frontend
@@ -100,6 +101,7 @@ services:
 volumes:
   edi_files:
   edi_pg:
+  edi_models:
 
 secrets:
   postgres_password: {file: .local/container/postgres-password}

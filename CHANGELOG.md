@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased — Milestone 4 (2026-10-30)
+
+- Restored the overview introduction's purple gradient and increased text contrast;
+  replaced an unsupported gradient class with an explicit CSS gradient and solid fallback.
+
+- Restricted name editing to administrators, including the self-profile API; employee
+  and reviewer profiles retain assigned names, activity and password options.
+
+- Fixed login errors masking a backend CSRF/configuration failure as an unreachable
+  frontend proxy. Preserve HTTP status/detail and reject malformed CSRF responses
+  before submitting mutations; session/HTTPS/CSRF enforcement remains intact.
+
+- Added session/CSRF/organization-scoped bilingual source search, exact citations,
+  independent durable indexing and staff-only reindex/removal with completion fencing.
+- Added pinned optional local ONNX embeddings, BM25/cosine/RRF, bounded candidate scans,
+  incremental vector reuse and explicit keyword fallback; no model downloads on requests.
+- Added policy-library search, maintenance confirmation and unchanged-source quotations.
+- Added fixed 32-source/40-query bilingual benchmark with measured baselines and explicit
+  relevance/Arabic abstention limitations. See docs/RETRIEVAL.md and verification evidence.
+- Added derived-table migration, retrieval security/PostgreSQL/browser/container checks;
+  preserved approved-rule authority, original files and development investigation guards.
+
 ## Unreleased — Milestone 3 (2026-10-30)
 
 - Added PostgreSQL/psycopg support, dialect-correct persistent rate limits and a pinned

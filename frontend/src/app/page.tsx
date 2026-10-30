@@ -38,7 +38,18 @@ export default function Dashboard() {
 
   return <>
     <SectionHeading eyebrow="Your workspace" title="Intelligence overview" description="A live view of documents processed through your FastAPI and Gemini extraction pipeline." action={<Button asChild><Link href="/upload"><CloudUpload size={17}/> Upload document</Link></Button>}/>
-    <div className="relative mb-7 overflow-hidden rounded-[22px] bg-gradient-to-[115deg] from-[#4545bb] via-[#5658d2] to-[#8881f6] px-7 py-7 text-white sm:px-9 sm:py-8"><div className="pointer-events-none absolute -right-10 -top-20 h-72 w-72 rounded-full border-[45px] border-white/[.045]"/><div className="pointer-events-none absolute right-36 top-12 h-52 w-52 rounded-full bg-white/[.045] blur-2xl"/><div className="relative z-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center"><div><div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.2em] text-[#d3d2ff]"><Sparkles size={14}/> AI document intelligence</div><h2 className="max-w-lg text-xl font-bold leading-snug tracking-tight sm:text-2xl">From raw documents to reliable decisions.</h2><p className="mt-2 max-w-xl text-[13px] leading-relaxed text-[#e3e4ff]">Extract with Gemini, trace evidence, and keep a human in control of important decisions.</p></div><Button asChild className="shrink-0 border-0 bg-white text-[#4c49b9] hover:bg-[#eff0ff]"><Link href="/upload">Process a file <ArrowRight size={16}/></Link></Button></div></div>
+    <section aria-labelledby="overview-intro-title" className="relative mb-7 overflow-hidden rounded-[22px] bg-[#4545bb] px-7 py-7 text-white sm:px-9 sm:py-8" style={{backgroundImage: "linear-gradient(115deg, #37378f 0%, #4545bb 60%, #5752b8 100%)"}}>
+      <div className="pointer-events-none absolute -right-10 -top-20 h-72 w-72 rounded-full border-[45px] border-white/[.045]"/>
+      <div className="pointer-events-none absolute right-36 top-12 h-52 w-52 rounded-full bg-white/[.045] blur-2xl"/>
+      <div className="relative z-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
+        <div>
+          <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.2em] text-[#e3e4ff]"><Sparkles size={14}/> AI document intelligence</div>
+          <h2 id="overview-intro-title" className="max-w-lg text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">From raw documents to reliable decisions.</h2>
+          <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-[#e3e4ff]">Extract with Gemini, trace evidence, and keep a human in control of important decisions.</p>
+        </div>
+        <Button asChild className="shrink-0 border-0 bg-white text-[#4c49b9] hover:bg-[#eff0ff]"><Link href="/upload">Process a file <ArrowRight size={16}/></Link></Button>
+      </div>
+    </section>
     {docs.isLoading ? <LoadingState/> : docs.isError ? <ErrorState error={docs.error} retry={() => docs.refetch()} /> : <>
       <div className="mb-7 grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">{cards.map((card) => <Card key={card.label} className="flex items-start justify-between gap-3 p-5"><div><div className="text-[12px] font-medium text-muted">{card.label}</div><div className="mt-2 text-[31px] font-bold tracking-tight text-ink">{card.value}</div><div className="mt-2 text-[11px] text-[#9ba4b7]">{card.helper}</div></div><div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] ${card.color}`}><card.icon size={21}/></div></Card>)}</div>
       <div className="mb-7 grid gap-6 xl:grid-cols-[1.6fr_1fr]">

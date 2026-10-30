@@ -54,6 +54,7 @@ from app.extraction.router import extract_structured_data
 from app.ingestion.safety import extract_text_isolated as extract_text
 from app.ingestion.safety import read_upload
 from app.jobs.api import router as jobs_router
+from app.rag.api import router as retrieval_router
 from app.rag.chunking import chunk_text
 from app.review.eligibility import validate_review_data
 from app.review.schemas import ReviewRequest
@@ -94,6 +95,7 @@ app.include_router(agent_router)
 app.include_router(workflow_router)
 app.include_router(auth_router)
 app.include_router(jobs_router)
+app.include_router(retrieval_router)
 app.state.resource_session_factory = lambda: SessionLocal()
 app.add_middleware(SecurityEnvelope)
 
@@ -127,7 +129,7 @@ def health_check():
 def readiness():
     try:
         with SessionLocal() as db:
-            if db.scalar(text("SELECT version_num FROM alembic_version")) != "20261030_jobs":
+            if db.scalar(text("SELECT version_num FROM alembic_version")) != "20261030_retrieval":
                 raise HTTPException(503, "Database migrations required.")
     except SQLAlchemyError as error:
         raise HTTPException(503, "Database unavailable or migrations required.") from error
@@ -755,6 +757,8 @@ async def upload_policy(
                 mime_type=content_type, file_hash=policy_hash, rule_extraction_status="queued")
             db.add(policy)
             job = enqueue(db, "policy", policy_id, request.state.actor)
+            from app.rag.indexing import request_index
+            request_index(db, policy_id, request.state.actor)
             db.commit()
             response.status_code = 202
             return {"policy_id": policy_id, "filename": file.filename, "extraction_method": "queued",
@@ -801,6 +805,10 @@ async def upload_policy(
         db.commit()
 
     extraction = await run_in_threadpool(run_policy_extraction, policy_id)
+    from app.rag.indexing import request_index
+    with SessionLocal() as db:
+        request_index(db, policy_id, request.state.actor)
+        db.commit()
     return {
         "policy_id": policy_id,
         "filename": file.filename,

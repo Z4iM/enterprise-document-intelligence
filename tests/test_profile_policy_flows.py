@@ -217,31 +217,42 @@ def test_policy_new_routes_deny_employees_and_other_organizations(secured):
 @pytest.mark.parametrize("who", ["alice", "reviewer", "admin"])
 def test_profile_names_and_role_specific_stats_are_scoped(secured, who):
     client, sessions = secured
-    sign_in(client, who)
-    response = client.post(
-        "/auth/profile", json={"display_name": "  Synthetic Person  "}
-    )
-    assert (
-        response.status_code == 200
-        and response.json()["display_name"] == "Synthetic Person"
-    )
-    assert "password_hash" not in response.text
+    sign_in(client, "admin")
     assert (
         client.post(
-            "/auth/profile", json={"display_name": "Fake", "role": "admin"}
+            f"/admin/users/{who}/profile", json={"display_name": "Assigned Person"}
         ).status_code
-        == 422
+        == 200
     )
-    assert client.post("/auth/profile", json={"display_name": "  "}).status_code == 422
-    assert (
-        client.post("/auth/profile", json={"display_name": "A\nB"}).status_code == 422
+    sign_in(client, who)
+    response = client.post(
+        "/auth/profile", json={"display_name": "  Self-changed Person  "}
     )
+    assert response.status_code == (200 if who == "admin" else 403)
+    assert "password_hash" not in response.text
+    for payload in [
+        {"display_name": "Fake", "role": "admin"},
+        {"display_name": "  "},
+        {"display_name": "A\nB"},
+    ]:
+        assert client.post("/auth/profile", json=payload).status_code == (
+            422 if who == "admin" else 403
+        )
+    if who != "admin":
+        assert (
+            client.post(
+                f"/admin/users/{who}/profile", json={"display_name": "Forged name"}
+            ).status_code
+            == 403
+        )
     with sessions() as db:
         db.add(HumanReview(document_id=DOCUMENT_ID, reviewer=who, decision="approved"))
         db.add(HumanReview(document_id="other-doc", reviewer=who, decision="approved"))
         db.commit()
     profile = client.get("/auth/profile").json()
-    assert profile["user"]["display_name"] == "Synthetic Person"
+    assert profile["user"]["display_name"] == (
+        "Self-changed Person" if who == "admin" else "Assigned Person"
+    )
     stats = profile["stats"]
     assert stats["documents_uploaded"] == (1 if who == "alice" else 0)
     assert ("documents_reviewed" in stats) == (who != "alice")
@@ -254,13 +265,14 @@ def test_profile_names_and_role_specific_stats_are_scoped(secured, who):
 
 def test_names_resolve_for_audit_and_reviews_without_exposing_foreign_identity(secured):
     client, sessions = secured
-    sign_in(client, "reviewer")
+    sign_in(client, "admin")
     assert (
         client.post(
-            "/auth/profile", json={"display_name": "Named Reviewer"}
+            "/admin/users/reviewer/profile", json={"display_name": "Named Reviewer"}
         ).status_code
         == 200
     )
+    sign_in(client, "reviewer")
     assert (
         client.post(
             f"/documents/{DOCUMENT_ID}/review",

@@ -26,6 +26,7 @@ def main():
             ENABLE_DEV_POLICY_REVIEW="false",
         )
         os.environ.pop("GEMINI_API_KEY", None)
+        os.environ.pop("EDI_RETRIEVAL_MODEL_DIR", None)
         os.chdir(directory)
         from alembic.config import Config
 
