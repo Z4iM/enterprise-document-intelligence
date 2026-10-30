@@ -30,7 +30,7 @@ class HTTPModelProvider(LLMProvider):
             json={
                 "prompt": prompt
             },
-            timeout=120
+            timeout=30
         )
 
         response.raise_for_status()

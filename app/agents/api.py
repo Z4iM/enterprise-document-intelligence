@@ -1,16 +1,16 @@
-
 import logging
 import os
 import secrets
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from google import genai
 from pydantic import BaseModel, Field
 
 from app.agents.verified_investigation import (
     run_verified_investigation,
 )
+from app.auth.security import authorize_request, authorized_scope
 from app.database.database import SessionLocal
 
 load_dotenv()
@@ -19,14 +19,24 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/agent",
+    dependencies=[Depends(authorize_request)],
     tags=["Investigation Agent"],
 )
 
 
 class InvestigationRequest(BaseModel):
+    # Selections narrow session-derived permissions; they never grant access.
+    model_config = {"extra": "forbid"}
+
     question: str = Field(
         min_length=1,
         max_length=1500,
+    )
+    document_id: str | None = Field(
+        default=None, min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_-]+$"
+    )
+    policy_id: str | None = Field(
+        default=None, min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_-]+$"
     )
 
 
@@ -42,10 +52,7 @@ def require_dev_agent_access(
             detail="Not found.",
         )
 
-    if (
-        request.client is None
-        or request.client.host not in {"127.0.0.1", "::1"}
-    ):
+    if request.client is None or request.client.host not in {"127.0.0.1", "::1"}:
         raise HTTPException(
             status_code=403,
             detail="Local access only.",
@@ -67,18 +74,6 @@ def require_dev_agent_access(
         )
 
 
-def read_allowed_ids(env_name: str) -> set[str]:
-    """Read trusted resource IDs from server configuration."""
-
-    raw = os.getenv(env_name, "")
-
-    return {
-        value.strip()
-        for value in raw.split(",")
-        if value.strip()
-    }
-
-
 @router.post("/investigate")
 def investigate_document(
     payload: InvestigationRequest,
@@ -88,8 +83,7 @@ def investigate_document(
     """
     Run one locally authorized EDI investigation.
 
-    User input contains only the question.
-    Document and policy permissions are server-controlled.
+    Optional document/policy selections only narrow server-derived account permissions.
     """
 
     require_dev_agent_access(
@@ -105,19 +99,8 @@ def investigate_document(
             detail="Question cannot be empty.",
         )
 
-    allowed_documents = read_allowed_ids(
-        "EDI_DEV_AGENT_DOCUMENT_IDS"
-    )
-
-    allowed_policies = read_allowed_ids(
-        "EDI_DEV_AGENT_POLICY_IDS"
-    )
-
-    if not allowed_documents or not allowed_policies:
-        raise HTTPException(
-            status_code=503,
-            detail="Investigation scope is not configured.",
-        )
+    if bool(payload.document_id) != bool(payload.policy_id):
+        raise HTTPException(422, "Select both a document and a policy.")
 
     api_key = os.getenv("GEMINI_API_KEY")
 
@@ -133,10 +116,26 @@ def investigate_document(
     )
 
     with SessionLocal() as db:
+        allowed_documents, allowed_policies = authorized_scope(db, request.state.actor)
+        if payload.document_id and payload.policy_id:
+            if (
+                payload.document_id not in allowed_documents
+                or payload.policy_id not in allowed_policies
+            ):
+                raise HTTPException(404, "Selected document or policy is unavailable.")
+            allowed_documents = {payload.document_id}
+            allowed_policies = {payload.policy_id}
+        if not allowed_documents or not allowed_policies:
+            raise HTTPException(
+                409,
+                "Upload an accessible document and policy before starting an investigation.",
+            )
+        if len(allowed_documents) > 50 or len(allowed_policies) > 50:
+            raise HTTPException(422, "Choose a document and policy to investigate.")
         client = None
 
         try:
-            client = genai.Client(api_key=api_key)
+            client = genai.Client(api_key=api_key, http_options={"timeout": 30000})
 
             result = run_verified_investigation(
                 question=question,
@@ -148,8 +147,8 @@ def investigate_document(
             )
 
         except Exception as error:
-            logger.exception(
-                "Agent investigation failed."
+            logger.error(
+                "Agent investigation failed (failure_type=%s).", type(error).__name__
             )
 
             raise HTTPException(

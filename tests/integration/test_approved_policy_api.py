@@ -45,7 +45,7 @@ def test_approved_policy_api(tmp_path, monkeypatch):
                     detected_type="pdf",
                     document_type="receipt",
                     processing_status="completed",
-                    review_status="needs_review",
+                    review_status="approved",
                     structured_extraction_method="llm",
                     structured_data={
                         "expense_category": "meal",

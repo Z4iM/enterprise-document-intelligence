@@ -1,0 +1,9 @@
+# Lower-process-count local option: one embedded worker in the API process.
+services:
+  api:
+    environment:
+      EDI_PROCESSING_MODE: embedded
+    mem_limit: 768m
+    cpus: 1.5
+  worker:
+    profiles: [separate-worker]

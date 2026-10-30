@@ -43,6 +43,8 @@ def extract_structured_data(
         return None, "none", True
 
     try:
+        if len(text) > 30000:
+            raise ValueError("Model input budget exceeded.")
         provider = get_llm_provider()
 
         structured_data = extract_with_llm(
@@ -53,11 +55,12 @@ def extract_structured_data(
 
         return structured_data, "llm", False
 
-    except Exception:
-        logger.exception(
-            "LLM extraction failed for document type '%s'; "
+    except Exception as error:  # noqa: BLE001 -- Untrusted provider failures must use review-gated fallback.
+        logger.warning(
+            "LLM extraction unavailable for type '%s' (failure_type=%s); "
             "using rule-based fallback.",
             document_type,
+            type(error).__name__,
         )
 
         fallback_data = extract_with_rules(

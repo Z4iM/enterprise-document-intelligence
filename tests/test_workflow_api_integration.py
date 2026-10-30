@@ -1,4 +1,3 @@
-
 from datetime import UTC, datetime
 from decimal import Decimal
 
@@ -15,6 +14,7 @@ from app.workflows import document_policy_graph as workflow
 from app.workflows.durable_review_graph import (
     build_durable_review_graph,
 )
+from tests.auth_helpers import TEST_ACTOR
 
 
 def test_authorized_workflow_creates_checkpoint(
@@ -42,6 +42,7 @@ def test_authorized_workflow_creates_checkpoint(
                     stored_file_path="unused-test-path",
                     file_size_bytes=100,
                     file_hash="synthetic-api-hash",
+                    document_type="receipt",
                     processing_status="completed",
                     review_status="needs_review",
                     structured_extraction_method="llm",
@@ -222,7 +223,7 @@ def test_authorized_workflow_creates_checkpoint(
         with SqliteSaver.from_conn_string(
             str(checkpoint_path)
         ) as saver:
-            graph = build_durable_review_graph(saver)
+            graph = build_durable_review_graph(saver, principal=TEST_ACTOR)
             snapshot = graph.get_state(config)
 
             assert snapshot.next == (
@@ -328,7 +329,7 @@ def test_authorized_workflow_creates_checkpoint(
         with SqliteSaver.from_conn_string(
             str(checkpoint_path)
         ) as saver:
-            graph = build_durable_review_graph(saver)
+            graph = build_durable_review_graph(saver, principal=TEST_ACTOR)
             snapshot = graph.get_state(config)
 
             assert snapshot.next == ()

@@ -1,8 +1,9 @@
 import hashlib
+import os
 import uuid
 from pathlib import Path
 
-UPLOAD_ROOT = Path("data/uploads")
+UPLOAD_ROOT = Path(os.getenv("EDI_DATA_ROOT", "data")) / "uploads"
 
 
 def generate_document_id() -> str:

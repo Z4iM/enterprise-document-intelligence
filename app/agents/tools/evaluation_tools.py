@@ -23,7 +23,7 @@ def evaluate_document_policy(
     Security:
     - Read-only operation.
     - Both resources must be authorized.
-    - Only reviewed LLM-extracted data is trusted.
+    - Only schema-valid, explicitly reviewed document data is trusted.
     - Only verified, human-approved policy rules are used.
     - The LLM never calculates or overrides policy decisions.
     """

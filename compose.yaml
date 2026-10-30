@@ -1,0 +1,106 @@
+name: edi-local
+
+x-backend: &backend
+  build: .
+  init: true
+  read_only: true
+  tmpfs: ["/tmp:size=134217728,mode=1777"]
+  pids_limit: 128
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  volumes: ["edi_files:/srv/data"]
+  secrets: [app_password]
+  environment: &backend-env
+    EDI_ENV: development
+    EDI_POSTGRES_HOST: db
+    EDI_POSTGRES_PASSWORD_FILE: /run/secrets/app_password
+    EDI_ALLOWED_ORIGINS: http://127.0.0.1:3000
+    EDI_PROCESSING_MODE: external
+    EDI_OCR_LANGUAGES: eng+ara
+    LLM_PROVIDER: disabled
+    EDI_ENABLE_DEV_AGENT: "false"
+    EDI_ENABLE_DEV_WORKFLOWS: "false"
+    ENABLE_DEV_POLICY_REVIEW: "false"
+  depends_on:
+    db: {condition: service_healthy}
+
+services:
+  db:
+    image: postgres:17-bookworm
+    command: ["postgres", "-c", "shared_buffers=32MB", "-c", "max_connections=30"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: --encoding=UTF8
+    secrets: [postgres_password, app_password]
+    volumes:
+      - edi_pg:/var/lib/postgresql/data
+      - ./scripts/postgres-init.sh:/docker-entrypoint-initdb.d/10-edi.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 128
+    shm_size: 64m
+  migrate:
+    <<: *backend
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    mem_limit: 384m
+    cpus: 0.5
+  api:
+    <<: *backend
+    restart: unless-stopped
+    stop_grace_period: 90s
+    depends_on:
+      db: {condition: service_healthy}
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready',timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    mem_limit: 512m
+    cpus: 1
+  worker:
+    <<: *backend
+    command: ["python", "-m", "app.jobs.worker"]
+    restart: unless-stopped
+    stop_grace_period: 90s
+    depends_on:
+      db: {condition: service_healthy}
+      migrate: {condition: service_completed_successfully}
+    mem_limit: 768m
+    cpus: 1
+  frontend:
+    build: ./frontend
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp:size=33554432,mode=1777"]
+    environment:
+      BACKEND_API_URL: http://api:8000
+      EDI_ENABLE_DEV_AGENT_FRONTEND: "false"
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/bridge/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    mem_limit: 384m
+    cpus: 0.5
+    pids_limit: 64
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+
+volumes:
+  edi_files:
+  edi_pg:
+
+secrets:
+  postgres_password: {file: .local/container/postgres-password}
+  app_password: {file: .local/container/app-password}

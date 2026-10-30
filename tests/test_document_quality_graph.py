@@ -1,4 +1,3 @@
-
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -6,13 +5,16 @@ import pytest
 
 from app.database.models import Document
 from app.workflows import document_policy_graph as workflow
+from tests.auth_helpers import TEST_ACTOR
 
 
 def make_document(**overrides):
     """Create an in-memory document for testing."""
     data = {
         "processing_status": "completed",
-        "review_status": "auto_accepted",
+        "document_type": "receipt",
+        "organization_id": "legacy-unassigned",
+        "review_status": "approved",
         "structured_extraction_method": "llm",
         "structured_data": {
             "expense_category": "meal",
@@ -53,6 +55,11 @@ def make_document(**overrides):
             "blocked",
         ),
         (
+            {"review_status": "auto_accepted"},
+            "needs_review",
+            "needs_review",
+        ),
+        (
             {"structured_extraction_method": "regex_fallback"},
             "needs_review",
             "needs_review",
@@ -86,7 +93,7 @@ def test_document_quality_routing(
     )
 
     # Execute the REAL compiled LangGraph.
-    graph = workflow.build_document_quality_graph()
+    graph = workflow.build_document_quality_graph(principal=TEST_ACTOR)
 
     result = graph.invoke(
         {
@@ -121,7 +128,7 @@ def test_missing_document_is_blocked(monkeypatch):
         lambda: context,
     )
 
-    graph = workflow.build_document_quality_graph()
+    graph = workflow.build_document_quality_graph(principal=TEST_ACTOR)
 
     result = graph.invoke(
         {
@@ -148,7 +155,7 @@ def test_missing_policy_is_blocked(monkeypatch):
         lambda: context,
     )
 
-    graph = workflow.build_document_quality_graph()
+    graph = workflow.build_document_quality_graph(principal=TEST_ACTOR)
 
     result = graph.invoke(
         {

@@ -39,6 +39,7 @@ export interface ReviewEvent {
   id: number;
   decision: string;
   reviewer: string | null;
+  reviewer_name: string;
   before_data: StructuredData;
   corrections: StructuredData;
   after_data: StructuredData;
@@ -71,7 +72,7 @@ export interface ValidationResult {
     summary: string;
     rules_evaluated: number;
     applicable_rules: number;
-    required_actions: string[];
+    required_actions: {rule_id: string; action: string; explanation: string}[];
     rule_results: ValidationRuleResult[];
     evidence: Evidence[];
   };
@@ -91,6 +92,7 @@ export interface PolicyUploadResponse {
   extraction_method: string;
   text_length: number;
   chunks_created: number;
+  rule_extraction: {status: string; message: string};
 }
 
 export interface StoredRule {
@@ -109,11 +111,14 @@ export interface StoredRule {
   verification_status: string;
   approval_status: string;
   approved_by: string | null;
+  approved_by_name: string | null;
 }
 
 export interface PolicyRulesResponse {
   policy_id: string;
   total_rules: number;
+  extraction_status: string;
+  extraction_message: string | null;
   rules: StoredRule[];
 }
 

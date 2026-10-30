@@ -41,7 +41,7 @@ def test_document_policy_validation_is_persisted(tmp_path):
                     detected_type="pdf",
                     document_type="receipt",
                     processing_status="completed",
-                    review_status="needs_review",
+                    review_status="approved",
                     structured_extraction_method="llm",
                     structured_data={
                         "expense_category": "meal",

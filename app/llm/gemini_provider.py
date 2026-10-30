@@ -28,7 +28,7 @@ class GeminiProvider(LLMProvider):
             )
         )
 
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(api_key=api_key, http_options={"timeout": 30000})
 
     def generate(self, prompt: str) -> str:
         """Generate text using the Gemini API."""

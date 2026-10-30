@@ -1,3 +1,4 @@
+import { csrfHeaders } from "@/lib/api";
 
 export interface InvestigationToolStep {
   tool: string;
@@ -36,15 +37,18 @@ export type InvestigationResult =
     };
 
 export async function investigateDocument(
-  question: string
+  question: string,
+  selection?: {document_id: string; policy_id: string}
 ): Promise<InvestigationResult> {
   const response = await fetch("/api/agent/investigate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...await csrfHeaders(),
     },
     body: JSON.stringify({
       question: question.trim(),
+      ...selection,
     }),
     cache: "no-store",
   });
@@ -65,6 +69,9 @@ export async function investigateDocument(
       message = data.detail;
     }
 
+    if (response.status === 404) {
+      message = "AI investigation is disabled for this workspace. It requires local development mode with both frontend and backend investigation services enabled.";
+    }
     throw new Error(message);
   }
 

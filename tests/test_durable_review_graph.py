@@ -15,6 +15,7 @@ from app.workflows import document_policy_graph as policy_workflow
 from app.workflows.durable_review_graph import (
     build_durable_review_graph,
 )
+from tests.auth_helpers import TEST_ACTOR
 
 
 def test_review_interrupt_survives_restart(
@@ -42,6 +43,7 @@ def test_review_interrupt_survives_restart(
                 stored_file_path="unused-test-path",
                 file_size_bytes=100,
                 file_hash="synthetic-test-hash",
+                document_type="receipt",
                 processing_status="completed",
                 review_status="needs_review",
                 structured_extraction_method="llm",
@@ -121,7 +123,7 @@ def test_review_interrupt_survives_restart(
     with SqliteSaver.from_conn_string(
         checkpoint_path
     ) as saver:
-        graph = build_durable_review_graph(saver)
+        graph = build_durable_review_graph(saver, principal=TEST_ACTOR)
 
         result = graph.invoke(
             {
@@ -146,7 +148,7 @@ def test_review_interrupt_survives_restart(
     with SqliteSaver.from_conn_string(
         checkpoint_path
     ) as saver:
-        graph = build_durable_review_graph(saver)
+        graph = build_durable_review_graph(saver, principal=TEST_ACTOR)
 
         restored = graph.get_state(config)
 

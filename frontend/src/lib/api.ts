@@ -23,16 +23,33 @@ function detailMessage(body: unknown, fallback: string): string {
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`${ROOT}${path}`, { cache: "no-store", ...init });
+    const headers = new Headers(init?.headers);
+    if (init?.method && !["GET", "HEAD"].includes(init.method)) {
+      const security = await csrfHeaders();
+      headers.set("x-csrf-token", security["x-csrf-token"]);
+    }
+    response = await fetch(`${ROOT}${path}`, { cache: "no-store", ...init, headers });
   } catch {
     throw new ApiError("Cannot reach the frontend API proxy. Is Next.js running?", 0, null);
   }
   const body: unknown = await response.json().catch(() => null);
+  if (response.status === 401 && path !== "/auth/login") window.dispatchEvent(new Event("edi-session-expired"));
   if (!response.ok) throw new ApiError(detailMessage(body, `Request failed (${response.status})`), response.status, body);
   return body as T;
 }
 
+export async function csrfHeaders(): Promise<Record<string, string>> {
+  const response = await fetch(`${ROOT}/auth/csrf`, { cache: "no-store" });
+  if (!response.ok) throw new Error("Cannot establish a secure session.");
+  const data = await response.json() as { csrf_token: string };
+  return { "x-csrf-token": data.csrf_token };
+}
+
 export const api = {
+  policies: () => request<{policy_id: string; filename: string; added_at: string}[]>("/policies"),
+  extractPolicy: (id: string) => request(`/policies/${encodeURIComponent(id)}/rules/extract-all`, { method: "POST" }),
+  approveAllRules: (id: string, rule_ids: string[]) => request(`/policies/${encodeURIComponent(id)}/rules/approve-all`, {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({rule_ids})}),
+  decideRule: (id: string, rule: string, decision: "approve" | "reject") => request(`/policies/${encodeURIComponent(id)}/rules/${encodeURIComponent(rule)}/decision`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({decision}) }),
   health: () => request<{ status: string }>("/health"),
   documents: () => request<DocumentSummary[]>("/documents"),
   document: (id: string) => request<DocumentDetail>(`/documents/${encodeURIComponent(id)}`),

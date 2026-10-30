@@ -1,9 +1,11 @@
 
+from functools import partial
 from typing import Literal
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import interrupt
 
+from app.auth.security import Principal
 from app.workflows.document_policy_graph import (
     WorkflowState,
     evaluate_approved_policy,
@@ -56,7 +58,7 @@ def route_after_quality(
     return "stop"
 
 
-def build_durable_review_graph(checkpointer):
+def build_durable_review_graph(checkpointer, *, principal: Principal | None = None):
     """
     Build a checkpointed workflow with human review.
 
@@ -65,7 +67,7 @@ def build_durable_review_graph(checkpointer):
 
     graph = StateGraph(WorkflowState)
 
-    graph.add_node("load_document", load_document)
+    graph.add_node("load_document", partial(load_document, principal=principal))
     graph.add_node("quality_gate", quality_gate)
     graph.add_node(
         "wait_for_human_review",
@@ -73,7 +75,7 @@ def build_durable_review_graph(checkpointer):
     )
     graph.add_node(
         "evaluate_approved_policy",
-        evaluate_approved_policy,
+        partial(evaluate_approved_policy, principal=principal),
     )
     graph.add_node("stop", mark_stopped)
 
