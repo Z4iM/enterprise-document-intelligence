@@ -6,6 +6,7 @@ from app.database.models import (
     PolicyDocument,
     PolicyValidation,
 )
+from app.review.eligibility import document_eligibility
 from app.validation.approved_rule_repository import (
     load_approved_rules,
 )
@@ -33,19 +34,15 @@ def validate_document_with_approved_rules(
     if document is None:
         raise ValueError("Document not found.")
 
-    if document.processing_status != "completed":
-        raise ValueError("Document processing is incomplete.")
-
-    if (
-        not isinstance(document.structured_data, dict)
-        or not document.structured_data
-    ):
-        raise ValueError("Structured document data is unavailable.")
-
-    if document.structured_extraction_method == "regex_fallback":
-        raise ValueError(
-            "Fallback extraction requires review before validation."
-        )
+    decision, reason = document_eligibility(
+        processing_status=document.processing_status,
+        review_status=document.review_status,
+        extraction_method=document.structured_extraction_method,
+        structured_data=document.structured_data,
+        document_type=document.document_type,
+    )
+    if decision != "ready":
+        raise ValueError(reason)
 
     # 2. Ensure the selected policy exists.
     policy = db.get(PolicyDocument, policy_id)

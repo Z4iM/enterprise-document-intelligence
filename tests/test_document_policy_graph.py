@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 from types import SimpleNamespace
 from unittest.mock import MagicMock
@@ -9,6 +8,7 @@ from app.database.models import Document, PolicyDocument
 from app.validation.approved_rule_repository import PolicyRuleIntegrityError
 from app.validation.rule_schemas import PolicyRule
 from app.workflows import document_policy_graph as workflow
+from tests.auth_helpers import TEST_ACTOR
 
 
 @pytest.fixture
@@ -29,6 +29,8 @@ def fake_db(monkeypatch):
 
 def make_document(review_status="approved"):
     return SimpleNamespace(
+        document_type="receipt",
+        organization_id="legacy-unassigned",
         processing_status="completed",
         review_status=review_status,
         structured_extraction_method="llm",
@@ -73,7 +75,7 @@ def configure_documents(session, document):
             return document
 
         if model is PolicyDocument:
-            return SimpleNamespace(id=record_id)
+            return SimpleNamespace(id=record_id, organization_id="legacy-unassigned")
 
         raise AssertionError("Unexpected database model")
 
@@ -81,7 +83,7 @@ def configure_documents(session, document):
 
 
 def run_graph():
-    graph = workflow.build_document_policy_graph()
+    graph = workflow.build_document_policy_graph(principal=TEST_ACTOR)
 
     return graph.invoke(
         {

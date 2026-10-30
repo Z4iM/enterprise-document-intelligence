@@ -1,47 +1,59 @@
-# NEXUS EDI — Frontend (Drop-in Monorepo Edition)
+# EDI frontend
 
-This folder belongs directly inside `enterprise-document-intelligence/` next to its existing `app/` backend. The ZIP includes `frontend/` as its top-level folder. **It does not contain or modify backend files.**
+Existing Next.js App Router / React / TypeScript dashboard. Use Node 22 (CI).
 
-## Installation (Windows PowerShell)
+```powershell
+npm ci
+npm run dev
+```
 
-1. Stop the current Next.js dev server (Ctrl+C).
-2. Back up or rename the existing `frontend/` folder before extracting this ZIP (for example, `frontend_old/`). Do not overwrite the current frontend in place if you have local edits.
-3. Extract this ZIP into the **project root**. Verify `frontend/package.json`, `frontend/postcss.config.js`, `frontend/tailwind.config.ts`, `frontend/src/app/globals.css`, and `frontend/src/lib/api.ts` exist.
-4. Open PowerShell in the root of the repository and run:
+Loopback `127.0.0.1:3000`; the allowlisted bridge forwards to FastAPI at
+`http://127.0.0.1:8000` unless BACKEND_API_URL is supplied server-side. Follow the root
+README to migrate a new local DB/bootstrap its administrator before sign-in. Do not
+overwrite `.env.local` or put secrets in `NEXT_PUBLIC_*` variables.
 
-   ```powershell
-   cd frontend
-   npm install
-   Copy-Item .env.example .env.local
-   npm run dev
-   ```
+SessionGate signs in through FastAPI, sends session-bound CSRF on writes and clears
+query data on logout/expiration. Private business data is protected by backend role/
+organization/ownership checks; page hiding is not the security boundary. The bridge
+forwards session cookies/CSRF/origin, not client roles or arbitrary upstream URLs.
 
-   If `.env.local` already exists in the new folder, keep its correct backend URL; do not put any LLM API keys here.
+Routes: `/`, `/documents`, `/documents/[id]`, `/upload`, `/reviews`, `/policies`,
+`/investigate`, `/workflows`, `/users`. Policies come from the scoped backend. Reviewers
+correct fields and approve verified rules; admins create/disable organization accounts.
+Policy uploads automatically extract all supported rules, with a confirmation before
+bulk approval and individual decisions still available. Existing policies have a
+whole-policy retry. Uploads return 202 with a saved original and durable background job;
+document/policy screens poll processing state and offer retry for terminal failures.
+Extracted text and quotations use automatic direction for Arabic/English content.
+Arabic semantic extraction quality remains a later acceptance gate.
+The user icon opens editable names, scoped activity by role,
+password changes and logout; admins can name existing users as well.
+The production investigation gateway intentionally remains 404. Workflow execution UI
+is planned; existing backend APIs retain their local/token guards plus authentication.
+The investigation page disables submission and explains production unavailability.
+To run the existing agent, follow **Local AI investigation** in the root README and
+use `npm run dev` at `127.0.0.1:3000` with both server-side flags, the shared private token,
+backend Gemini configuration. Pick documents/policies by filename; account permissions
+provide the scope automatically. Never bypass `NODE_ENV` guards.
 
-5. In a second terminal from the **project root**:
+```powershell
+npm run lint
+npm run build
+$env:EDI_BROWSER_CHANNEL = 'msedge'
+npm run test:e2e
+```
 
-   ```powershell
-   .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-   ```
+`lint` is TypeScript, not ESLint. Playwright uses one worker, a production Next.js server,
+loopback ports 3197/8197 and an ephemeral migrated backend. Installed Edge is the local
+default; CI uses `EDI_BROWSER_CHANNEL=chromium` after `npx playwright install --with-deps
+chromium`. It refuses to reuse an existing server. No personal credentials or real model
+inference are required; only synthetic fixture accounts are created. Test artifacts are
+ignored and traces are disabled to avoid credential-bearing request captures.
 
-6. Visit http://127.0.0.1:3000/documents. The uploaded FastAPI documents should appear **with the original Tailwind styling**.
-7. Optionally run `npm run lint` and `npm run build` within `frontend/` to verify the production build.
+For local production-build testing, run `npm run build` then `npm start`. Back up and
+migrate the backend's selected database to head before starting the updated backend;
+the queue/profile migrations are explicit, never performed by frontend/backend startup.
+Local HTTP uses backend `EDI_ENV=development`, independent of the Next.js build mode.
 
-## Included configuration and styling
-
-- `frontend/postcss.config.js` — PostCSS Tailwind CSS / Autoprefixer plugin registration.
-- `frontend/tailwind.config.ts` — content glob and product palette.
-- `frontend/src/app/globals.css` — Tailwind directives and global CSS.
-- `frontend/tsconfig.json` — `@/*` points to `./src/*`, using `baseUrl: "."`.
-- `frontend/package.json` — includes `tailwindcss` 3.x, `postcss`, and `autoprefixer`.
-
-The files are **not** generated at runtime: they are present in this ZIP. `node_modules/`, `.next/`, database files and API keys are intentionally omitted.
-
-## Design and safety notes
-
-- Next.js proxies API calls to FastAPI at `BACKEND_API_URL` from `.env.local` (`http://127.0.0.1:8000` by default).
-- Policy rules and human review still require the existing backend. The user interface is an MVP, not a production-secure system.
-- The project currently lacks enterprise authentication; don't expose either service publicly or upload confidential documents.
-- The package was created without any edits, commits, branches, or pushes to your GitHub repository.
-
-If styles do not appear, from within `frontend/` inspect `npm ls tailwindcss --depth=0` and verify the configuration files listed above exist. Stop/restart `npm run dev` after installing dependencies.
+Styling remains Tailwind 4 through `@tailwindcss/postcss`. See root README and
+`docs/SECURITY.md` for current limits and deployment caveats.

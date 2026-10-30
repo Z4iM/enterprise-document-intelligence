@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 
 from sqlalchemy import (
     JSON,
+    Boolean,
     CheckConstraint,
     Column,
     DateTime,
@@ -32,6 +33,9 @@ def utc_now_naive() -> datetime:
 
 class Document(Base):
     __tablename__ = "documents"
+
+    organization_id: Mapped[str] = mapped_column(String, default="legacy-unassigned", nullable=False, index=True)
+    owner_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
 
     id: Mapped[str] = mapped_column(
         String,
@@ -127,6 +131,8 @@ class Document(Base):
 class AuditEvent(Base):
     __tablename__ = "audit_events"
 
+    actor_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
@@ -214,6 +220,12 @@ class HumanReview(Base):
 
 class PolicyDocument(Base):
     __tablename__ = "policy_documents"
+
+    rule_extraction_status: Mapped[str] = mapped_column(String, default="not_started", nullable=False)
+    rule_extraction_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    organization_id: Mapped[str] = mapped_column(String, default="legacy-unassigned", nullable=False, index=True)
+    owner_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
 
     id: Mapped[str] = mapped_column(
         String,
@@ -438,4 +450,74 @@ class PolicyRuleReview(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
         nullable=False,
+    )
+
+
+class User(Base):
+    __tablename__ = "users"
+    display_name: Mapped[str] = mapped_column(String(100), default="", nullable=False)
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    password_hash: Mapped[str] = mapped_column(String, nullable=False)
+    role: Mapped[str] = mapped_column(String, nullable=False)
+    active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    __table_args__ = (CheckConstraint("role IN ('employee','reviewer','admin')", name="ck_user_role"),)
+
+
+class AuthSession(Base):
+    __tablename__ = "auth_sessions"
+    token_hash: Mapped[str] = mapped_column(String, primary_key=True)
+    user_id: Mapped[str | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
+    csrf_hash: Mapped[str] = mapped_column(String, nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    last_seen: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+
+class SecurityEvent(Base):
+    __tablename__ = "security_events"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    actor_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    organization_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    resource_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    action: Mapped[str] = mapped_column(String, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now_naive, nullable=False)
+
+
+class RequestLimit(Base):
+    __tablename__ = "request_limits"
+    key: Mapped[str] = mapped_column(String, primary_key=True)
+    window: Mapped[int] = mapped_column(Integer, nullable=False)
+    count: Mapped[int] = mapped_column(Integer, nullable=False)
+
+
+class WorkflowRun(Base):
+    __tablename__ = "workflow_runs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    owner_id: Mapped[str] = mapped_column(String, nullable=False)
+    document_id: Mapped[str] = mapped_column(String, nullable=False)
+    policy_id: Mapped[str] = mapped_column(String, nullable=False)
+
+
+class ProcessingJob(Base):
+    __tablename__ = "processing_jobs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    kind: Mapped[str] = mapped_column(String, nullable=False)
+    resource_id: Mapped[str] = mapped_column(String, nullable=False)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    actor_id: Mapped[str] = mapped_column(String, nullable=False)
+    state: Mapped[str] = mapped_column(String, nullable=False, default="queued", index=True)
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    max_attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=3)
+    available_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=utc_now_naive)
+    lease_until: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    lease_token: Mapped[str | None] = mapped_column(String, nullable=True)
+    error: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=utc_now_naive)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=utc_now_naive)
+    __table_args__ = (
+        UniqueConstraint("kind", "resource_id", name="uq_job_resource"),
+        CheckConstraint("kind IN ('document','policy')", name="ck_job_kind"),
+        CheckConstraint("state IN ('queued','running','retry_wait','completed','failed')", name="ck_job_state"),
     )

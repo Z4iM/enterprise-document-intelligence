@@ -74,9 +74,9 @@ export async function POST(request: NextRequest) {
     return errorResponse(413, "Request is too large.");
   }
 
-  // 6. Accept ONLY a question.
-  // Never accept permissions, credentials or model names
-  // from the browser.
+  // 6. Accept a question and optional resource selections.
+  // FastAPI rechecks each selection against session permissions.
+  // Never accept grants, credentials or model names from the browser.
   let payload: unknown;
 
   try {
@@ -105,12 +105,12 @@ export async function POST(request: NextRequest) {
   const fields = Object.keys(payload);
 
   if (
-    fields.length !== 1 ||
-    fields[0] !== "question"
+    !fields.includes("question") ||
+    fields.some(field => !["question", "document_id", "policy_id"].includes(field))
   ) {
     return errorResponse(
       422,
-      "Only the question field is permitted."
+      "Only question, document_id and policy_id fields are permitted."
     );
   }
 
@@ -133,6 +133,14 @@ export async function POST(request: NextRequest) {
       "Question must contain 1 to 1500 characters."
     );
   }
+
+  const selection = payload as {document_id?: unknown; policy_id?: unknown};
+  const hasSelection = "document_id" in selection || "policy_id" in selection;
+  if (hasSelection && (
+    typeof selection.document_id !== "string" || typeof selection.policy_id !== "string" ||
+    !/^[A-Za-z0-9_-]{1,128}$/.test(selection.document_id) ||
+    !/^[A-Za-z0-9_-]{1,128}$/.test(selection.policy_id)
+  )) return errorResponse(422, "Select both a document and a policy.");
 
   // 7. Restrict backend requests to local FastAPI.
   const backendValue =
@@ -172,8 +180,14 @@ export async function POST(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           "x-edi-agent-token": token,
+          "x-csrf-token": request.headers.get("x-csrf-token") || "",
+          "Origin": LOCAL_ORIGIN,
+          "Cookie": ["edi_session", "__Host-edi_session"].map(name => {
+            const value = request.cookies.get(name)?.value;
+            return value ? `${name}=${encodeURIComponent(value)}` : "";
+          }).filter(Boolean).join("; "),
         },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, ...(hasSelection ? {document_id: selection.document_id, policy_id: selection.policy_id} : {}) }),
         cache: "no-store",
         signal: AbortSignal.timeout(180_000),
       }

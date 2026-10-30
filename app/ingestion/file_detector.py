@@ -7,7 +7,7 @@ SUPPORTED_EXTENSIONS = {
     ".jpeg": "image",
     ".png": "image",
     ".pptx": "pptx",
-    ".txt": "Text Document"
+    ".txt": "txt"
 }
 
 

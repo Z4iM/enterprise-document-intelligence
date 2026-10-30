@@ -1,19 +1,5 @@
-fastapi
-uvicorn[standard]
-python-multipart
-pydantic
+-r requirements-runtime.txt
 
-pypdf
-python-docx
-Pillow
-python-pptx
-pytesseract
-pdf2image
-requests
-python-dotenv
-sqlalchemy
+# Legacy local RAG dependencies; milestone 4 will select and lock its retrieval stack.
 sentence-transformers
 faiss-cpu
-google-genai
-langgraph
-langgraph-checkpoint-sqlite

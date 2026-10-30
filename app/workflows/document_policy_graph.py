@@ -1,10 +1,13 @@
 
+from functools import partial
 from typing import Literal, TypedDict
 
+from fastapi import HTTPException
 from langgraph.graph import END, START, StateGraph
 
+from app.auth.security import Principal, require_document, require_policy
 from app.database.database import SessionLocal
-from app.database.models import Document, PolicyDocument
+from app.review.eligibility import document_eligibility
 from app.validation.approved_rule_repository import (
     PolicyRuleIntegrityError,
     load_approved_rules,
@@ -16,6 +19,7 @@ class WorkflowState(TypedDict, total=False):
     document_id: str
     policy_id: str
 
+    document_type: str | None
     document_found: bool
     processing_status: str | None
     review_status: str | None
@@ -29,8 +33,11 @@ class WorkflowState(TypedDict, total=False):
     reason: str
 
 
-def load_document(state: WorkflowState) -> dict:
+def load_document(state: WorkflowState, *, principal: Principal | None = None) -> dict:
     """Load an existing document without changing the database."""
+
+    if principal is None:
+        return {"document_found": False}
 
     document_id = state.get("document_id")
 
@@ -38,13 +45,17 @@ def load_document(state: WorkflowState) -> dict:
         return {"document_found": False}
 
     with SessionLocal() as db:
-        document = db.get(Document, document_id)
+        try:
+            document = require_document(db, document_id, principal)
+        except HTTPException:
+            return {"document_found": False}
 
         if document is None:
             return {"document_found": False}
 
         return {
             "document_found": True,
+            "document_type": document.document_type,
             "processing_status": document.processing_status,
             "review_status": document.review_status,
             "extraction_method": document.structured_extraction_method,
@@ -61,43 +72,15 @@ def quality_gate(state: WorkflowState) -> dict:
             "reason": "Document not found.",
         }
 
-    if state.get("processing_status") != "completed":
-        return {
-            "decision": "blocked",
-            "reason": "Document processing is incomplete or failed.",
-        }
-
-    if state.get("review_status") == "rejected":
-        return {
-            "decision": "blocked",
-            "reason": "Document was rejected by a reviewer.",
-        }
-
-    data = state.get("structured_data")
-
-    if not isinstance(data, dict) or not data:
-        return {
-            "decision": "needs_review",
-            "reason": "Structured document data is unavailable.",
-        }
-
-    if state.get("extraction_method") != "llm":
-        return {
-            "decision": "needs_review",
-            "reason": "Document requires extraction verification.",
-        }
-
-    allowed_statuses = {
-        "auto_accepted",
-        "approved",
-        "corrected",
-    }
-
-    if state.get("review_status") not in allowed_statuses:
-        return {
-            "decision": "needs_review",
-            "reason": "Human document review is required.",
-        }
+    decision, reason = document_eligibility(
+        processing_status=state.get("processing_status"),
+        review_status=state.get("review_status"),
+        extraction_method=state.get("extraction_method"),
+        structured_data=state.get("structured_data"),
+        document_type=state.get("document_type"),
+    )
+    if decision != "ready":
+        return {"decision": decision, "reason": reason}
 
     if not state.get("policy_id"):
         return {
@@ -132,12 +115,12 @@ def mark_stopped(state: WorkflowState) -> dict:
     }
 
 
-def build_document_quality_graph():
+def build_document_quality_graph(*, principal: Principal | None = None):
     """Compile the initial LangGraph document workflow."""
 
     graph = StateGraph(WorkflowState)
 
-    graph.add_node("load_document", load_document)
+    graph.add_node("load_document", partial(load_document, principal=principal))
     graph.add_node("quality_gate", quality_gate)
     graph.add_node("ready_for_policy", mark_ready)
     graph.add_node("stop", mark_stopped)
@@ -159,7 +142,7 @@ def build_document_quality_graph():
 
     return graph.compile()
 
-def evaluate_approved_policy(state: WorkflowState) -> dict:
+def evaluate_approved_policy(state: WorkflowState, *, principal: Principal | None = None) -> dict:
     """
     Evaluate verified, approved policy rules.
 
@@ -167,7 +150,7 @@ def evaluate_approved_policy(state: WorkflowState) -> dict:
     the document passes the quality gate.
     """
 
-    if state.get("decision") != "ready":
+    if principal is None or state.get("decision") != "ready":
         return {
             "workflow_status": "blocked",
             "reason": "Document has not passed the quality gate.",
@@ -189,7 +172,11 @@ def evaluate_approved_policy(state: WorkflowState) -> dict:
         }
 
     with SessionLocal() as db:
-        policy = db.get(PolicyDocument, policy_id)
+        try:
+            require_document(db, state.get("document_id"), principal)
+            policy = require_policy(db, policy_id, principal)
+        except HTTPException:
+            return {"workflow_status": "blocked", "reason": "Resource access denied."}
 
         if policy is None:
             return {
@@ -233,7 +220,7 @@ def evaluate_approved_policy(state: WorkflowState) -> dict:
         ),
     }
 
-def build_document_policy_graph(checkpointer=None):
+def build_document_policy_graph(checkpointer=None, *, principal: Principal | None = None):
     """
     Build the read-only, evidence-backed policy workflow.
 
@@ -243,11 +230,11 @@ def build_document_policy_graph(checkpointer=None):
 
     graph = StateGraph(WorkflowState)
 
-    graph.add_node("load_document", load_document)
+    graph.add_node("load_document", partial(load_document, principal=principal))
     graph.add_node("quality_gate", quality_gate)
     graph.add_node(
         "evaluate_approved_policy",
-        evaluate_approved_policy,
+        partial(evaluate_approved_policy, principal=principal),
     )
     graph.add_node("stop", mark_stopped)
 

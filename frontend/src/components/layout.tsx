@@ -1,5 +1,7 @@
 "use client";
 
+import { ProfileMenu } from "@/components/profile-menu";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Activity, ArrowUpRight, BookOpenCheck, BrainCircuit, ChevronRight, FileStack, FileSearch, LayoutDashboard, Menu, ScanText, ShieldCheck, Sparkles, X } from "lucide-react";
@@ -50,12 +52,12 @@ function Topbar() {
   return <>
     <header className="sticky top-0 z-20 flex h-[76px] items-center justify-between border-b border-stroke bg-white/95 px-5 backdrop-blur-md sm:px-8 lg:px-10">
       <div className="flex items-center gap-4"><button aria-label="Open navigation" className="rounded-lg border border-stroke p-2 text-ink lg:hidden" onClick={() => setMobileOpen(true)}><Menu size={20}/></button><div className="hidden text-[13px] font-medium text-[#9ba4b7] sm:block">Workspace <ChevronRight size={14} className="mx-1 inline" /></div><div className="text-sm font-semibold text-ink">{title}</div></div>
-      <div className="flex items-center gap-4"><span className={cn("flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold", online ? "border-[#c8ecdd] bg-[#f0faf5] text-[#268463]" : "border-[#ffdfb2] bg-[#fff8ef] text-[#ac7329]")}><span className={cn("h-1.5 w-1.5 rounded-full", online ? "bg-[#36b781]" : "bg-[#eea84a]")}/>{online ? "API Connected" : status.isLoading ? "Checking API" : "API Offline"}</span><div className="hidden h-8 w-[1px] bg-stroke sm:block"/><div className="flex h-9 w-9 items-center justify-center rounded-[11px] border border-[#e8e3ff] bg-[#f3f0ff] text-xs font-bold text-[#6660c8]" title="Local development profile">DE</div></div>
+      <div className="flex items-center gap-4"><span className={cn("flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold", online ? "border-[#c8ecdd] bg-[#f0faf5] text-[#268463]" : "border-[#ffdfb2] bg-[#fff8ef] text-[#ac7329]")}><span className={cn("h-1.5 w-1.5 rounded-full", online ? "bg-[#36b781]" : "bg-[#eea84a]")}/>{online ? "API Connected" : status.isLoading ? "Checking API" : "API Offline"}</span><div className="hidden h-8 w-[1px] bg-stroke sm:block"/><ProfileMenu/></div>
     </header>
     {mobileOpen && <div className="fixed inset-0 z-50 lg:hidden"><div className="absolute inset-0 bg-[#08101e]/70" onClick={() => setMobileOpen(false)} /><div className="absolute inset-y-0 left-0 w-[272px]"><Sidebar close={() => setMobileOpen(false)} /></div><button className="absolute right-5 top-5 rounded-xl bg-white p-2 text-ink" aria-label="Close navigation" onClick={() => setMobileOpen(false)}><X size={20}/></button></div>}
   </>;
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-screen bg-canvas text-ink"><aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] lg:block"><Sidebar /></aside><div className="lg:pl-[252px]"><Topbar/><main className="mx-auto max-w-[1440px] px-5 pb-14 pt-8 sm:px-8 lg:px-10 lg:pt-10">{children}</main><footer className="mx-auto max-w-[1440px] px-5 pb-8 text-[11px] text-[#9aa2b3] sm:px-8 lg:px-10">NEXUS EDI · Local development frontend · AI outputs require human verification</footer></div></div>;
+  return <div className="min-h-screen bg-canvas text-ink"><aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] lg:block"><Sidebar /></aside><div className="lg:pl-[252px]"><Topbar/><main className="mx-auto max-w-[1440px] px-5 pb-14 pt-8 sm:px-8 lg:px-10 lg:pt-10">{children}</main><footer className="mx-auto max-w-[1440px] px-5 pb-8 text-[11px] text-[#9aa2b3] sm:px-8 lg:px-10">NEXUS EDI · Reviewed fields and source-backed policy decisions</footer></div></div>;
 }

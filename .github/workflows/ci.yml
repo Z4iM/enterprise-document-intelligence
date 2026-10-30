@@ -48,7 +48,7 @@ jobs:
   # Frontend: TypeScript and Production Build
   # ==========================================
   frontend:
-    name: Next.js TypeScript and Production Build
+    name: Next.js TypeScript, Production Build and Browser Security
     runs-on: ubuntu-latest
 
     defaults:
@@ -74,3 +74,59 @@ jobs:
 
       - name: Build Next.js frontend
         run: npm run build
+
+      - name: Set up Python for synthetic browser backend
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install browser backend dependencies
+        run: python -m pip install -r ../requirements-ci.txt
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Exercise authenticated browser lifecycle
+        env:
+          EDI_BROWSER_CHANNEL: chromium
+          EDI_TEST_PYTHON: python
+        run: npm run test:e2e
+
+  postgres:
+    name: Real PostgreSQL migrations, import and recovery
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-bookworm
+        env:
+          POSTGRES_USER: edi_ci
+          POSTGRES_PASSWORD: synthetic-ci-only-password
+          POSTGRES_DB: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U edi_ci -d postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-ci.txt
+      - name: Test actual PostgreSQL dialect and preserved data
+        env:
+          EDI_POSTGRES_TEST_URL: postgresql+psycopg://edi_ci:synthetic-ci-only-password@127.0.0.1:5432/postgres
+        run: python -m pytest -q tests/test_postgres_integration.py
+
+  containers:
+    name: Compose build and durable synthetic smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate both Compose configurations using isolated dummy secrets
+        run: python scripts/verify_compose.py
+      - name: Build serially and verify both isolated profiles, HTTP intake and full restarts
+        run: python scripts/verify_containers.py

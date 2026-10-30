@@ -24,7 +24,7 @@ export default function Dashboard() {
   const docs = useQuery({ queryKey: ["documents"], queryFn: api.documents });
   const reviews = useQuery({ queryKey: ["pending-reviews"], queryFn: api.pendingReviews });
   const documents = docs.data || [];
-  const pending = documents.filter((d) => d.review_status === "needs_review").length;
+  const pending = documents.filter((d) => ["needs_review", "auto_accepted"].includes(d.review_status)).length;
   const completed = documents.filter((d) => d.processing_status === "completed").length;
   const approved = documents.filter((d) => ["approved", "corrected"].includes(d.review_status)).length;
   const days = activityDays(documents);

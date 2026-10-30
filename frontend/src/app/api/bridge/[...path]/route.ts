@@ -8,14 +8,24 @@ function isAllowed(method: string, path: string) {
   const id = "[a-zA-Z0-9_-]+";
   const patterns: Record<string, RegExp[]> = {
     GET: [
-      /^health$/,
+      /^(health|ready)$/,
+      /^auth\/(csrf|me|profile)$/,
+      /^admin\/users$/,
+      /^policies$/,
+      new RegExp(`^policies/${id}/(original|processing)$`),
       /^documents$/,
       new RegExp(`^documents/${id}$`),
-      new RegExp(`^documents/${id}/(audit|original|reviews)$`),
+      new RegExp(`^documents/${id}/(audit|original|reviews|processing)$`),
       /^reviews\/pending$/,
-      new RegExp(`^policies/${id}/rules$`), // Optional: may not exist on GitHub main.
+      new RegExp(`^policies/${id}/rules$`),
     ],
     POST: [
+      /^auth\/(login|logout|profile|change-password)$/,
+      /^admin\/users$/,
+      new RegExp(`^admin/users/${id}/(status|profile)$`),
+      new RegExp(`^policies/${id}/rules/(extract-candidates|extract-all|approve-all)$`),
+      new RegExp(`^policies/${id}/rules/${id}/decision$`),
+      new RegExp(`^(documents|policies)/${id}/processing/retry$`),
       /^documents\/upload$/,
       /^policies\/upload$/,
       new RegExp(`^documents/${id}/review$`),
@@ -47,11 +57,39 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
     const headers = new Headers();
     const contentType = request.headers.get("content-type");
     if (contentType) headers.set("Content-Type", contentType);
-    const body = request.method === "POST" ? await request.arrayBuffer() : undefined;
+    const cookie = ["edi_session", "__Host-edi_session"].map(name => {
+      const value = request.cookies.get(name)?.value;
+      return value ? `${name}=${encodeURIComponent(value)}` : "";
+    }).filter(Boolean).join("; ");
+    if (cookie) headers.set("Cookie", cookie);
+    for (const name of ["x-csrf-token", "origin", "sec-fetch-site"]) {
+      const value = request.headers.get(name);
+      if (value) headers.set(name, value);
+    }
+    let body: Uint8Array<ArrayBuffer> | undefined;
+    if (request.method === "POST" && request.body) {
+      const reader = request.body.getReader();
+      const chunks: Uint8Array[] = [];
+      let size = 0;
+      while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+        size += value.byteLength;
+        if (size > maxUpload) {
+          await reader.cancel();
+          return NextResponse.json({detail: "Request exceeds the 20 MB limit."}, {status: 413});
+        }
+        chunks.push(value);
+      }
+      body = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) { body.set(chunk, offset); offset += chunk.byteLength; }
+    }
     if (body && body.byteLength > maxUpload) return NextResponse.json({ detail: "Request exceeds the 20 MB limit." }, { status: 413 });
     const target = new URL(`${baseUrl.pathname.replace(/\/$/, "")}/${path}`, baseUrl.origin);
     const upstream = await fetch(target, {
       method: request.method,
+      redirect: "manual",
       body: body?.byteLength ? body : undefined,
       headers,
       cache: "no-store",
@@ -62,6 +100,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       const value = upstream.headers.get(name);
       if (value) returnHeaders.set(name, value);
     }
+    for (const cookie of upstream.headers.getSetCookie()) returnHeaders.append("Set-Cookie", cookie);
     return new Response(upstream.body, { status: upstream.status, headers: returnHeaders });
   } catch {
     return NextResponse.json({ detail: "FastAPI is unavailable or did not respond in time. Start the backend on port 8000." }, { status: 502 });

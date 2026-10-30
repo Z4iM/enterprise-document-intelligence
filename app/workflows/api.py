@@ -5,25 +5,29 @@ import uuid
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
+from app.auth.security import authorize_request, require_document, require_policy
+from app.database.models import WorkflowRun
+from app.workflows import document_policy_graph as workflow
 from app.workflows.durable_review_graph import (
     build_durable_review_graph,
 )
 
 load_dotenv()
 
-router = APIRouter(prefix="/workflows", tags=["Workflows"])
+router = APIRouter(prefix="/workflows", tags=["Workflows"], dependencies=[Depends(authorize_request)])
 
-CHECKPOINT_PATH = Path("data/langgraph_checkpoints.sqlite")
+CHECKPOINT_PATH = Path(os.getenv("EDI_DATA_ROOT", "data")) / "langgraph_checkpoints.sqlite"
 
 
 class StartWorkflowRequest(BaseModel):
-    document_id: str = Field(min_length=1)
-    policy_id: str = Field(min_length=1)
+    model_config = {"extra": "forbid"}
+    document_id: str = Field(min_length=1, max_length=128)
+    policy_id: str = Field(min_length=1, max_length=128)
 
 
 def require_dev_access(request: Request, token: str | None):
@@ -65,7 +69,16 @@ def start_workflow(
 ):
     require_dev_access(request, x_edi_workflow_token)
 
-    workflow_id = str(uuid.uuid4())
+    actor = request.state.actor
+    with workflow.SessionLocal() as db:
+        require_document(db, payload.document_id, actor)
+        require_policy(db, payload.policy_id, actor)
+        workflow_id = str(uuid.uuid4())
+        db.add(WorkflowRun(id=workflow_id, organization_id=actor.organization_id, owner_id=actor.id,
+                           document_id=payload.document_id, policy_id=payload.policy_id))
+        db.commit()
+
+    check_workflow_scope(workflow_id, request.state.actor)
 
     config = {
         "configurable": {
@@ -81,7 +94,7 @@ def start_workflow(
     with SqliteSaver.from_conn_string(
         str(CHECKPOINT_PATH)
     ) as saver:
-        graph = build_durable_review_graph(saver)
+        graph = build_durable_review_graph(saver, principal=request.state.actor)
 
         result = graph.invoke(
             {
@@ -133,6 +146,8 @@ def get_workflow_status(
     # Apply the same local-development access protection.
     require_dev_access(request, x_edi_workflow_token)
 
+    check_workflow_scope(workflow_id, request.state.actor)
+
     config = {
         "configurable": {
             "thread_id": workflow_id,
@@ -152,7 +167,7 @@ def get_workflow_status(
                 detail="Workflow not found.",
             )
 
-        graph = build_durable_review_graph(saver)
+        graph = build_durable_review_graph(saver, principal=request.state.actor)
 
         snapshot = graph.get_state(config)
 
@@ -215,6 +230,8 @@ def resume_workflow(
             detail="Workflow not found.",
         )
 
+    check_workflow_scope(workflow_id, request.state.actor)
+
     config = {
         "configurable": {
             "thread_id": workflow_id,
@@ -232,7 +249,7 @@ def resume_workflow(
                 detail="Workflow not found.",
             )
 
-        graph = build_durable_review_graph(saver)
+        graph = build_durable_review_graph(saver, principal=request.state.actor)
 
         snapshot = graph.get_state(config)
 
@@ -291,3 +308,16 @@ def resume_workflow(
             "pending_nodes": list(snapshot.next),
             "required_actions": required_actions,
         }
+
+
+def check_workflow_scope(workflow_id, actor):
+    if len(workflow_id) > 128:
+        raise HTTPException(404, "Workflow not found.")
+    with workflow.SessionLocal() as db:
+        run = db.get(WorkflowRun, workflow_id)
+        if run is None or run.organization_id != actor.organization_id or (
+            actor.role == "employee" and run.owner_id != actor.id
+        ):
+            raise HTTPException(404, "Workflow not found.")
+        require_document(db, run.document_id, actor)
+        require_policy(db, run.policy_id, actor)

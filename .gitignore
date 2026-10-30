@@ -2,9 +2,15 @@
 __pycache__/
 *.pyc
 
-.env
+.env*
+!.env.example
 
 data/uploads/
+data/
+
+# Local engineering handoff files; preserve without publishing personal prompts.
+/EDI_CODEX_MASTER_PROMPT.md
+/EDI_CODEX_AGENTS_TEMPLATE.md
 
 .vscode/
 
@@ -31,3 +37,9 @@ data/database.db*
 # Python testing caches
 .pytest_cache/
 .ruff_cache/
+# Browser test artifacts
+frontend/test-results/
+frontend/playwright-report/
+.local/
+data/*.db*
+data/*.sqlite*

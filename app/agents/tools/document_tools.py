@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.database.models import Document
+from app.review.eligibility import document_eligibility
 
 
 def inspect_document(
@@ -27,13 +28,14 @@ def inspect_document(
         return {"status": "not_found"}
 
     # 3. Determine whether extraction data is trustworthy.
-    verified = (
-        document.processing_status == "completed"
-        and document.review_status in {"approved", "corrected"}
-        and document.structured_extraction_method == "llm"
-        and isinstance(document.structured_data, dict)
-        and bool(document.structured_data)
+    decision, _ = document_eligibility(
+        processing_status=document.processing_status,
+        review_status=document.review_status,
+        extraction_method=document.structured_extraction_method,
+        structured_data=document.structured_data,
+        document_type=document.document_type,
     )
+    verified = decision == "ready"
 
     # 4. Return only the appropriate information.
     return {

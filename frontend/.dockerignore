@@ -1,0 +1,13 @@
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!src/
+!src/**
+!public/
+!public/**
+!next.config.ts
+!tsconfig.json
+!postcss.config.js
+!tailwind.config.ts
+**/.env*

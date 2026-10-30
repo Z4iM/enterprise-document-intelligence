@@ -1,7 +1,7 @@
-
 from datetime import UTC, datetime
 
 from pydantic import ValidationError
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from app.database.models import (
@@ -23,6 +23,8 @@ def review_policy_rule(
     decision: str,
     reviewer: str,
     notes: str | None = None,
+    *,
+    commit: bool = True,
 ) -> dict:
     """Review a candidate rule using an authorized caller."""
 
@@ -68,19 +70,32 @@ def review_policy_rule(
         verification = verify_rule(rule, chunk.text)
 
         if not verification["verified"]:
-            raise ValueError(
-                "Source verification failed: "
-                + verification["reason"]
-            )
+            raise ValueError("Source verification failed: " + verification["reason"])
 
-        stored.approval_status = "approved"
-        stored.approved_by = reviewer
-        stored.approved_at = datetime.now(UTC)
-
+        values = {
+            "approval_status": "approved",
+            "approved_by": reviewer,
+            "approved_at": datetime.now(UTC),
+        }
     else:
-        stored.approval_status = "rejected"
-        stored.approved_by = None
-        stored.approved_at = None
+        values = {
+            "approval_status": "rejected",
+            "approved_by": None,
+            "approved_at": None,
+        }
+
+    # One reviewer wins the pending transition; competing decisions cannot overwrite it.
+    changed = db.execute(
+        update(StoredPolicyRule)
+        .where(
+            StoredPolicyRule.id == stored.id,
+            StoredPolicyRule.approval_status == "pending",
+        )
+        .values(**values)
+    ).rowcount
+    if changed != 1:
+        db.rollback()
+        raise ValueError("This rule has already been reviewed.")
 
     review = PolicyRuleReview(
         stored_rule_id=stored.id,
@@ -90,7 +105,10 @@ def review_policy_rule(
     )
 
     db.add(review)
-    db.commit()
+    if commit:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(review)
 
     return {
@@ -103,3 +121,18 @@ def review_policy_rule(
         "reviewer": review.reviewer,
         "decision": review.decision,
     }
+
+
+def approve_policy_rules(db, policy_id, rule_ids, reviewer):
+    """Approve exactly the human-confirmed snapshot, in one all-or-nothing transaction."""
+    if not rule_ids or len(rule_ids) > 100 or len(set(rule_ids)) != len(rule_ids):
+        raise ValueError("Select 1–100 distinct rules.")
+    try:
+        results = [review_policy_rule(db, policy_id, identifier, "approve", reviewer,
+                                     "Approved in a confirmed batch.", commit=False)
+                   for identifier in rule_ids]
+        db.commit()
+        return {"approved_count": len(results), "rules": results}
+    except Exception:
+        db.rollback()
+        raise

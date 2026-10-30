@@ -1,4 +1,3 @@
-
 import os
 
 from dotenv import load_dotenv
@@ -11,10 +10,17 @@ def get_llm_provider() -> LLMProvider:
 
     load_dotenv()
 
-    provider_name = os.getenv(
-        "LLM_PROVIDER",
-        "http",
-    ).strip().lower()
+    provider_name = (
+        os.getenv(
+            "LLM_PROVIDER",
+            "http",
+        )
+        .strip()
+        .lower()
+    )
+
+    if provider_name == "disabled":
+        raise ValueError("Model inference is disabled.")
 
     if provider_name == "gemini":
         from app.llm.gemini_provider import GeminiProvider
@@ -26,6 +32,4 @@ def get_llm_provider() -> LLMProvider:
 
         return HTTPModelProvider()
 
-    raise ValueError(
-        f"Unsupported LLM provider: {provider_name}"
-    )
+    raise ValueError(f"Unsupported LLM provider: {provider_name}")

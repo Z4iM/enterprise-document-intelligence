@@ -1,7 +1,8 @@
+import os
 import uuid
 from pathlib import Path
 
-POLICY_ROOT = Path("data/policies")
+POLICY_ROOT = Path(os.getenv("EDI_DATA_ROOT", "data")) / "policies"
 
 
 def generate_policy_id() -> str:
