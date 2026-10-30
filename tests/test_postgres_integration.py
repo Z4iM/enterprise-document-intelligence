@@ -196,6 +196,7 @@ def test_real_postgres_worker_and_workflow_checkpoint_resume(
     from app.database.storage import file_storage, policy_storage
     from app.jobs.smoke import run_smoke
     from app.jobs.worker import serve
+    from app.specialists.smoke import run_smoke as specialist_smoke
     from app.workflows import document_policy_graph
 
     sessions = sessionmaker(bind=postgres, autoflush=False)
@@ -204,12 +205,18 @@ def test_real_postgres_worker_and_workflow_checkpoint_resume(
     monkeypatch.setattr(policy_storage, "POLICY_ROOT", root / "policies")
     monkeypatch.setattr(document_policy_graph, "SessionLocal", sessions)
     monkeypatch.setenv("LLM_PROVIDER", "disabled")
+    monkeypatch.setenv("EDI_ENABLE_DEV_WORKFLOWS", "true")
+    monkeypatch.setenv("EDI_DATA_ROOT", str(root))
     stop = threading.Event()
     worker = threading.Thread(target=serve, args=(stop, sessions), daemon=True)
     worker.start()
     try:
         assert (
             run_smoke(sessions=sessions, root=root)["checkpoint"]
+            == "waiting_for_review"
+        )
+        assert (
+            specialist_smoke(sessions=sessions)["specialist_checkpoint"]
             == "waiting_for_review"
         )
     finally:
@@ -219,6 +226,17 @@ def test_real_postgres_worker_and_workflow_checkpoint_resume(
     assert (
         run_smoke(verify=True, sessions=sessions, root=root)["checkpoint"] == "resumed"
     )
+    stop = threading.Event()
+    worker = threading.Thread(target=serve, args=(stop, sessions), daemon=True)
+    worker.start()
+    try:
+        assert (
+            specialist_smoke(verify=True, sessions=sessions)["specialist_checkpoint"]
+            == "resumed"
+        )
+    finally:
+        stop.set()
+        worker.join(timeout=10)
 
 
 def test_real_postgres_durable_processing_preserves_arabic(

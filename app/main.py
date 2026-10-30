@@ -56,8 +56,10 @@ from app.ingestion.safety import read_upload
 from app.jobs.api import router as jobs_router
 from app.rag.api import router as retrieval_router
 from app.rag.chunking import chunk_text
+from app.review.documentation import router as documentation_router
 from app.review.eligibility import validate_review_data
 from app.review.schemas import ReviewRequest
+from app.specialists.api import router as specialists_router
 from app.workflows.api import router as workflow_router
 
 
@@ -96,6 +98,8 @@ app.include_router(workflow_router)
 app.include_router(auth_router)
 app.include_router(jobs_router)
 app.include_router(retrieval_router)
+app.include_router(documentation_router)
+app.include_router(specialists_router)
 app.state.resource_session_factory = lambda: SessionLocal()
 app.add_middleware(SecurityEnvelope)
 
@@ -129,7 +133,7 @@ def health_check():
 def readiness():
     try:
         with SessionLocal() as db:
-            if db.scalar(text("SELECT version_num FROM alembic_version")) != "20261030_retrieval":
+            if db.scalar(text("SELECT version_num FROM alembic_version")) != "20261030_specialists":
                 raise HTTPException(503, "Database migrations required.")
     except SQLAlchemyError as error:
         raise HTTPException(503, "Database unavailable or migrations required.") from error

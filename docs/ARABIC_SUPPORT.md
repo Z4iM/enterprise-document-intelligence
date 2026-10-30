@@ -31,10 +31,19 @@ M4 adds measured bilingual retrieval: 20 Arabic queries, exact Unicode quotation
 84.4% Arabic hybrid Recall@5. Unanswerable Arabic abstention is only 50% (2/4). This is
 candidate retrieval, not semantic-policy certification. See [results](RETRIEVAL.md).
 
-The existing keyword classifier, regex fallback and policy source verifier primarily
-recognize English wording and currency patterns. Arabic text can be preserved now, but
-Arabic field/rule interpretation is **not yet accepted end to end**. Unsupported source
-language/wording must remain review-gated; never bypass verification or claim compliance.
-Mocked OCR checks prove configuration/timeout behavior, not Arabic recognition quality.
-Native Arabic PDF/table coverage and real scanned-document OCR still need their own
-fixtures and measured results. TXT intake currently requires UTF-8, not arbitrary encodings.
+M5 adds Arabic classification/labeled fallback fields, both Arabic digit sets,
+conservative dates/separators/currencies, and a narrow source-verified monetary-rule
+grammar covering categories, actions and manager/director roles. Negation, exceptions,
+currency/role mismatch and ambiguous wording fail closed. Original quotations stay intact.
+
+The 40-template bilingual corpus (20/language) passes supported native golden cases;
+eight actual scans expose important limits: Arabic scanned field exact accuracy **50%**,
+false abstention **43.75%**, OCR CER/WER **0.4103/0.4033** on four Arabic scans, and 0/1
+scanned Arabic policy verification. This does **not** establish reliable general Arabic
+OCR. The actual browser journey proves Arabic upload → source-verified policy approval →
+field correction → evidence attestation → resume with generation mocked, not live model
+quality. See [method/results](SPECIALISTS.md) and raw benchmark JSON.
+
+Native Arabic PDF/table coverage, realistic held-out scans and real-model quality remain
+unverified. Unsupported inputs stay review-gated; never bypass source verification.
+TXT intake requires UTF-8, not arbitrary encodings. Real-model evaluation needs approval.

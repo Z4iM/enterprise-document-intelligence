@@ -203,3 +203,26 @@ Exact quote integrity does not imply relevance. Relevance calibration/reranking 
 separate held-out data; broad Arabic semantics remain M5/M6 gates. Container testing
 found a genuine 768 MB API startup OOM; API/worker caps are now 1 GB, with actual runtime
 verification required before acceptance.
+
+## ADR 012 — Cooperating specialists with canonical authority (2026-10-30)
+
+Preserve the existing investigator; add two tool-choosing document/policy conversations
+with disjoint permissions and a reviewed-fact handoff. A shared bounded adapter avoids
+duplicating SDK/tool-loop mechanics. Models cannot choose official rules or approve
+anything; final evaluation reloads all approved source-verified rules and reviewed facts.
+Human interrupts require canonical review records, not trusted resume payloads.
+
+Reuse DB jobs and SQLite saver rather than add a broker or checkpoint service. Fork each
+lease into an isolated checkpoint thread; publish its pointer only with fenced business
+completion. This trades orphan storage and at-least-once inference billing for protection
+against stale workers. Backups must preserve business DB and both saver files together.
+
+Explicit receipt/invoice requirements need human evidence checks. The original upload
+may qualify; generic proof wording needs clarification. Preserve append-only attestations
+and invalidate them when source/facts/evidence/reviewer access changes. No automatic proof
+matching or expense approval. Production workflow exposure is deferred.
+
+Conservative Arabic grammar/normalization preserves original quotations. Template goldens
+establish supported behavior, not unrestricted language understanding. Actual Arabic OCR
+remains weak. Scripted specialist comparison demonstrates separation/overhead, not model
+superiority; live quality/cost needs explicit authorization. See SPECIALISTS.md.

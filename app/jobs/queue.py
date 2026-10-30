@@ -10,6 +10,7 @@ from app.database.models import (
     PolicyDocument,
     PolicySearchIndex,
     ProcessingJob,
+    SpecialistWorkflow,
     utc_now_naive,
 )
 
@@ -70,11 +71,17 @@ def claim(sessions):
             ).rowcount
             if changed:
                 resource = db.get(
-                    Document if job.kind == "document" else PolicyDocument,
+                    SpecialistWorkflow
+                    if job.kind == "specialist"
+                    else Document
+                    if job.kind == "document"
+                    else PolicyDocument,
                     job.resource_id,
                 )
                 if resource and resource.organization_id == job.organization_id:
-                    if job.kind == "document":
+                    if job.kind == "specialist":
+                        resource.status = "failed"
+                    elif job.kind == "document":
                         resource.processing_status, resource.review_status = (
                             "failed",
                             "needs_review",
@@ -158,10 +165,17 @@ def fail(sessions, identifier, token):
         ).rowcount
         if changed:
             resource = db.get(
-                Document if job.kind == "document" else PolicyDocument, job.resource_id
+                SpecialistWorkflow
+                if job.kind == "specialist"
+                else Document
+                if job.kind == "document"
+                else PolicyDocument,
+                job.resource_id,
             )
             if resource and resource.organization_id == job.organization_id:
-                if job.kind == "document":
+                if job.kind == "specialist":
+                    resource.status = "failed" if terminal else "retry_wait"
+                elif job.kind == "document":
                     resource.processing_status = "failed" if terminal else "retry_wait"
                     resource.review_status = "needs_review"
                 elif job.kind == "policy_index":

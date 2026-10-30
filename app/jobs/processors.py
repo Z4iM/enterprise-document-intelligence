@@ -30,6 +30,10 @@ def process(db, job):
     if not user or not user.active or user.organization_id != job.organization_id:
         raise ValueError("Job actor no longer authorized.")
     actor = Principal(user.id, user.organization_id, user.role)
+    if job.kind == "specialist":
+        from app.specialists.runtime import execute_workflow
+        execute_workflow(db, job)
+        return
     if job.kind == "document":
         resource = require_document(db, job.resource_id, actor)
         root = file_storage.UPLOAD_ROOT

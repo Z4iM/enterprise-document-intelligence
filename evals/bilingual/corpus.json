@@ -1,0 +1,654 @@
+{
+  "version": "synthetic-bilingual-v1",
+  "scope": "Template-generated development corpus, not held-out enterprise accuracy. Eight scans require explicit local OCR execution.",
+  "documents": [
+    {
+      "id": "en-receipt-0",
+      "language": "en",
+      "kind": "receipt",
+      "input": "scan",
+      "text": "Synthetic Cafe 0\nReceipt\nDate: 2026-10-30\nTotal: $150.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 0",
+        "date": "2026-10-30",
+        "total": "150.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-receipt-1",
+      "language": "en",
+      "kind": "receipt",
+      "input": "scan",
+      "text": "Synthetic Cafe 1\nReceipt\nDate: 2026-10-30\nTotal: $155.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 1",
+        "date": "2026-10-30",
+        "total": "155.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-receipt-2",
+      "language": "en",
+      "kind": "receipt",
+      "input": "native",
+      "text": "Synthetic Cafe 2\nReceipt\nDate: 2026-10-30\nTotal: $160.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 2",
+        "date": "2026-10-30",
+        "total": "160.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-receipt-3",
+      "language": "en",
+      "kind": "receipt",
+      "input": "native",
+      "text": "Synthetic Cafe 3\nReceipt\nDate: 2026-10-30\nTotal: $165.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 3",
+        "date": "2026-10-30",
+        "total": "165.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-receipt-4",
+      "language": "en",
+      "kind": "receipt",
+      "input": "native",
+      "text": "Synthetic Cafe 4\nReceipt\nDate: 2026-10-30\nTotal: $170.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 4",
+        "date": "2026-10-30",
+        "total": "170.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-receipt-5",
+      "language": "en",
+      "kind": "receipt",
+      "input": "native",
+      "text": "Synthetic Cafe 5\nReceipt\nDate: 2026-10-30\nTotal: $175.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 5",
+        "date": "2026-10-30",
+        "total": "175.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-receipt-6",
+      "language": "en",
+      "kind": "receipt",
+      "input": "native",
+      "text": "Synthetic Cafe 6\nReceipt\nDate: 2026-10-30\nTotal: $180.50\nPayment: cash\nExpense category: meal\nTotal: $999.00",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 6",
+        "date": "2026-10-30",
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "en-receipt-7",
+      "language": "en",
+      "kind": "receipt",
+      "input": "native",
+      "text": "Synthetic Cafe 7\nReceipt\nDate: 01/02/2026\nTotal: $185.50\nPayment: cash\nExpense category: meal",
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 7",
+        "date": null,
+        "total": "185.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "en-invoice-0",
+      "language": "en",
+      "kind": "invoice",
+      "input": "scan",
+      "text": "Synthetic Vendor 0\nInvoice number: INV-0\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $150.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-invoice-1",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 1\nInvoice number: INV-1\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $155.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 1",
+        "invoice_number": "INV-1",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "155.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-invoice-2",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 2\nInvoice number: INV-2\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $160.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 2",
+        "invoice_number": "INV-2",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "160.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-invoice-3",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 3\nInvoice number: INV-3\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $165.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 3",
+        "invoice_number": "INV-3",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "165.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-invoice-4",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 4\nInvoice number: INV-4\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $170.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 4",
+        "invoice_number": "INV-4",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "170.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-invoice-5",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 5\nInvoice number: INV-5\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $175.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 5",
+        "invoice_number": "INV-5",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "175.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "en-invoice-6",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 6\nInvoice number: INV-6\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $180.50\nExpense category: purchase\nAmount due: $999.00",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 6",
+        "invoice_number": "INV-6",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": null,
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "en-invoice-7",
+      "language": "en",
+      "kind": "invoice",
+      "input": "native",
+      "text": "Synthetic Vendor 7\nInvoice number: INV-7\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $185.50\nExpense category: purchase",
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 7",
+        "invoice_number": "INV-7",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "185.50",
+        "expense_category": "purchase"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "en-policy-0",
+      "language": "en",
+      "kind": "policy",
+      "input": "scan",
+      "text": "Meals above $100 require manager approval.",
+      "rule": {
+        "rule_id": "synthetic-en-0",
+        "source_chunk_id": "synthetic",
+        "category": "meal",
+        "field": "total",
+        "operator": ">",
+        "threshold": "100",
+        "currency": "USD",
+        "action": "requires_approval",
+        "approval_role": "manager"
+      },
+      "expected_verified": true
+    },
+    {
+      "id": "en-policy-1",
+      "language": "en",
+      "kind": "policy",
+      "input": "native",
+      "text": "For all expenses of $25 or more, receipts are required.",
+      "rule": {
+        "rule_id": "synthetic-en-1",
+        "source_chunk_id": "synthetic",
+        "category": "all_expenses",
+        "field": "total",
+        "operator": ">=",
+        "threshold": "25",
+        "currency": "USD",
+        "action": "requires_documentation",
+        "approval_role": null
+      },
+      "expected_verified": true
+    },
+    {
+      "id": "en-policy-2",
+      "language": "en",
+      "kind": "policy",
+      "input": "native",
+      "text": "Hotels above $200 require director approval.",
+      "rule": {
+        "rule_id": "synthetic-en-2",
+        "source_chunk_id": "synthetic",
+        "category": "hotel",
+        "field": "total",
+        "operator": ">",
+        "threshold": "200",
+        "currency": "USD",
+        "action": "requires_approval",
+        "approval_role": "director"
+      },
+      "expected_verified": true
+    },
+    {
+      "id": "en-policy-3",
+      "language": "en",
+      "kind": "policy",
+      "input": "native",
+      "text": "Meals above $100 do not require manager approval.",
+      "rule": {
+        "rule_id": "synthetic-en-3",
+        "source_chunk_id": "synthetic",
+        "category": "meal",
+        "field": "total",
+        "operator": ">",
+        "threshold": "100",
+        "currency": "USD",
+        "action": "requires_approval",
+        "approval_role": "manager"
+      },
+      "expected_verified": false
+    },
+    {
+      "id": "ar-receipt-0",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "scan",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 0\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٥٠٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 0",
+        "date": "2026-10-30",
+        "total": "150.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-receipt-1",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "scan",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 1\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٥٥٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 1",
+        "date": "2026-10-30",
+        "total": "155.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-receipt-2",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "native",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 2\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٦٠٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 2",
+        "date": "2026-10-30",
+        "total": "160.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-receipt-3",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "native",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 3\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٦٥٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 3",
+        "date": "2026-10-30",
+        "total": "165.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-receipt-4",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "native",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 4\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٧٠٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 4",
+        "date": "2026-10-30",
+        "total": "170.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-receipt-5",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "native",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 5\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٧٥٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 5",
+        "date": "2026-10-30",
+        "total": "175.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-receipt-6",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "native",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 6\nالتاريخ: ٢٠٢٦-١٠-٣٠\nالإجمالي: ١٨٠٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات\nالإجمالي: ٩٩٩ جنيه مصري",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 6",
+        "date": "2026-10-30",
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "ar-receipt-7",
+      "language": "ar",
+      "kind": "receipt",
+      "input": "native",
+      "text": "إيصال\nالتاجر: مطعم تجريبي 7\nالتاريخ: ٠١/٠٢/٢٠٢٦\nالإجمالي: ١٨٥٫٥٠ جنيه مصري\nطريقة الدفع: نقدا\nالفئة: وجبات",
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 7",
+        "date": null,
+        "total": "185.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "ar-invoice-0",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "scan",
+      "text": "فاتورة\nالمورد: مورد تجريبي 0\nرقم الفاتورة: INV-0\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٥٠٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-invoice-1",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 1\nرقم الفاتورة: INV-1\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٥٥٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 1",
+        "invoice_number": "INV-1",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "155.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-invoice-2",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 2\nرقم الفاتورة: INV-2\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٦٠٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 2",
+        "invoice_number": "INV-2",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "160.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-invoice-3",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 3\nرقم الفاتورة: INV-3\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٦٥٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 3",
+        "invoice_number": "INV-3",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "165.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-invoice-4",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 4\nرقم الفاتورة: INV-4\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٧٠٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 4",
+        "invoice_number": "INV-4",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "170.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-invoice-5",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 5\nرقم الفاتورة: INV-5\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٧٥٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 5",
+        "invoice_number": "INV-5",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "175.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": false
+    },
+    {
+      "id": "ar-invoice-6",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 6\nرقم الفاتورة: INV-6\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٨٠٫٥٠ جنيه مصري\nالفئة: مشتريات\nالمبلغ المستحق: ٩٩٩ جنيه مصري",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 6",
+        "invoice_number": "INV-6",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": null,
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "ar-invoice-7",
+      "language": "ar",
+      "kind": "invoice",
+      "input": "native",
+      "text": "فاتورة\nالمورد: مورد تجريبي 7\nرقم الفاتورة: INV-7\nتاريخ الفاتورة: ٢٠٢٦-١٠-٣٠\nتاريخ الاستحقاق: ٢٠٢٦-١١-١٥\nالمبلغ المستحق: ١٨٥٫٥٠ جنيه مصري\nالفئة: مشتريات",
+      "expected_fields": {
+        "vendor": "مورد تجريبي 7",
+        "invoice_number": "INV-7",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "185.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "intentional_abstention": true
+    },
+    {
+      "id": "ar-policy-0",
+      "language": "ar",
+      "kind": "policy",
+      "input": "scan",
+      "text": "مصروفات الوجبات التي تتجاوز ١٠٠ جنيه مصري تتطلب موافقة المدير.",
+      "rule": {
+        "rule_id": "synthetic-ar-0",
+        "source_chunk_id": "synthetic",
+        "category": "meal",
+        "field": "total",
+        "operator": ">",
+        "threshold": "100",
+        "currency": "EGP",
+        "action": "requires_approval",
+        "approval_role": "manager"
+      },
+      "expected_verified": true
+    },
+    {
+      "id": "ar-policy-1",
+      "language": "ar",
+      "kind": "policy",
+      "input": "native",
+      "text": "لجميع المصروفات التي لا تقل عن ٢٥ جنيه مصري، الإيصالات مطلوبة.",
+      "rule": {
+        "rule_id": "synthetic-ar-1",
+        "source_chunk_id": "synthetic",
+        "category": "all_expenses",
+        "field": "total",
+        "operator": ">=",
+        "threshold": "25",
+        "currency": "EGP",
+        "action": "requires_documentation",
+        "approval_role": null
+      },
+      "expected_verified": true
+    },
+    {
+      "id": "ar-policy-2",
+      "language": "ar",
+      "kind": "policy",
+      "input": "native",
+      "text": "مصروفات الفنادق التي تتجاوز ٢٠٠ جنيه مصري تتطلب موافقة المدير العام.",
+      "rule": {
+        "rule_id": "synthetic-ar-2",
+        "source_chunk_id": "synthetic",
+        "category": "hotel",
+        "field": "total",
+        "operator": ">",
+        "threshold": "200",
+        "currency": "EGP",
+        "action": "requires_approval",
+        "approval_role": "director"
+      },
+      "expected_verified": true
+    },
+    {
+      "id": "ar-policy-3",
+      "language": "ar",
+      "kind": "policy",
+      "input": "native",
+      "text": "مصروفات الوجبات التي تتجاوز ١٠٠ جنيه مصري لا تتطلب موافقة المدير.",
+      "rule": {
+        "rule_id": "synthetic-ar-3",
+        "source_chunk_id": "synthetic",
+        "category": "meal",
+        "field": "total",
+        "operator": ">",
+        "threshold": "100",
+        "currency": "EGP",
+        "action": "requires_approval",
+        "approval_role": "manager"
+      },
+      "expected_verified": false
+    }
+  ]
+}

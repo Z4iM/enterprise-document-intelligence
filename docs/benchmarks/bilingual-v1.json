@@ -1,0 +1,1364 @@
+{
+  "corpus_version": "synthetic-bilingual-v1",
+  "corpus_sha256": "85a7d794df77585055d2316bda47b779c7c7668527921fb5ff3afe3d89a16322",
+  "evaluator_sha256": "79172d320044300c1357790b892b6c7b675cd8ad7ea7560eb3a5d053ea203877",
+  "unique_documents": 40,
+  "scope": "Template-generated development corpus, not held-out enterprise accuracy. Eight scans require explicit local OCR execution.",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.12.10",
+  "ocr_version": "tesseract 5.3.0",
+  "ocr_configuration": {
+    "image": "edi-verification-backend:b51030202602",
+    "languages": "eng+ara",
+    "segmentation": "Tesseract default",
+    "upscale": 2,
+    "timeout_seconds": 5,
+    "font": "arial.ttf"
+  },
+  "scan_cases_not_run": [],
+  "method_notes": "Native text is a reference baseline for all 40 templates. Eight scans additionally use the actual app extract_image_text preprocessing/default segmentation/eng+ara/5-second OCR timeout in the named container. OCR transport included in latency; CER/WER collapse whitespace only. No LLM, keys or real data.",
+  "metrics": {
+    "native_text": {
+      "overall": {
+        "observations": 40,
+        "field_exact_accuracy": 1.0,
+        "nonempty_field_precision": 1.0,
+        "false_abstention_rate": 0.0,
+        "classification_accuracy": 1.0,
+        "policy_decision_accuracy": 1.0,
+        "mean_cer": null,
+        "mean_wer": null
+      },
+      "by_language": {
+        "en": {
+          "observations": 20,
+          "field_exact_accuracy": 1.0,
+          "nonempty_field_precision": 1.0,
+          "false_abstention_rate": 0.0,
+          "classification_accuracy": 1.0,
+          "policy_decision_accuracy": 1.0,
+          "mean_cer": null,
+          "mean_wer": null
+        },
+        "ar": {
+          "observations": 20,
+          "field_exact_accuracy": 1.0,
+          "nonempty_field_precision": 1.0,
+          "false_abstention_rate": 0.0,
+          "classification_accuracy": 1.0,
+          "policy_decision_accuracy": 1.0,
+          "mean_cer": null,
+          "mean_wer": null
+        }
+      }
+    },
+    "scanned_ocr": {
+      "overall": {
+        "observations": 8,
+        "field_exact_accuracy": 0.625,
+        "nonempty_field_precision": 0.8,
+        "false_abstention_rate": 0.2188,
+        "classification_accuracy": 1.0,
+        "policy_decision_accuracy": 0.5,
+        "mean_cer": 0.2097,
+        "mean_wer": 0.2348
+      },
+      "by_language": {
+        "en": {
+          "observations": 4,
+          "field_exact_accuracy": 0.75,
+          "nonempty_field_precision": 0.75,
+          "false_abstention_rate": 0.0,
+          "classification_accuracy": 1.0,
+          "policy_decision_accuracy": 1.0,
+          "mean_cer": 0.0091,
+          "mean_wer": 0.0662
+        },
+        "ar": {
+          "observations": 4,
+          "field_exact_accuracy": 0.5,
+          "nonempty_field_precision": 0.8889,
+          "false_abstention_rate": 0.4375,
+          "classification_accuracy": 1.0,
+          "policy_decision_accuracy": 0.0,
+          "mean_cer": 0.4103,
+          "mean_wer": 0.4033
+        }
+      }
+    }
+  },
+  "per_document": [
+    {
+      "id": "en-receipt-0",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 0",
+        "date": "2026-10-30",
+        "total": "150.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 0",
+        "date": "2026-10-30",
+        "total": "150.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-1",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 1",
+        "date": "2026-10-30",
+        "total": "155.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 1",
+        "date": "2026-10-30",
+        "total": "155.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-2",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 2",
+        "date": "2026-10-30",
+        "total": "160.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 2",
+        "date": "2026-10-30",
+        "total": "160.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-3",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 3",
+        "date": "2026-10-30",
+        "total": "165.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 3",
+        "date": "2026-10-30",
+        "total": "165.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-4",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 4",
+        "date": "2026-10-30",
+        "total": "170.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 4",
+        "date": "2026-10-30",
+        "total": "170.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-5",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 5",
+        "date": "2026-10-30",
+        "total": "175.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 5",
+        "date": "2026-10-30",
+        "total": "175.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-6",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 4,
+      "correct_nonempty": 4,
+      "required_values": 4,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 6",
+        "date": "2026-10-30",
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 6",
+        "date": "2026-10-30",
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-receipt-7",
+      "language": "en",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 4,
+      "correct_nonempty": 4,
+      "required_values": 4,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 7",
+        "date": null,
+        "total": "185.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "Synthetic Cafe 7",
+        "date": null,
+        "total": "185.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      }
+    },
+    {
+      "id": "en-invoice-0",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-0",
+        "vendor": "Synthetic Vendor 0",
+        "total": "150.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-1",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 1",
+        "invoice_number": "INV-1",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "155.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-1",
+        "vendor": "Synthetic Vendor 1",
+        "total": "155.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-2",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 2",
+        "invoice_number": "INV-2",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "160.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-2",
+        "vendor": "Synthetic Vendor 2",
+        "total": "160.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-3",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 3",
+        "invoice_number": "INV-3",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "165.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-3",
+        "vendor": "Synthetic Vendor 3",
+        "total": "165.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-4",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 4",
+        "invoice_number": "INV-4",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "170.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-4",
+        "vendor": "Synthetic Vendor 4",
+        "total": "170.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-5",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 5",
+        "invoice_number": "INV-5",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "175.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-5",
+        "vendor": "Synthetic Vendor 5",
+        "total": "175.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-6",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 6",
+        "invoice_number": "INV-6",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": null,
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-6",
+        "vendor": "Synthetic Vendor 6",
+        "total": null,
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-invoice-7",
+      "language": "en",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 7",
+        "invoice_number": "INV-7",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "185.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-7",
+        "vendor": "Synthetic Vendor 7",
+        "total": "185.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      }
+    },
+    {
+      "id": "en-policy-0",
+      "language": "en",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supplied source evidence."
+    },
+    {
+      "id": "en-policy-1",
+      "language": "en",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supplied source evidence."
+    },
+    {
+      "id": "en-policy-2",
+      "language": "en",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supplied source evidence."
+    },
+    {
+      "id": "en-policy-3",
+      "language": "en",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": false,
+      "expected_verified": false,
+      "decision_correct": true,
+      "reason": "Unsupported negation, exception or discretionary wording."
+    },
+    {
+      "id": "ar-receipt-0",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 0",
+        "date": "2026-10-30",
+        "total": "150.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 0",
+        "date": "2026-10-30",
+        "total": "150.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-1",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 1",
+        "date": "2026-10-30",
+        "total": "155.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 1",
+        "date": "2026-10-30",
+        "total": "155.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-2",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 2",
+        "date": "2026-10-30",
+        "total": "160.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 2",
+        "date": "2026-10-30",
+        "total": "160.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-3",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 3",
+        "date": "2026-10-30",
+        "total": "165.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 3",
+        "date": "2026-10-30",
+        "total": "165.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-4",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 4",
+        "date": "2026-10-30",
+        "total": "170.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 4",
+        "date": "2026-10-30",
+        "total": "170.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-5",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 5",
+        "date": "2026-10-30",
+        "total": "175.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 5",
+        "date": "2026-10-30",
+        "total": "175.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-6",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 4,
+      "correct_nonempty": 4,
+      "required_values": 4,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 6",
+        "date": "2026-10-30",
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 6",
+        "date": "2026-10-30",
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-receipt-7",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 5,
+      "fields_total": 5,
+      "predicted_nonempty": 4,
+      "correct_nonempty": 4,
+      "required_values": 4,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 7",
+        "date": null,
+        "total": "185.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 7",
+        "date": null,
+        "total": "185.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      }
+    },
+    {
+      "id": "ar-invoice-0",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-1",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 1",
+        "invoice_number": "INV-1",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "155.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 1",
+        "invoice_number": "INV-1",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "155.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-2",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 2",
+        "invoice_number": "INV-2",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "160.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 2",
+        "invoice_number": "INV-2",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "160.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-3",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 3",
+        "invoice_number": "INV-3",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "165.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 3",
+        "invoice_number": "INV-3",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "165.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-4",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 4",
+        "invoice_number": "INV-4",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "170.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 4",
+        "invoice_number": "INV-4",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "170.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-5",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 5",
+        "invoice_number": "INV-5",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "175.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 5",
+        "invoice_number": "INV-5",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "175.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-6",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 5,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 6",
+        "invoice_number": "INV-6",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": null,
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 6",
+        "invoice_number": "INV-6",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": null,
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-invoice-7",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "native_text",
+      "latency_ms": 0,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 6,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 6,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 7",
+        "invoice_number": "INV-7",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "185.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 7",
+        "invoice_number": "INV-7",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "185.50 EGP",
+        "expense_category": "مشتريات"
+      }
+    },
+    {
+      "id": "ar-policy-0",
+      "language": "ar",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supported Arabic source grammar."
+    },
+    {
+      "id": "ar-policy-1",
+      "language": "ar",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supported Arabic source grammar."
+    },
+    {
+      "id": "ar-policy-2",
+      "language": "ar",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supported Arabic source grammar."
+    },
+    {
+      "id": "ar-policy-3",
+      "language": "ar",
+      "kind": "policy",
+      "method": "native_text",
+      "latency_ms": 0,
+      "verified": false,
+      "expected_verified": false,
+      "decision_correct": true,
+      "reason": "Unsupported exception, negation or discretionary wording."
+    },
+    {
+      "id": "en-receipt-0",
+      "language": "en",
+      "kind": "receipt",
+      "method": "scanned_ocr",
+      "latency_ms": 2962.18,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 4,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 4,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 0",
+        "date": "2026-10-30",
+        "total": "150.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "synthetic Cafe 0",
+        "date": "2026-10-30",
+        "total": "150.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "cer": 0.010752688172043012,
+      "wer": 0.07692307692307693,
+      "ocr_text": "synthetic Cafe 0\nReceipt\n\nDate: 2026-10-30\nTotal: $150.50\nPayment: cash\n\nExpense category: meal"
+    },
+    {
+      "id": "en-receipt-1",
+      "language": "en",
+      "kind": "receipt",
+      "method": "scanned_ocr",
+      "latency_ms": 1470.38,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 4,
+      "fields_total": 5,
+      "predicted_nonempty": 5,
+      "correct_nonempty": 4,
+      "required_values": 5,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "merchant": "Synthetic Cafe 1",
+        "date": "2026-10-30",
+        "total": "155.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "actual_fields": {
+        "merchant": "synthetic Cafe 1",
+        "date": "2026-10-30",
+        "total": "155.50",
+        "payment_method": "cash",
+        "expense_category": "meal"
+      },
+      "cer": 0.010752688172043012,
+      "wer": 0.07692307692307693,
+      "ocr_text": "synthetic Cafe 1\nReceipt\n\nDate: 2026-10-30\nTotal: $155.50\nPayment: cash\n\nExpense category: meal"
+    },
+    {
+      "id": "en-invoice-0",
+      "language": "en",
+      "kind": "invoice",
+      "method": "scanned_ocr",
+      "latency_ms": 1464.86,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 4,
+      "fields_total": 6,
+      "predicted_nonempty": 6,
+      "correct_nonempty": 4,
+      "required_values": 6,
+      "false_abstentions": 0,
+      "expected_fields": {
+        "vendor": "Synthetic Vendor 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50",
+        "expense_category": "purchase"
+      },
+      "actual_fields": {
+        "invoice_number": "INV-O",
+        "vendor": "synthetic Vendor 0",
+        "total": "150.50",
+        "due_date": "2026-11-15",
+        "invoice_date": "2026-10-30",
+        "expense_category": "purchase"
+      },
+      "cer": 0.015037593984962405,
+      "wer": 0.1111111111111111,
+      "ocr_text": "synthetic Vendor 0\nInvoice number: INV-O\nInvoice date: 2026-10-30\nDue date: 2026-11-15\nAmount due: $150.50\n\nExpense category: purchase"
+    },
+    {
+      "id": "en-policy-0",
+      "language": "en",
+      "kind": "policy",
+      "method": "scanned_ocr",
+      "latency_ms": 1182.44,
+      "verified": true,
+      "expected_verified": true,
+      "decision_correct": true,
+      "reason": "Rule matches the supplied source evidence.",
+      "cer": 0.0,
+      "wer": 0.0,
+      "ocr_text": "Meals above $100 require manager approval."
+    },
+    {
+      "id": "ar-receipt-0",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "scanned_ocr",
+      "latency_ms": 3669.07,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 3,
+      "fields_total": 5,
+      "predicted_nonempty": 3,
+      "correct_nonempty": 3,
+      "required_values": 5,
+      "false_abstentions": 2,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 0",
+        "date": "2026-10-30",
+        "total": "150.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 0",
+        "date": null,
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "cer": 0.1619047619047619,
+      "wer": 0.1875,
+      "ocr_text": "إيصال\n\nالتاجر: مطعم تجريبي 0\n\nالتاريخ: ‎50-١١-7١75‏\n‏الإجمالي: ‎١5١,5٠‏ جنيه مصري\nطريقة الدفع: نقدا\n\nالفئة: وجبات"
+    },
+    {
+      "id": "ar-receipt-1",
+      "language": "ar",
+      "kind": "receipt",
+      "method": "scanned_ocr",
+      "latency_ms": 1951.0,
+      "classification": "receipt",
+      "classification_correct": true,
+      "fields_correct": 3,
+      "fields_total": 5,
+      "predicted_nonempty": 3,
+      "correct_nonempty": 3,
+      "required_values": 5,
+      "false_abstentions": 2,
+      "expected_fields": {
+        "merchant": "مطعم تجريبي 1",
+        "date": "2026-10-30",
+        "total": "155.50 EGP",
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "actual_fields": {
+        "merchant": "مطعم تجريبي 1",
+        "date": null,
+        "total": null,
+        "payment_method": "cash",
+        "expense_category": "وجبات"
+      },
+      "cer": 0.24761904761904763,
+      "wer": 0.1875,
+      "ocr_text": "إيصال\n\nالتاجر: مطعم تجريبي 1\n\n50-١١-7١75 ‏التاريخ:‎\n\nالإجمالي: ‎١١5,5٠‏ جنيه مصري\nطريقة الدفع: نقدا\n\nالفئة: وجبات"
+    },
+    {
+      "id": "ar-invoice-0",
+      "language": "ar",
+      "kind": "invoice",
+      "method": "scanned_ocr",
+      "latency_ms": 2368.63,
+      "classification": "invoice",
+      "classification_correct": true,
+      "fields_correct": 2,
+      "fields_total": 6,
+      "predicted_nonempty": 3,
+      "correct_nonempty": 2,
+      "required_values": 6,
+      "false_abstentions": 3,
+      "expected_fields": {
+        "vendor": "مورد تجريبي 0",
+        "invoice_number": "INV-0",
+        "invoice_date": "2026-10-30",
+        "due_date": "2026-11-15",
+        "total": "150.50 EGP",
+        "expense_category": "مشتريات"
+      },
+      "actual_fields": {
+        "vendor": "مورد تجريبي 0",
+        "invoice_number": "‎INV-O‏",
+        "invoice_date": null,
+        "due_date": null,
+        "total": null,
+        "expense_category": "مشتريات"
+      },
+      "cer": 0.23178807947019867,
+      "wer": 0.23809523809523808,
+      "ocr_text": "فاتورة\n\nالمورد: مورد تجريبي 0\n\nرقم الفاتورة: ‎INV-O‏\n\nتاريخ الفاتورة: ‎50-١١-5075‏\n\nتاريخ الاستحقاق: ‎١5-1١1١-7075‏\n‎ne‏ المستحق: 04 جنيه مصري\nالفئة: مشتريات"
+    },
+    {
+      "id": "ar-policy-0",
+      "language": "ar",
+      "kind": "policy",
+      "method": "scanned_ocr",
+      "latency_ms": 972.2,
+      "verified": false,
+      "expected_verified": true,
+      "decision_correct": false,
+      "reason": "Missing source quote.",
+      "cer": 1.0,
+      "wer": 1.0,
+      "ocr_text": ""
+    }
+  ]
+}

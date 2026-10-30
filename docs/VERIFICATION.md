@@ -1,4 +1,55 @@
-# Milestone 1 verification — 2026-10-30
+# Engineering verification — 2026-10-30
+
+## Milestone 5 checkpoint
+
+Implemented on `feat/edi-specialist-workflows`, based on merged milestone 4 PR #5
+(`5a7bb53`). M4's four remote CI jobs were subsequently observed passing. This milestone
+is uncommitted/unpublished and awaits user review; **M5 remote CI is not observed**.
+No deployment, live Gemini inference, private environment inspection or real-data
+migration. All accounts/documents/DBs/volumes used for verification were synthetic.
+
+- Full Ruff passed. Final full backend: **363 passed, 9 opt-in PostgreSQL skipped**
+  in **174.72 s**. Dedicated current-code PostgreSQL: **9 passed in 15.57 s**, including
+  schema/model parity and specialist worker pause/reopen/resume using PostgreSQL records.
+- Native frontend TypeScript (`npm run lint`) and optimized build passed in a public
+  source copy on D: without `.env.local`. Production Playwright: **27 passed, 1 expected
+  development-only skip in 44.2 s**. Development Arabic specialist journey: **1 passed
+  in 41.5 s** in the final screenshot run, including authenticated upload, whole-policy extraction/review,
+  corrected Arabic fields, existing receipt attestation, original-file download, worker
+  checkpoint resume, cited outcome and 390px no-horizontal-overflow check. Generation
+  alone was scripted; no live-model quality claim.
+  Desktop and mobile screenshots were visually inspected: readable Arabic quotations,
+  intact review states and no clipped/overflowing content.
+- Both Docker images built; default **and** compact profiles passed migrations/readiness,
+  OCR pack checks, worker processing, specialist pause → full-service restart → review →
+  resume, authenticated HTTP upload/index/Arabic search/citation/original/session/restart
+  checks. Final isolated run ID: `b51030202602`. Config validation passed both profiles.
+  Workflow flag is enabled only in the runner's owned verification override; normal
+  Compose defaults and production frontend guards remain unchanged.
+- Security regressions exercise disjoint tools, injected role/scope/final approval fields,
+  bounded provider failure, revoked actor/reviewer access, source-semantic tampering,
+  same-uploader evidence, idempotent replay, immutable attestation history, stale evidence,
+  missing canonical backups, read-only checkpoint import and an expired attempt racing
+  a replacement worker. The expired attempt could not publish over the canonical head.
+- Native bilingual regression: **40 templates, 20 per language**; actual application OCR
+  also ran on **eight rendered scans**, four/language, with no network/real data.
+  Supported native fields/policy verification passed 100%; English scanned field exact
+  accuracy **75%**, Arabic **50%**; Arabic OCR CER/WER **0.4103/0.4033**, false abstention
+  **43.75%**, Arabic scanned policy verification **0/1**. These are development templates,
+  not held-out enterprise accuracy. Accurate general Arabic OCR remains unfinished.
+- Existing investigator versus specialists: **12/12 canonical outcomes each**, using
+  scripted adapters; **34 versus 50** scripted model calls. No demonstrated generative
+  accuracy gain; live tokens/cost/provider latency are unmeasured. Raw corpus/evaluator
+  hashes, configuration and per-case results are in `docs/benchmarks/*-v1.json`.
+- Pinned SDK client constructed/closed with a synthetic key without network inference;
+  native `pip check`, final diff/credential-pattern review and `git diff --check` passed.
+  This is not an independent penetration test or dependency-vulnerability audit.
+
+Observed logs are ignored `.local/m5-complete-*.log`; frontend logs/screenshots live in
+the D: verification copy. Owned verification services were stopped; synthetic volumes,
+images and checkpoint artifacts retained. No new model download/runtime dependency.
+See [architecture, setup and limitations](SPECIALISTS.md). Next milestone 6 requires
+separate approval; no automatic continuation, commit, push or deployment.
 
 ## Milestone 4 checkpoint (2026-10-30, local working branch)
 

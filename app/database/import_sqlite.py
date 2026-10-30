@@ -26,6 +26,7 @@ def import_backup(
     apply=False,
     stored_prefix=None,
     checkpoints=None,
+    specialist_checkpoints=None,
 ):
     source, files_root, destination = (
         Path(source).resolve(),
@@ -89,6 +90,30 @@ def import_backup(
                 if connection.execute("PRAGMA quick_check").fetchone() != ("ok",):
                     raise ValueError("Invalid checkpoint backup.")
             copies.append((checkpoint, destination / "langgraph_checkpoints.sqlite"))
+        specialist_threads = {
+            row["checkpoint_thread"]
+            for row in rows["specialist_workflows"]
+            if row["checkpoint_thread"]
+        }
+        if specialist_threads and not specialist_checkpoints:
+            raise ValueError("Specialist workflows require their checkpoint backup.")
+        if specialist_checkpoints:
+            checkpoint = Path(specialist_checkpoints).resolve()
+            with sqlite3.connect(
+                checkpoint.as_uri() + "?mode=ro", uri=True
+            ) as connection:
+                if connection.execute("PRAGMA quick_check").fetchone() != ("ok",):
+                    raise ValueError("Invalid specialist checkpoint backup.")
+                for thread in specialist_threads:
+                    if (
+                        connection.execute(
+                            "SELECT 1 FROM checkpoints WHERE thread_id=? LIMIT 1",
+                            (thread,),
+                        ).fetchone()
+                        is None
+                    ):
+                        raise ValueError("Missing canonical specialist checkpoint.")
+            copies.append((checkpoint, destination / "specialist_checkpoints.sqlite"))
         for row in rows["processing_jobs"]:
             if row["state"] in {"running", "retry_wait"}:
                 row.update(
@@ -180,6 +205,7 @@ def main():
     )
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--checkpoints")
+    parser.add_argument("--specialist-checkpoints")
     args = parser.parse_args()
     from app.database.database import DATABASE_URL
 
@@ -193,6 +219,7 @@ def main():
             apply=args.apply,
             stored_prefix=args.stored_prefix,
             checkpoints=args.checkpoints,
+            specialist_checkpoints=args.specialist_checkpoints,
         )
         print(json.dumps(report))
     except Exception as error:

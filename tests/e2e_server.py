@@ -22,7 +22,10 @@ def main():
             LLM_PROVIDER="disabled",
             EDI_ENABLE_DEV_AGENT="true",
             EDI_DEV_AGENT_TOKEN="synthetic-browser-agent-token",
-            EDI_ENABLE_DEV_WORKFLOWS="false",
+            EDI_ENABLE_DEV_WORKFLOWS="true"
+            if os.getenv("EDI_E2E_WORKFLOW_DEV") == "true"
+            else "false",
+            EDI_DEV_WORKFLOW_TOKEN="synthetic-browser-workflow-token",
             ENABLE_DEV_POLICY_REVIEW="false",
         )
         os.environ.pop("GEMINI_API_KEY", None)
@@ -123,6 +126,22 @@ def main():
                             "requires_documentation",
                             None,
                         ),
+                        (
+                            "مصروفات الوجبات التي تتجاوز ١٠٠ جنيه مصري تتطلب موافقة المدير.",
+                            "meal",
+                            ">",
+                            "100",
+                            "requires_approval",
+                            "manager",
+                        ),
+                        (
+                            "لجميع المصروفات التي لا تقل عن ٢٥ جنيه مصري، الإيصالات مطلوبة.",
+                            "all_expenses",
+                            ">=",
+                            "25",
+                            "requires_documentation",
+                            None,
+                        ),
                     ]:
                         if quote in text:
                             rules.append(
@@ -131,7 +150,9 @@ def main():
                                     "field": "total",
                                     "operator": operator,
                                     "threshold": threshold,
-                                    "currency": "USD",
+                                    "currency": "EGP"
+                                    if "جنيه مصري" in quote
+                                    else "USD",
                                     "action": action,
                                     "approval_role": role,
                                     "source_quote": quote,
@@ -185,6 +206,28 @@ def main():
                 pass
 
         agent_api.genai.Client = SyntheticInvestigationModel
+        if os.getenv("EDI_E2E_WORKFLOW_DEV") == "true":
+            from app.specialists import agents
+
+            class SyntheticSpecialistModel:
+                def __init__(self):
+                    self.models, self.turn = self, 0
+
+                def generate_content(self, *, config, contents, **kwargs):
+                    self.turn += 1
+                    if self.turn == 1:
+                        selection = json.loads(contents[0].parts[0].text)
+                        name = config.tools[0].function_declarations[0].name
+                        key = (
+                            "document_id" if name == "inspect_document" else "policy_id"
+                        )
+                        return tool_response(name, {key: selection[key]})
+                    return text_response('{"decision":"ready"}')
+
+                def close(self):
+                    pass
+
+            agents.client_factory = SyntheticSpecialistModel
         os.environ["GEMINI_API_KEY"] = "synthetic-browser-key-not-used"
         # Obsolete stale settings must not affect account-derived permissions.
         os.environ["EDI_DEV_AGENT_DOCUMENT_IDS"] = "stale-synthetic-document"
