@@ -32,6 +32,10 @@ def classify_document(text: str) -> tuple[str, float]:
         ],
     }
 
+    if any("\u0621" <= char <= "\u064a" for char in text):
+        keyword_groups["invoice"] = ["فاتورة", "رقم الفاتورة", "المبلغ المستحق", "المورد"]
+        keyword_groups["receipt"] = ["إيصال", "ايصال", "التاجر", "طريقة الدفع", "الإجمالي"]
+
     scores = {
         "cv": 0,
         "invoice": 0,

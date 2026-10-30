@@ -8,7 +8,7 @@ from app.database.models import (
     StoredPolicyRule,
 )
 from app.validation.rule_schemas import PolicyRule
-from app.validation.source_verifier import normalize_whitespace
+from app.validation.source_verifier import normalize_whitespace, verify_rule
 
 
 class PolicyRuleIntegrityError(Exception):
@@ -84,6 +84,8 @@ def load_approved_rules(
                 "or unsupported source quote."
             )
 
+        if not verify_rule(rule, chunk.text)["verified"]:
+            raise PolicyRuleIntegrityError(f"Rule {rule.rule_id} no longer matches source semantics.")
         approved_rules.append(rule)
 
     return approved_rules

@@ -98,9 +98,9 @@ migration or extra broker for the current single-host configuration. See [operat
 
 ## Target and measured limits
 
-Keep FastAPI, Next.js, Gemini tools and LangGraph. PostgreSQL/Alembic, safe SQLite import
-and durable jobs are implemented. Next add authorized full-text
-plus pgvector retrieval and measured specialist cooperation. Redis/reranking/extra
+Keep FastAPI, Next.js, Gemini tools and LangGraph. PostgreSQL/Alembic, safe SQLite import,
+durable jobs, scoped hybrid retrieval and specialist coordination are implemented.
+Current JSON-vector exact search avoids a pgvector service dependency. Redis/reranking/extra
 services require a measured need. Existing global FAISS and model-led RAG are experimental;
 the retired legacy endpoint returns 410 and does not expose those decisions.
 
@@ -112,4 +112,19 @@ both images built cleanly, both profiles started and preserved data across full-
 restarts. Production backups/restore rehearsal, deployment,
 retention, SSO and operational telemetry remain unfinished. Arabic Unicode/OCR/RTL
 foundations are present; semantic support and measured OCR/field/retrieval quality remain
-required release gates. Source verification is still narrow English monetary-rule support.
+required release gates. Source verification supports narrow English/Arabic monetary grammar.
+
+## Specialist coordination (M5)
+
+`/specialist-workflows` queues a persisted document/policy pair owned by its session actor.
+Separate model roles use disjoint read-only tools; server-derived reviewed document
+context crosses to policy research. LangGraph reloads canonical facts/all approved rules
+for deterministic evaluation and real review interrupts. The Next.js development gateway
+keeps private tokens server-side; production builds return 404.
+
+`specialist_checkpoints.sqlite` stores per-lease branches. The existing transactional
+queue fence publishes only a valid attempt's checkpoint pointer/results. Supporting
+evidence has immutable reviewer attestations, same-uploader scope and input fingerprints;
+file/rule/field/access changes invalidate confirmation. Confirmation is not expense
+approval. No extra service/dependency; business DB can remain PostgreSQL while the
+single-host checkpoint volume is SQLite. See [bounds/trade-offs](SPECIALISTS.md).

@@ -11,6 +11,7 @@ class CVSchema(BaseModel):
 
 
 class InvoiceSchema(BaseModel):
+    expense_category: str | None = None
     invoice_number: str | None = None
     vendor: str | None = None
     invoice_date: str | None = None

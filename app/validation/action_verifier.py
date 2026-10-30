@@ -15,7 +15,7 @@ def detect_policy_action(
     )
 
     documentation_pattern = (
-        r"\b(?:receipts?|documentation|"
+        r"\b(?:receipts?|invoices?|documentation|"
         r"supporting documents?)\s+"
         r"(?:is|are)\s+required\b"
     )
@@ -26,6 +26,7 @@ def detect_policy_action(
 
     has_documentation = bool(
         re.search(documentation_pattern, text)
+        or re.search(r"\brequires?\s+(?:an?\s+)?(?:receipts?|invoices?|documentation|supporting documents?)\b", text)
     )
 
     if has_approval and has_documentation:

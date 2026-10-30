@@ -18,6 +18,8 @@ function isAllowed(method: string, path: string) {
       /^documents$/,
       new RegExp(`^documents/${id}$`),
       new RegExp(`^documents/${id}/(audit|original|reviews|processing)$`),
+      new RegExp(`^documents/${id}/documentation/${id}$`),
+      new RegExp(`^documents/${id}/documentation-candidates$`),
       /^reviews\/pending$/,
       new RegExp(`^policies/${id}/rules$`),
     ],
@@ -33,6 +35,7 @@ function isAllowed(method: string, path: string) {
       /^evidence\/search$/,
       new RegExp(`^policies/${id}/index(?:/remove)?$`),
       new RegExp(`^documents/${id}/review$`),
+      new RegExp(`^documents/${id}/documentation$`),
       new RegExp(`^documents/${id}/validate-approved-policy$`),
     ],
   };

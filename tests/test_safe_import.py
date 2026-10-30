@@ -104,6 +104,97 @@ def test_rehearsal_is_read_only_and_apply_preserves_unicode_ownership_and_job_id
         assert not db.scalars(select(AuthSession)).all()
 
 
+def test_specialist_import_requires_matching_canonical_checkpoint_and_preserves_history(
+    backup, tmp_path
+):
+    from langgraph.checkpoint.base import empty_checkpoint
+    from langgraph.checkpoint.sqlite import SqliteSaver
+
+    from app.database.models import (
+        DocumentationReview,
+        PolicyDocument,
+        SpecialistWorkflow,
+    )
+
+    source, files, destination, target = backup
+    original = files / "policies" / "policy" / "سياسة.txt"
+    original.parent.mkdir(parents=True)
+    original.write_text("سياسة تجريبية", encoding="utf-8")
+    engine = create_engine(f"sqlite:///{source.as_posix()}")
+    with sessionmaker(bind=engine)() as db:
+        db.add(
+            PolicyDocument(
+                id="policy",
+                organization_id="org",
+                owner_id="user",
+                original_filename=original.name,
+                stored_file_path="old/policy",
+                file_hash=hashlib.sha256(original.read_bytes()).hexdigest(),
+            )
+        )
+        db.add(
+            SpecialistWorkflow(
+                id="workflow",
+                organization_id="org",
+                owner_id="user",
+                document_id="doc",
+                policy_id="policy",
+                request_key="synthetic-import-key",
+                question="Synthetic",
+                checkpoint_thread="canonical-thread",
+            )
+        )
+        for identifier in ("old-attestation", "new-attestation"):
+            db.add(
+                DocumentationReview(
+                    id=identifier,
+                    document_id="doc",
+                    policy_id="policy",
+                    rule_id="rule",
+                    reviewer_id="user",
+                    evidence_ids=["doc"],
+                    source_digest=identifier,
+                    note="Synthetic historic review",
+                )
+            )
+        db.commit()
+    engine.dispose()
+    before = hashlib.sha256(source.read_bytes()).hexdigest()
+    with pytest.raises(ValueError, match="checkpoint backup"):
+        import_backup(source, files, destination, target)
+    checkpoint = tmp_path / "specialists.sqlite"
+    with SqliteSaver.from_conn_string(str(checkpoint)) as saver:
+        saver.setup()
+        with pytest.raises(ValueError, match="Missing canonical"):
+            import_backup(
+                source, files, destination, target, specialist_checkpoints=checkpoint
+            )
+        saver.put(
+            {"configurable": {"thread_id": "canonical-thread", "checkpoint_ns": ""}},
+            empty_checkpoint(),
+            {},
+            {},
+        )
+    assert import_backup(
+        source,
+        files,
+        destination,
+        target,
+        specialist_checkpoints=checkpoint,
+        apply=True,
+    )["applied"]
+    with sessionmaker(bind=target)() as db:
+        assert (
+            db.get(SpecialistWorkflow, "workflow").checkpoint_thread
+            == "canonical-thread"
+        )
+        assert len(db.scalars(select(DocumentationReview)).all()) == 2
+    assert (
+        destination / "specialist_checkpoints.sqlite"
+    ).read_bytes() == checkpoint.read_bytes()
+    assert hashlib.sha256(source.read_bytes()).hexdigest() == before
+
+
 def test_existing_target_or_destination_cannot_be_overwritten(backup):
     source, files, destination, target = backup
     destination.mkdir()

@@ -8,6 +8,20 @@ their manifest and never downloaded on requests. See [limits](RETRIEVAL.md).
 
 ## Identity and authority
 
+M5 specialist intake/resume retains development flag, loopback, private token, sessions,
+CSRF and scoped resources. Each node/tool reloads the active account and permission scope.
+Role-specific tool allowlists reject model-supplied scope/approval arguments before
+dispatch. The final evaluator reloads all approved rules; stored verified flags alone
+are insufficient without current source-semantic revalidation. Production Next.js
+workflow gateway is disabled regardless of feature flags.
+
+Checkpoint publication shares the queue's unexpired-lease transaction. Stale attempts
+cannot publish a head; missing canonical backups fail closed. Supporting evidence is
+same-organization/same-uploader, reviewed and attested only by active Reviewer/Admin.
+Immutable attestations bind current inputs; changed source/facts/access invalidate them.
+Neither model output, workflow resume nor documentation attestation grants expense
+approval. Generic documentation requirements need clarification. See SPECIALISTS.md.
+
 Only administrators may change display names, including their own. Both self-profile
 and organization-scoped user-management writes enforce this on the server. Employees
 and reviewers can read their profile/activity and change their password, but cannot

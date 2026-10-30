@@ -1,7 +1,7 @@
-import re
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from typing import Any
 
+from app.language.amounts import parse_amount
 from app.validation.category_normalizer import normalize_category
 from app.validation.rule_schemas import (
     PolicyRule,
@@ -23,46 +23,8 @@ def parse_decimal(
 ) -> Decimal | None:
     """Parse a monetary amount with optional currency information."""
 
-    if value is None or isinstance(value, bool):
-        return None
+    return parse_amount(value, expected_currency)
 
-    cleaned = str(value).strip()
-
-    # Extract an optional trailing currency code.
-    currency_match = re.search(
-        r"\s+([A-Za-z]{3})$",
-        cleaned,
-    )
-
-    if currency_match:
-        actual_currency = currency_match.group(1).upper()
-
-        if actual_currency != expected_currency.upper():
-            return None
-
-        cleaned = cleaned[:currency_match.start()].strip()
-
-    # The dollar symbol is treated as USD in this parser.
-    if "$" in cleaned and expected_currency.upper() != "USD":
-        return None
-
-    cleaned = (
-        cleaned
-        .replace("$", "")
-        .replace(",", "")
-        .strip()
-    )
-
-    try:
-        number = Decimal(cleaned)
-
-        if not number.is_finite():
-            return None
-
-        return number
-
-    except (InvalidOperation, ValueError):
-        return None
 
 
 def evaluate_rule(

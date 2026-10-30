@@ -24,6 +24,7 @@ def verify_rule_scope(
         r"\ball expenses\b",
         r"\bevery expense\b",
         r"\bany expense\b",
+        r"^expenses of\s+\$?\s*\d",
     ]
 
     expected_scope = None

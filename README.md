@@ -7,9 +7,9 @@ against verified company rules, and explains the result with original-source evi
 It combines FastAPI, a Next.js dashboard, bounded Gemini investigation tools,
 LangGraph human-review checkpoints and durable background processing.
 
-**Status — October 30, 2026:** milestones 1–4 implemented and locally verified;
-milestone 4 awaits review.
-**Showcase target — November 6, 2026:** cooperating specialists and broader evaluation remain planned.
+**Status — October 30, 2026:** milestones 1–4 reviewed; milestone 5 implemented and
+locally verified, awaiting review.
+**Showcase target — November 6, 2026:** broader MLOps/release checks and showcase rehearsal remain.
 Production readiness has separate gates.
 
 [Architecture](docs/ARCHITECTURE.md) · [Verification evidence](docs/VERIFICATION.md) ·
@@ -60,17 +60,18 @@ background processing and persistence.*
 | Intake and extraction | Bounded PDF, DOCX, PPTX, UTF-8 TXT and image intake; OCR; heuristic classification; configured-model extraction and review-gated fallback | Accuracy is not established by functional tests; tables/scans need broader evaluation |
 | Policy checking | Automatic candidates, source verification, confirmed human decisions and cited deterministic evaluation | Current verifier supports a narrow set of English monetary expense statements |
 | Identity and UI | Session login/logout, Employee/Reviewer/Admin roles, scoped accounts, admin-managed names, personal statistics, password changes and audit history | SSO/MFA/account recovery and independent security review remain production work |
-| Investigation | Existing bounded Gemini agent with three scoped read-only tools and account-derived resource selection | Local development only; cooperating specialists are milestone 5 work |
-| Workflows | LangGraph human-review interruption, persistence and resume | Full orchestration/status/trace UI is planned for milestone 5 |
+| Investigation | Existing bounded investigator plus distinct document/policy specialists with disjoint tools and canonical fact handoff | Local development only; live multi-agent quality/cost unmeasured |
+| Workflows | Queued LangGraph pause/resume, lease-isolated checkpoints, status/traces and explicit supporting-evidence review | Production gateway disabled; checkpoint retention and distributed orchestration remain |
 | Reliability | PostgreSQL/SQLite business storage, Alembic, safe backup-import rehearsal, durable jobs, processing UI and retry | Single-host design; production backup/restore and load/SLO verification remain |
 | Containers | Frontend/API/worker/PostgreSQL, private backend networking, loopback UI, readiness, volumes and normal/compact profiles | Both profiles passed local build/start/restart checks; public deployment is not certified |
-| Arabic | Unicode preservation, native TXT/DOCX checks, bilingual OCR configuration and automatic source-text direction | Arabic semantic extraction, policy verification and measured OCR accuracy remain required work |
+| Arabic | Unicode/RTL, conservative labeled fields/digits/money/dates, narrow source-verified policy grammar; 40 bilingual templates and eight actual scans measured | Arabic scanned field accuracy only 50% on four templates; broad OCR/model quality remains unproven |
 | Retrieval | Authorized policy search, optional pinned multilingual ONNX encoder, BM25/cosine/RRF, exact quotations and scoped index lifecycle | Synthetic benchmark: 87.5% Recall@5; Arabic unanswerable abstention only 50% (2/4); candidate sources, never decisions |
-| MLOps | Automated security/integration/browser/container checks and reproducible retrieval benchmark | Broader extraction/agent evaluation and operational telemetry remain planned |
+| MLOps | Security/integration/browser/container checks and reproducible retrieval/bilingual/specialist control benchmarks | Held-out/live-model evaluation, correlated telemetry and real cost measurements remain planned |
 
-The worker executes queued jobs; the existing Gemini agent chooses permitted investigation
-tools. Specialist coordination is planned for milestone 5. See
-[Arabic acceptance](docs/ARABIC_SUPPORT.md) for the remaining bilingual requirements.
+Workers execute jobs; model specialists independently choose their permitted tools.
+The coordinator enforces review and deterministic outcomes. See
+[specialist architecture, demo and measurements](docs/SPECIALISTS.md) and
+[Arabic acceptance](docs/ARABIC_SUPPORT.md) for measured scope and remaining requirements.
 
 See [retrieval setup, metrics and limitations](docs/RETRIEVAL.md) to enable the optional
 267 MB local encoder. Default search is explicitly keyword-only; no request-time model
@@ -117,8 +118,8 @@ subject to review and quality gates; the showcase date is not a production-relea
 | **1 — Trustworthy lifecycle** | Verified Oct 30, 2026 | Complete | Shared review/eligibility gates across API, tools and workflows; unsafe model-led official validation retired; durable review/resume checks |
 | **2 — Identity and security** | Verified Oct 30, 2026 | Complete | Real sessions/CSRF/RBAC, ownership isolation, bounded intake, source-verified rule review, account/profile flows and investigation authorization tests |
 | **3 — Persistence and recovery** | Verified Oct 30, 2026 | Complete | Real PostgreSQL and safe synthetic import; queued uploads/recovery/fencing; both Docker profiles built/started/restarted; authenticated HTTP intake and checkpoint/session/original persistence |
-| **4 — Authorized evidence retrieval** | Nov 2–3, 2026 | Planned | Tenant-scoped hybrid search, indexing/deletion and at least 30 labeled queries, including 15 Arabic; report Recall@5, MRR, citation support and abstention by language |
-| **5 — Cooperating specialists and bilingual understanding** | Nov 3–4, 2026 | Planned | Distinct document/policy responsibilities, bounded durable coordination and workflow UI; at least 20 Arabic and 20 English fixtures; verified Arabic interpretation, outage/injection/replay tests and single-agent comparison |
+| **4 — Authorized evidence retrieval** | Verified Oct 30, 2026 | Reviewed/merged | Scoped hybrid search, indexing/removal and 40 bilingual queries; all four PR CI jobs passed |
+| **5 — Cooperating specialists and bilingual understanding** | Verified Oct 30, 2026 | Awaiting review | Separate specialists, durable workflow UI/evidence review; 20 Arabic/20 English templates and eight OCR scans; narrow verified grammar, failure/injection/replay tests and scripted comparison |
 | **6 — MLOps and release checks** | Nov 5, 2026 | Planned | Correlated/redacted logs, latency/error/token/cost measurements, language-specific OCR/field/rule/retrieval evaluation and release CI gates |
 | **7 — Employer showcase** | Nov 6, 2026 | Planned | Independent clean-start rehearsal, complete English/Arabic investigation scenario, evidence/audit/restart demonstration, screenshots, demo script and evidence-supported CV claims |
 

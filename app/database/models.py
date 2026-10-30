@@ -518,7 +518,7 @@ class ProcessingJob(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=utc_now_naive)
     __table_args__ = (
         UniqueConstraint("kind", "resource_id", name="uq_job_resource"),
-        CheckConstraint("kind IN ('document','policy','policy_index')", name="ck_job_kind"),
+        CheckConstraint("kind IN ('document','policy','policy_index','specialist')", name="ck_job_kind"),
         CheckConstraint("state IN ('queued','running','retry_wait','completed','failed')", name="ck_job_state"),
     )
 
@@ -547,3 +547,34 @@ class SearchPassage(Base):
     embedding: Mapped[list | None] = mapped_column(JSON, nullable=True)
     model_id: Mapped[str | None] = mapped_column(String, nullable=True)
     __table_args__ = (CheckConstraint('"start" >= 0 AND "end" > "start"', name="ck_passage_offsets"),)
+
+
+class SpecialistWorkflow(Base):
+    __tablename__ = "specialist_workflows"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    owner_id: Mapped[str] = mapped_column(String, nullable=False)
+    document_id: Mapped[str] = mapped_column(ForeignKey("documents.id"), nullable=False)
+    policy_id: Mapped[str] = mapped_column(ForeignKey("policy_documents.id"), nullable=False)
+    question: Mapped[str] = mapped_column(String, nullable=False)
+    request_key: Mapped[str] = mapped_column(String, nullable=False)
+    status: Mapped[str] = mapped_column(String, default="queued", nullable=False)
+    checkpoint_thread: Mapped[str | None] = mapped_column(String, nullable=True)
+    result: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    resumes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now_naive, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now_naive, nullable=False)
+    __table_args__ = (UniqueConstraint("organization_id", "owner_id", "request_key", name="uq_specialist_request"),)
+
+
+class DocumentationReview(Base):
+    __tablename__ = "documentation_reviews"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    document_id: Mapped[str] = mapped_column(ForeignKey("documents.id"), nullable=False, index=True)
+    policy_id: Mapped[str] = mapped_column(ForeignKey("policy_documents.id"), nullable=False)
+    rule_id: Mapped[str] = mapped_column(String, nullable=False)
+    reviewer_id: Mapped[str] = mapped_column(String, nullable=False)
+    evidence_ids: Mapped[list] = mapped_column(JSON, nullable=False)
+    source_digest: Mapped[str] = mapped_column(String, nullable=False)
+    note: Mapped[str] = mapped_column(String, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now_naive, nullable=False)

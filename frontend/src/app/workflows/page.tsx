@@ -1,24 +1,6 @@
-import Link from "next/link";
-import { ArrowRight, BrainCircuit, CheckCircle2, CirclePause, GitBranch, Layers, LockKeyhole, Network, Repeat2, Workflow } from "lucide-react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/feedback";
-
-const stages = [
-  { title: "Ingest and classify", detail: "File parsing, OCR where supported, document classification", state: "Backend available", icon: Layers, ready: true },
-  { title: "Extract structured fields", detail: "Gemini model provider with deterministic fallback", state: "Backend available", icon: BrainCircuit, ready: true },
-  { title: "Check approved policy rules", detail: "Deterministic evaluation with evidence references", state: "Backend available", icon: CheckCircle2, ready: true },
-  { title: "Orchestrate decisions", detail: "LangGraph quality gates and deterministic policy evaluation", state: "Local backend available", icon: GitBranch, ready: true },
-  { title: "Pause for human review", detail: "Human decision as a resumable workflow checkpoint", state: "Local backend available", icon: CirclePause, ready: true },
-  { title: "Run background automations", detail: "Queue-driven tasks and external triggers", state: "Not implemented", icon: Repeat2, ready: false },
-];
+import WorkflowClient from "./workflow-client";
 
 export default function WorkflowsPage() {
-  return <><SectionHeading eyebrow="Agentic automation" title="Workflow orchestration" description="Checkpointed LangGraph review workflows are available through the local backend API. Dashboard execution controls and cooperating specialist agents are planned."/>
-    <div className="mb-7 overflow-hidden rounded-[22px] bg-[#161d36] px-7 py-8 text-white sm:px-9"><div className="flex flex-wrap items-center justify-between gap-5"><div><div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.17em] text-[#aaa8ff]"><Network size={15}/> Architecture roadmap</div><h2 className="text-[22px] font-bold tracking-tight">An orchestration layer built for control.</h2><p className="mt-2 max-w-xl text-[13px] leading-relaxed text-[#aeb8d0]">The local backend can pause for document review, persist a checkpoint, and resume after rechecking the recorded review. Retries and background processing remain planned.</p></div><span className="rounded-full border border-[#4e5776] bg-[#28304d] px-4 py-2 text-[11px] font-semibold text-[#c0c5d9]">LangGraph: local backend</span></div></div>
-    <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]"><Card><CardHeader><div><CardTitle>Workflow capabilities</CardTitle><p className="mt-1 text-[12px] text-muted">Capabilities and implementation status</p></div><Workflow size={20} className="text-primary"/></CardHeader><div className="space-y-0 px-6 pb-6">{stages.map((stage, i) => <div className="flex gap-4" key={stage.title}><div className="flex flex-col items-center"><div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${stage.ready ? "bg-[#e9f8f0] text-[#2b9f72]" : "bg-[#f1f1fb] text-[#8684ba]"}`}><stage.icon size={19}/></div>{i < stages.length - 1 && <div className="min-h-9 w-px flex-1 bg-[#e6e8f1]"/>}</div><div className="flex-1 pb-8 pt-0.5"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-[13px] font-semibold text-ink">{stage.title}</h3><span className={`text-[10px] font-semibold ${stage.ready ? "text-[#328767]" : "text-[#8b8ca5]"}`}>{stage.state}</span></div><p className="mt-1.5 text-[12px] leading-relaxed text-muted">{stage.detail}</p></div></div>)}</div></Card>
-      <div className="space-y-6"><Card className="p-6"><div className="flex items-center gap-3"><div className="rounded-xl bg-[#f0efff] p-3 text-primary"><LockKeyhole size={21}/></div><h3 className="text-[14px] font-semibold">Human approval by design</h3></div><p className="mt-4 text-[12px] leading-6 text-muted">The workflow engine must not silently skip uncertain classifications, missing policy evidence, or approval requirements. Reviews act as explicit checkpoints in the backend.</p><Button asChild variant="secondary" size="sm" className="mt-5"><Link href="/reviews">Open review center <ArrowRight size={15}/></Link></Button></Card>
-      <Card className="p-6"><div className="flex items-center gap-3"><div className="rounded-xl bg-[#eaf8f3] p-3 text-[#28a075]"><BrainCircuit size={21}/></div><h3 className="text-[14px] font-semibold">What works today</h3></div><p className="mt-4 text-[12px] leading-6 text-muted">Upload a document, let Gemini extract information, review uncertain fields, then evaluate approved policy rules. These steps are available through the existing FastAPI APIs.</p><Button asChild className="mt-5"><Link href="/upload">Try document processing <ArrowRight size={15}/></Link></Button></Card></div></div>
-    <p className="mt-5 text-[11px] text-muted">Workflow start, status, and resume APIs exist for explicitly enabled local development. Dashboard execution controls and background jobs are not yet implemented.</p>
-  </>;
+  const available = process.env.NODE_ENV === "development" && process.env.EDI_ENABLE_DEV_WORKFLOWS_FRONTEND === "true" && !!process.env.EDI_DEV_WORKFLOW_TOKEN;
+  return <WorkflowClient available={available}/>;
 }

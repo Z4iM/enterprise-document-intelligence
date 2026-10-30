@@ -57,3 +57,16 @@ Local HTTP uses backend `EDI_ENV=development`, independent of the Next.js build 
 
 Styling remains Tailwind 4 through `@tailwindcss/postcss`. See root README and
 `docs/SECURITY.md` for current limits and deployment caveats.
+
+Milestone 5 adds `/workflows`: independent document/policy specialist traces, durable
+pause/resume and explicit supporting-evidence review. Controls require `npm run dev`,
+`EDI_ENABLE_DEV_WORKFLOWS_FRONTEND=true` and private `EDI_DEV_WORKFLOW_TOKEN`, matching
+the backend's enabled workflow guard/token. Optional private loopback origin configuration
+supports alternate local ports. The production gateway returns 404. Documentation
+attestation is staff-only; employees see their scoped checklist. See
+[`docs/SPECIALISTS.md`](../docs/SPECIALISTS.md) for setup, bounds and measured limitations.
+
+The default browser run tests the production guard. A separate synthetic development
+journey uses `EDI_E2E_WORKFLOW_DEV=true npx playwright test specialist-journey.spec.ts`
+(PowerShell: set `$env:EDI_E2E_WORKFLOW_DEV='true'` first). Only generation is mocked;
+real auth/CSRF, jobs, review, checkpoints and deterministic Arabic evaluation are exercised.

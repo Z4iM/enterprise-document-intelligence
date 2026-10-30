@@ -1,7 +1,11 @@
 import re
 
+from app.language.fields import arabic_fields, date_value, labeled, labeled_amount
+
 
 def extract_invoice_data(text: str) -> dict:
+    if re.search(r"(?:رقم الفاتورة|المورد|المبلغ المستحق)\s*[:：]", text):
+        return arabic_fields(text, "invoice")
     data = {
         "invoice_number": None,
         "vendor": None,
@@ -12,33 +16,19 @@ def extract_invoice_data(text: str) -> dict:
     lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     invoice_match = re.search(
-        r"(?:invoice\s*(?:number|no|#)?\s*[:\-]?\s*)([A-Za-z0-9\-]+)",
+        r"^invoice\s*(?:number|no\.?|#)\s*[:\-]?\s*([A-Za-z0-9\-]+)\s*$",
         text,
-        re.IGNORECASE
+        re.IGNORECASE | re.MULTILINE
     )
 
     if invoice_match:
         data["invoice_number"] = invoice_match.group(1)
 
-    total_match = re.search(
-        r"(?:total|amount due)\s*[:\-]?\s*[$€£]?\s*([0-9,]+(?:\.[0-9]{2})?)",
-        text,
-        re.IGNORECASE
-    )
-
-    if total_match:
-        data["total"] = total_match.group(1)
-
-    due_date_match = re.search(
-        r"(?:due date)\s*[:\-]?\s*([0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{2,4})",
-        text,
-        re.IGNORECASE
-    )
-
-    if due_date_match:
-        data["due_date"] = due_date_match.group(1)
-
     if lines:
         data["vendor"] = lines[0]
 
+    data["total"] = labeled_amount(text, "total|amount due", retain_usd=False)
+    data["invoice_date"] = date_value(labeled(text, "invoice date"))
+    data["due_date"] = date_value(labeled(text, "due date"))
+    data["expense_category"] = labeled(text, "expense category|category")
     return data

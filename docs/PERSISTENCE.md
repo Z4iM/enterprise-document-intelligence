@@ -23,6 +23,14 @@ durable processing path. Test fixtures select their mode explicitly.
 migration head without exposing configuration. `EDI_DATA_ROOT` defaults to `data` and
 holds originals and SQLite LangGraph checkpoints; the business database can be PostgreSQL.
 
+M5 head is `20261030_specialists`: workflow metadata and append-only evidence attestations.
+The additional `specialist_checkpoints.sqlite` must be backed up with the business DB,
+originals and existing `langgraph_checkpoints.sqlite`. Import of referenced specialist
+threads requires `--specialist-checkpoints <backed-up-saver>`; missing threads fail the
+read-only rehearsal. Upgrade only a separate rehearsal copy first. No real user database
+was migrated as part of development. Per-lease checkpoint branches publish only through
+the transactional queue fence; unpublished orphan retention remains future work.
+
 Native OCR requires Tesseract with both `eng` and `ara` trained-data packs plus Poppler
 for scanned PDFs. Check `tesseract --list-langs`. Missing packs fail explicitly; the
 container definition installs both. `EDI_OCR_LANGUAGES=eng` is an English-only local

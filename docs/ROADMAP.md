@@ -8,8 +8,8 @@ Milestones stop for review; dates are planning windows, not completion claims.
 | 1: Trustworthy local lifecycle | Oct 30 | Complete | Consistent API/tool/workflow eligibility; TXT upload; validated fallback correction and durable resume; legacy route retired; full quality gates |
 | 2: Identity and security | Oct 30–Nov 1 | Accepted for continuation | Sessions/CSRF/logout/password change; scoped Employee/Reviewer/Admin; names and role-specific personal stats; bounded uploads; automatic policy extraction and confirmed atomic bulk approval; account-derived investigation scope |
 | 3: Persistence/recovery | Nov 1–2 | Reviewed and merged | Both Docker profiles built/started/restarted; authenticated HTTP intake; safe synthetic SQLite import; real PostgreSQL; durable jobs/recovery; Arabic Unicode/OCR/RTL foundations |
-| 4: Evidence retrieval | Nov 2–3 | Complete; awaiting user review | Authorized hybrid search; incremental indexing/removal; fixed 40-query bilingual benchmark; English/Arabic Recall@5/MRR/citation/abstention results and baselines |
-| 5: Cooperating specialists | Nov 3–4 | Not started | Distinct document/policy responsibilities; bounded durable orchestration; workflow UI; English/Arabic extraction and verified policy interpretation; failure/injection/replay tests; single-agent comparison |
+| 4: Evidence retrieval | Nov 2–3 | Reviewed and merged | Authorized hybrid search; incremental indexing/removal; fixed 40-query bilingual benchmark; English/Arabic Recall@5/MRR/citation/abstention results and baselines |
+| 5: Cooperating specialists | Nov 3–4 | Locally verified; awaiting review | Separate bounded tool-choosing roles; durable fenced checkpoints and workflow UI; 40 bilingual fixtures/eight actual scans; narrow Arabic verification; real review/evidence gates; scripted single-agent comparison. General OCR/model quality remains unproven. |
 | 6: MLOps/release checks | Nov 5 | Not started | Browser lifecycle test; redacted correlated logs; latency/error/token/cost metrics; evaluation/container CI gates |
 | 7: Showcase freeze | Nov 6 | Not started | Independent clean-start rehearsal; screenshots/demo; evidence-supported CV claims and published limitations |
 
@@ -75,4 +75,6 @@ for both profiles, including real authenticated HTTP intake and persisted sessio
 The container CI job now uses the same isolated verification runner; remote CI is unobserved.
 Milestone 3 was subsequently reviewed and merged. The user approved milestone 4;
 its scoped retrieval implementation and measured benchmark are described in RETRIEVAL.md.
-Milestone 5 remains unapproved and has not started.
+Milestone 4 was subsequently reviewed/merged as PR #5; all four remote CI jobs passed.
+The user approved milestone 5. Its design, measurements and limitations are recorded
+in [SPECIALISTS.md](SPECIALISTS.md); no further milestone or publication is authorized.

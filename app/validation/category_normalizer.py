@@ -1,7 +1,10 @@
 import re
 
+from app.language.amounts import semantic_text
+
 CATEGORY_ALIASES = {
     "meal": {
+        "وجبة", "وجبات", "الوجبات", "الطعام", "مصروفات الوجبات",
         "meal",
         "meals",
         "meal expense",
@@ -10,6 +13,7 @@ CATEGORY_ALIASES = {
         "restaurant expense",
     },
     "hotel": {
+        "فندق", "الفندق", "فنادق", "الفنادق", "إقامة", "الإقامة",
         "hotel",
         "hotels",
         "hotel expense",
@@ -18,6 +22,7 @@ CATEGORY_ALIASES = {
         "lodging",
     },
     "ground_transportation": {
+        "النقل البري", "تاكسي", "سيارة أجرة", "سيارات الأجرة",
         "ground transportation",
         "transport",
         "transportation",
@@ -26,6 +31,7 @@ CATEGORY_ALIASES = {
         "ground transport",
     },
     "purchase": {
+    "مشتريات", "المشتريات", "الشراء", "مستلزمات المكتب",
     "purchase",
     "purchases",
     "purchasing",
@@ -36,6 +42,7 @@ CATEGORY_ALIASES = {
     },
 
     "all_expenses": {
+        "جميع المصروفات", "كل المصروفات", "جميع النفقات",
         "all_expenses",
         "all expenses",
         "individual expenses",
@@ -52,7 +59,7 @@ def normalize_category(value: str | None) -> str:
     cleaned = re.sub(
         r"[\s_-]+",
         " ",
-        value.strip().lower()
+        semantic_text(value)
     )
 
     for canonical, aliases in CATEGORY_ALIASES.items():

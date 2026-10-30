@@ -263,7 +263,7 @@ def main():
     override.write_text(
         "services:\n"
         + "".join(
-            f"  {name}:\n    image: {backend}\n    environment:\n      EDI_ALLOWED_ORIGINS: http://127.0.0.1:{port}\n      EDI_RETRIEVAL_MODEL_DIR: {json.dumps('/srv/models/retrieval' if args.model_directory else '')}\n"
+            f"  {name}:\n    image: {backend}\n    environment:\n      EDI_ALLOWED_ORIGINS: http://127.0.0.1:{port}\n      EDI_ENABLE_DEV_WORKFLOWS: 'true'\n      EDI_RETRIEVAL_MODEL_DIR: {json.dumps('/srv/models/retrieval' if args.model_directory else '')}\n"
             + (
                 f"    volumes:\n      - type: bind\n        source: {json.dumps(str(Path(args.model_directory).resolve()))}\n        target: /srv/models/retrieval\n        read_only: true\n"
                 if args.model_directory
@@ -348,6 +348,11 @@ def main():
             )
             run(command + ["exec", "-T", "api", "tesseract", "--list-langs"], env)
             run(command + ["exec", "-T", "api", "python", "-m", "app.jobs.smoke"], env)
+            run(
+                command
+                + ["exec", "-T", "api", "python", "-m", "app.specialists.smoke"],
+                env,
+            )
             run(command + ["stop"], env)
             run(
                 command + ["up", "--no-build", "-d", "--wait", "--wait-timeout", "180"],
@@ -356,6 +361,19 @@ def main():
             run(
                 command
                 + ["exec", "-T", "api", "python", "-m", "app.jobs.smoke", "--verify"],
+                env,
+            )
+            run(
+                command
+                + [
+                    "exec",
+                    "-T",
+                    "api",
+                    "python",
+                    "-m",
+                    "app.specialists.smoke",
+                    "--verify",
+                ],
                 env,
             )
             http_check(command, env, port, semantic=bool(args.model_directory))

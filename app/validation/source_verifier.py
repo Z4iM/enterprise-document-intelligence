@@ -1,7 +1,8 @@
 
 import re
-from decimal import Decimal
 
+from app.language.amounts import currency_codes, parse_amount
+from app.language.policy import arabic_policy_check
 from app.validation.action_verifier import detect_policy_action
 from app.validation.rule_schemas import PolicyRule
 from app.validation.scope_verifier import verify_rule_scope
@@ -37,7 +38,14 @@ def verify_rule(
             "reason": "Source quote not found in policy."
         }
 
-    text = quote.lower()
+    text = normalized_quote.lower()
+    if re.search(r"[\u0621-\u064a]", quote):
+        return arabic_policy_check(rule)
+    assertion = re.sub(r"\bno (?:less|more) than\b", "", text)
+    if re.search(r"\b(?:no|not|never|without|unless|except|excluding|optional|unnecessary|may|might|can)\b", assertion):
+        return {"verified": False, "reason": "Unsupported negation, exception or discretionary wording."}
+    if currency_codes(quote) != {rule.currency}:
+        return {"verified": False, "reason": "Currency not supported by source quote."}
 
     # -----------------------------------------
     # 2. Verify comparison operator
@@ -47,7 +55,7 @@ def verify_rule(
         ">=": r"\b(at least|or more|no less than)\b",
         ">": r"\b(above|over|exceeds|greater than)\b",
         "<=": r"\b(up to|at most|no more than)\b",
-        "<": r"\b(below|under|less than)\b",
+        "<": r"\b(below|under|(?<!no )less than)\b",
     }
 
     detected_operators = [
@@ -78,16 +86,16 @@ def verify_rule(
     # -----------------------------------------
 
     amounts = re.findall(
-        r"\$\s*(\d[\d,]*(?:\.\d+)?)",
+        r"\$\s*(\d[\d,]*(?:\.\d+)?)(?![\w,]|\.\w)",
         quote
     )
 
     extracted_amounts = {
-        Decimal(value.replace(",", ""))
+        parse_amount("$" + value, rule.currency)
         for value in amounts
     }
 
-    if rule.threshold not in extracted_amounts:
+    if len(extracted_amounts) != 1 or rule.threshold not in extracted_amounts:
         return {
             "verified": False,
             "reason": "Threshold not supported by source quote."

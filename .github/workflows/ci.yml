@@ -47,6 +47,11 @@ jobs:
       - name: Reproduce synthetic keyword retrieval baseline (no model/network)
         run: python evals/retrieval/run.py --output .local/retrieval-lexical-ci.json
 
+      - name: Reproduce bilingual reference and specialist control-flow evaluations
+        run: |
+          python evals/bilingual/run.py --check-native --output .local/bilingual-ci.json
+          python evals/specialists/run.py --output .local/specialists-ci.json
+
   # ==========================================
   # Frontend: TypeScript and Production Build
   # ==========================================
@@ -94,6 +99,13 @@ jobs:
           EDI_BROWSER_CHANNEL: chromium
           EDI_TEST_PYTHON: python
         run: npm run test:e2e
+
+      - name: Exercise isolated development specialist workflow with synthetic model generation
+        env:
+          EDI_BROWSER_CHANNEL: chromium
+          EDI_TEST_PYTHON: python
+          EDI_E2E_WORKFLOW_DEV: "true"
+        run: npx playwright test specialist-journey.spec.ts
 
   postgres:
     name: Real PostgreSQL migrations, import and recovery
