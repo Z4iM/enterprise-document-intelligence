@@ -5,7 +5,13 @@ from datetime import timedelta
 
 from sqlalchemy import and_, or_, select, update
 
-from app.database.models import Document, PolicyDocument, ProcessingJob, utc_now_naive
+from app.database.models import (
+    Document,
+    PolicyDocument,
+    PolicySearchIndex,
+    ProcessingJob,
+    utc_now_naive,
+)
 
 LEASE_SECONDS = 180
 
@@ -73,6 +79,10 @@ def claim(sessions):
                             "failed",
                             "needs_review",
                         )
+                    elif job.kind == "policy_index":
+                        index = db.get(PolicySearchIndex, job.resource_id)
+                        if index and index.enabled:
+                            index.state = "failed"
                     else:
                         resource.rule_extraction_status = "failed"
         query = (
@@ -154,6 +164,10 @@ def fail(sessions, identifier, token):
                 if job.kind == "document":
                     resource.processing_status = "failed" if terminal else "retry_wait"
                     resource.review_status = "needs_review"
+                elif job.kind == "policy_index":
+                    index = db.get(PolicySearchIndex, job.resource_id)
+                    if index and index.enabled:
+                        index.state = "failed" if terminal else "queued"
                 else:
                     resource.rule_extraction_status = (
                         "failed" if terminal else "retry_wait"

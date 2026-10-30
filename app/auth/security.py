@@ -229,7 +229,10 @@ def authorize_request(
                     require_reviewer(actor)
                 if len(parts) > 1 and parts[1] != "upload":
                     require_policy(db, parts[1], actor)
-            if parts[0] == "admin" and actor.role != "admin":
+            if (
+                parts[0] == "admin"
+                or (request.url.path == "/auth/profile" and request.method == "POST")
+            ) and actor.role != "admin":
                 raise HTTPException(403, "Administrator permission required.")
         except HTTPException:
             record_event(db, "access_denied", actor)

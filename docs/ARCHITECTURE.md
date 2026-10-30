@@ -1,12 +1,23 @@
 # Architecture — 2026-10-30
 
+M4 adds organization/policy-scoped source search, separate fenced `policy_index` jobs
+and derived `PolicySearchIndex`/`SearchPassage` tables. SQL authorization precedes
+BM25/vector ranking; current chunk hashes/offsets are revalidated on reads. Optional local
+ONNX vectors use BM25/cosine/RRF; default is explicit keyword search. The legacy global
+FAISS experiment remains outside the product path. Existing approved-rule evaluation
+and agent authority boundaries remain. See [design and limits](RETRIEVAL.md) and ADR 011.
+
 ```mermaid
 flowchart LR
     Browser --> Next[Next.js session UI and allowlisted bridge]
     Next --> Auth[FastAPI session / CSRF / role / scope checks]
     Auth --> DB[(PostgreSQL or SQLite: users, sessions, data, limits, audit, jobs)]
     Auth --> Queue[Persist original and enqueue job]
+    Auth --> Search[Scoped BM25 / cosine / RRF source retrieval]
+    Search --> DB
     Queue --> Worker[Bounded embedded or separate worker]
+    Worker --> Index[Derived policy indexing with lease fencing]
+    Index --> DB
     Worker --> Parser
     Auth --> Parser[Bounded parser subprocess]
     Parser --> Review[Authenticated field review]

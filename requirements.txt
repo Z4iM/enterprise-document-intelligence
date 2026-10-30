@@ -1,5 +1,6 @@
 -r requirements-runtime.txt
 
-# Legacy local RAG dependencies; milestone 4 will select and lock its retrieval stack.
+# Optional legacy global-index experiments only. Official scoped retrieval uses
+# the pinned ONNX runtime above; these packages are not required by the application.
 sentence-transformers
 faiss-cpu

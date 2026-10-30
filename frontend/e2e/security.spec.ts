@@ -13,6 +13,19 @@ async function signOut(page: Page) {
   await page.getByRole("button", {name: "Sign out", exact: true}).click();
 }
 
+for (const role of ["employee", "reviewer"]) {
+  test(`${role} profile restricts name editing to administrators`, async ({page}) => {
+    await login(page, role);
+    await page.getByRole("button", {name: "Open user profile", exact: true}).click();
+    const profile = page.getByRole("region", {name: "Your profile", exact: true});
+    await expect(profile.getByText("Your name is managed by an administrator.", {exact: true})).toBeVisible();
+    await expect(profile.getByLabel("Your name", {exact: true})).toHaveCount(0);
+    await expect(profile.getByRole("button", {name: "Save name", exact: true})).toHaveCount(0);
+    await expect(profile.getByRole("button", {name: "Change password", exact: true})).toBeVisible();
+    await expect(profile.getByText("Documents uploaded", {exact: true})).toBeVisible();
+  });
+}
+
 test("real cookie bridge: upload, reviewer correction, rule approval, evidence and logout", async ({page}) => {
   await login(page, "employee");
   await page.goto("/upload");
@@ -125,4 +138,24 @@ test("production investigation explains availability and retains gateway denial"
   expect(submitted).toBe(false);
   const response = await page.request.post("/api/agent/investigate", {data: {question: "Synthetic question"}});
   expect(response.status()).toBe(404);
+});
+
+test("Arabic policy search, exact evidence and reviewer removal preserve original", async ({page}) => {
+  await login(page, "reviewer");
+  await page.goto("/policies");
+  const text = "تتطلب مصروفات الوجبات التي تتجاوز مائة دولار موافقة المدير.";
+  await page.getByLabel("Policy file").setInputFiles({name: "arabic-search.txt", mimeType: "text/plain", buffer: Buffer.from(text)});
+  const uploaded = page.waitForResponse(response => response.url().endsWith("/api/bridge/policies/upload") && response.request().method() === "POST");
+  await page.getByRole("button", {name: "Upload policy", exact: true}).click();
+  const policy = (await (await uploaded).json()).policy_id as string;
+  await expect.poll(async () => (await (await page.request.get(`/api/bridge/policies/${policy}/index`)).json()).state, {timeout: 45000}).toBe("ready");
+  const search = page.getByRole("region", {name: "Search policy evidence"});
+  await search.getByLabel("Policy evidence query").fill("موافقة المدير للوجبات");
+  await search.getByRole("button", {name: "Search", exact: true}).click();
+  await expect(search.locator("blockquote")).toHaveText(text);
+  await expect(search.getByText(/source passages · keyword retrieval/)).toBeVisible();
+  await search.getByRole("button", {name: "Remove from search", exact: true}).click();
+  await search.getByRole("button", {name: "Confirm removal from search", exact: true}).click();
+  await expect(search.getByText("This policy is excluded from search.", {exact: true})).toBeVisible();
+  expect((await page.request.get(`/api/bridge/policies/${policy}/original`)).status()).toBe(200);
 });

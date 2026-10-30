@@ -6,6 +6,8 @@
 !alembic/
 !alembic/**
 !alembic.ini
+!scripts/
+!scripts/cache_retrieval_model.py
 **/__pycache__/
 **/*.pyc
 **/.env*

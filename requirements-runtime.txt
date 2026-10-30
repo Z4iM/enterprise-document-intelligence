@@ -74,3 +74,21 @@ websockets==16.1.1
 xlsxwriter==3.2.9
 xxhash==4.0.2
 zstandard==0.25.0
+
+# CPU-only multilingual retrieval; weights are installed explicitly, outside images.
+fastembed==0.9.1
+numpy==2.5.3
+onnxruntime==1.31.1
+tqdm==4.70.1
+tokenizers==0.23.2
+huggingface-hub==1.33.0
+filelock==4.0.12
+fsspec==2026.9.0
+hf-xet==1.7.0
+loguru==0.7.3
+mmh3==5.3.1
+py-rust-stemmers==0.1.8
+flatbuffers==25.12.19
+protobuf==7.36.2
+colorama==0.4.6; sys_platform == 'win32'
+win32-setctime==1.2.1; sys_platform == 'win32'

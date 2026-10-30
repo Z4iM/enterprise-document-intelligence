@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ProcessingStatus } from "@/components/processing-status";
 import { StatusBadge } from "@/components/ui/badge";
 import { ErrorState, SectionHeading } from "@/components/feedback";
+import { PolicyEvidenceSearch } from "@/components/policy-evidence-search";
 
 export default function PoliciesPage() {
   const {user} = useAuth();
@@ -37,7 +38,8 @@ export default function PoliciesPage() {
         </div></Card>
       </div>
       <Card><CardHeader><CardTitle>Source-backed rules</CardTitle></CardHeader><div className="space-y-4 px-6 pb-6">
-        {current && <ProcessingStatus key={current} kind="policies" id={current}/>}
+        {current && <PolicyEvidenceSearch key={`search-${current}`} policyId={current}/>}
+        {current && <ProcessingStatus key={`processing-${current}`} kind="policies" id={current}/>}
         {current && <a className="text-sm font-semibold text-primary" href={`/api/bridge/policies/${encodeURIComponent(current)}/original`}>Download original policy</a>}
         {current && <div className="space-y-3 rounded-xl border border-stroke p-4">
           <p role="status" className="text-sm">{rules.data?.extraction_message || "Automatic extraction runs when a policy is uploaded. Existing policies can be extracted below."}</p>

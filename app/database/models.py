@@ -518,6 +518,32 @@ class ProcessingJob(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=utc_now_naive)
     __table_args__ = (
         UniqueConstraint("kind", "resource_id", name="uq_job_resource"),
-        CheckConstraint("kind IN ('document','policy')", name="ck_job_kind"),
+        CheckConstraint("kind IN ('document','policy','policy_index')", name="ck_job_kind"),
         CheckConstraint("state IN ('queued','running','retry_wait','completed','failed')", name="ck_job_state"),
     )
+
+
+class PolicySearchIndex(Base):
+    __tablename__ = "policy_search_indexes"
+    policy_id: Mapped[str] = mapped_column(ForeignKey("policy_documents.id"), primary_key=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    state: Mapped[str] = mapped_column(String, default="queued", nullable=False)
+    source_digest: Mapped[str | None] = mapped_column(String, nullable=True)
+    model_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    passage_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now_naive, nullable=False)
+    __table_args__ = (CheckConstraint("state IN ('queued','ready','failed','removed')", name="ck_search_state"),)
+
+
+class SearchPassage(Base):
+    __tablename__ = "search_passages"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    policy_id: Mapped[str] = mapped_column(ForeignKey("policy_documents.id"), nullable=False, index=True)
+    chunk_id: Mapped[str] = mapped_column(ForeignKey("policy_chunks.id"), nullable=False, index=True)
+    start: Mapped[int] = mapped_column(Integer, nullable=False)
+    end: Mapped[int] = mapped_column(Integer, nullable=False)
+    source_hash: Mapped[str] = mapped_column(String, nullable=False)
+    language: Mapped[str] = mapped_column(String, nullable=False)
+    embedding: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    model_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    __table_args__ = (CheckConstraint('"start" >= 0 AND "end" > "start"', name="ck_passage_offsets"),)

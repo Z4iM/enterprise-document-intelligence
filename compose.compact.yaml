@@ -3,7 +3,7 @@ services:
   api:
     environment:
       EDI_PROCESSING_MODE: embedded
-    mem_limit: 768m
+    mem_limit: 1024m
     cpus: 1.5
   worker:
     profiles: [separate-worker]

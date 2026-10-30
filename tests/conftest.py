@@ -15,6 +15,7 @@ def pytest_configure(config):
     patch.setenv("EDI_ENV", "development")
     patch.setenv("EDI_PROCESSING_MODE", "inline")
     patch.setenv("EDI_DATA_ROOT", "data")
+    patch.delenv("EDI_RETRIEVAL_MODEL_DIR", raising=False)
     patch.setenv("EDI_DATABASE_URL", "sqlite:///data/database.db")
     patch.setenv("EDI_ALLOWED_ORIGINS", "http://127.0.0.1:3000,http://127.0.0.1:8000")
     config.addinivalue_line("markers", "security: exercises real authentication without trusted unit-test identity overrides")
