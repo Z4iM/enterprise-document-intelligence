@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.agents.gemini_tools import build_gemini_tools
 from app.agents.tool_dispatcher import dispatch_tool_call
+from app.observability.tracing import generate_content
 
 MAX_TOOL_CALLS = 5
 MAX_MODEL_TURNS = 7
@@ -81,7 +82,7 @@ def run_investigation(
     authoritative_result = None
 
     for _ in range(MAX_MODEL_TURNS):
-        response = client.models.generate_content(
+        response = generate_content(client,
             model=model,
             contents=history,
             config=config,

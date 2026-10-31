@@ -70,6 +70,7 @@ def public_run(db, run, actor):
     )
     return {
         "workflow_id": run.id,
+        "trace_id": job.trace_id if job else None,
         "document_id": run.document_id,
         "policy_id": run.policy_id,
         "question": run.question,

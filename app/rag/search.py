@@ -13,6 +13,7 @@ from app.database.models import (
     PolicySearchIndex,
     SearchPassage,
 )
+from app.observability.tracing import traced
 from app.rag import semantic
 from app.rag.indexing import source_hash
 from app.rag.lexical import bm25, tokens
@@ -21,6 +22,7 @@ MAX_CANDIDATES = 5000
 SEMANTIC_THRESHOLD = 0.55
 
 
+@traced("retrieval.search")
 def search_evidence(
     db,
     actor,

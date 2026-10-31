@@ -11,8 +11,6 @@ from io import BytesIO
 from pathlib import Path, PureWindowsPath
 
 from fastapi import HTTPException, UploadFile
-from PIL import Image
-from pypdf import PdfReader
 from starlette.concurrency import run_in_threadpool
 
 from app.ingestion.file_detector import detect_file_type
@@ -62,6 +60,8 @@ def validate_structure(raw: bytes, kind: str) -> str:
             raise ValueError("Binary text")
         return "text/plain"
     if kind == "pdf":
+        from pypdf import PdfReader
+
         if not raw.startswith(b"%PDF-"):
             raise ValueError("PDF signature")
         reader = PdfReader(BytesIO(raw), strict=True)
@@ -99,6 +99,8 @@ def validate_structure(raw: bytes, kind: str) -> str:
             if kind == "docx"
             else "presentationml.presentation"
         )
+    from PIL import Image
+
     with Image.open(BytesIO(raw)) as image:
         if (
             image.format not in {"PNG", "JPEG"}

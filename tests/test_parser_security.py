@@ -74,7 +74,7 @@ def test_fallback_logs_type_without_sensitive_exception_values(monkeypatch, capl
     )
     assert method == "regex_fallback" and failed and data
     assert marker not in caplog.text
-    assert "failure_type=ValueError" in caplog.text
+    assert any(getattr(record, "edi_failure_type", None) == "ValueError" for record in caplog.records)
 
 
 def test_large_text_cannot_trigger_unbounded_model_input(monkeypatch):

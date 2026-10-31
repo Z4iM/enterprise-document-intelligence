@@ -14,7 +14,7 @@ export function LoadingState({ label = "Loading workspace data..." }: { label?: 
 export function ErrorState({ error, retry }: { error: unknown; retry?: () => void }) {
   const message = error instanceof Error ? error.message : "Something went wrong.";
   const offline = error instanceof ApiError && error.status === 502;
-  return <Card className="flex flex-col items-center justify-center p-9 text-center"><div className="mb-4 rounded-2xl bg-[#fff1f0] p-4 text-[#cd5362]">{offline ? <WifiOff size={23} /> : <AlertCircle size={23} />}</div><div className="font-semibold text-ink">{offline ? "FastAPI is not responding" : "Unable to load data"}</div><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted">{message}</p>{retry && <Button variant="secondary" className="mt-5" onClick={retry}>Try again</Button>}</Card>;
+  return <Card className="flex flex-col items-center justify-center p-9 text-center"><div className="mb-4 rounded-2xl bg-[#fff1f0] p-4 text-[#cd5362]">{offline ? <WifiOff size={23} /> : <AlertCircle size={23} />}</div><div className="font-semibold text-ink">{offline ? "FastAPI is not responding" : "Unable to load data"}</div><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted">{message}</p>{error instanceof ApiError && error.requestId && <p className="mt-2 break-all font-mono text-xs text-muted">Request reference: {error.requestId}</p>}{retry && <Button variant="secondary" className="mt-5" onClick={retry}>Try again</Button>}</Card>;
 }
 
 export function EmptyState({ title, description, action }: { title: string; description: string; action?: React.ReactNode }) {

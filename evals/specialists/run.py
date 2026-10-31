@@ -311,6 +311,35 @@ def main():
             "real_provider_tokens": None,
             "real_provider_cost": None,
             "per_case": rows,
+            "by_language": {
+                language: {
+                    "cases": len(subset),
+                    "baseline_correct": sum(row["baseline_correct"] for row in subset),
+                    "specialists_correct": sum(
+                        row["specialists_correct"] for row in subset
+                    ),
+                    "baseline_scripted_calls": sum(
+                        row["baseline_model_calls_scripted"] for row in subset
+                    ),
+                    "specialist_scripted_calls": sum(
+                        row["specialist_model_calls_scripted"] for row in subset
+                    ),
+                    "mean_baseline_control_latency_ms": round(
+                        sum(row["baseline_control_latency_ms"] for row in subset)
+                        / len(subset),
+                        3,
+                    ),
+                    "mean_specialist_control_latency_ms": round(
+                        sum(row["specialist_control_latency_ms"] for row in subset)
+                        / len(subset),
+                        3,
+                    ),
+                    "real_provider_tokens": None,
+                    "real_provider_cost": None,
+                }
+                for language in ("en", "ar")
+                for subset in [[row for row in rows if row["language"] == language]]
+            },
         }
         output = Path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)

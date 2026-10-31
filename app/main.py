@@ -54,6 +54,9 @@ from app.extraction.router import extract_structured_data
 from app.ingestion.safety import extract_text_isolated as extract_text
 from app.ingestion.safety import read_upload
 from app.jobs.api import router as jobs_router
+from app.observability.api import router as operations_router
+from app.observability.middleware import TelemetryMiddleware
+from app.observability.tracing import configure_logging
 from app.rag.api import router as retrieval_router
 from app.rag.chunking import chunk_text
 from app.review.documentation import router as documentation_router
@@ -72,6 +75,7 @@ def processing_mode():
 
 @asynccontextmanager
 async def lifespan(application):
+    configure_logging()
     stop = threading.Event()
     thread = None
     if processing_mode() == "embedded":
@@ -100,8 +104,10 @@ app.include_router(jobs_router)
 app.include_router(retrieval_router)
 app.include_router(documentation_router)
 app.include_router(specialists_router)
+app.include_router(operations_router)
 app.state.resource_session_factory = lambda: SessionLocal()
 app.add_middleware(SecurityEnvelope)
+app.add_middleware(TelemetryMiddleware)
 
 
 @app.exception_handler(RequestValidationError)
@@ -133,7 +139,7 @@ def health_check():
 def readiness():
     try:
         with SessionLocal() as db:
-            if db.scalar(text("SELECT version_num FROM alembic_version")) != "20261030_specialists":
+            if db.scalar(text("SELECT version_num FROM alembic_version")) != "20261031_observability":
                 raise HTTPException(503, "Database migrations required.")
     except SQLAlchemyError as error:
         raise HTTPException(503, "Database unavailable or migrations required.") from error

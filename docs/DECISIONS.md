@@ -226,3 +226,23 @@ Conservative Arabic grammar/normalization preserves original quotations. Templat
 establish supported behavior, not unrestricted language understanding. Actual Arabic OCR
 remains weak. Scripted specialist comparison demonstrates separation/overhead, not model
 superiority; live quality/cost needs explicit authorization. See SPECIALISTS.md.
+
+## ADR 013 — Content-free local operations and honest release evidence (2026-10-31)
+
+Use context-variable parent/child spans, strict JSON logs and existing SQL storage rather
+than introduce an exporter/collector/dashboard service on the 8 GB development machine.
+Flush bounded diagnostic collectors after business transactions; diagnostics cannot
+authorize/approve or roll back successful business work. Generate correlation IDs on the
+server and persist trusted queue linkage. Read-only diagnostics are Admin/org scoped.
+
+Soft storage/read caps trade completeness for resource bounds. Retention is explicit,
+not automatic deletion. Missing provider counters/prices remain unknown; linear cost
+estimates require exact model/rate configuration and are never billing truth. Preserve
+safe failure codes while dropping arbitrary messages, tracebacks and private payloads.
+
+Separate deterministic regression success from product-quality gates. Small known
+templates and scripted models cannot certify real Arabic scans or live agent superiority.
+Keep these requirements visibly blocked until measured, authorized evidence exists.
+Audit runtime dependencies and built images; use full-SHA actions/checksummed scanner
+binaries. Patch advisory-affected pins and verify both native and Linux compatibility.
+See OBSERVABILITY.md for limits, configuration, migration and scan scope.

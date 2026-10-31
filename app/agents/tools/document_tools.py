@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 
 from app.database.models import Document
+from app.observability.tracing import traced
 from app.review.eligibility import document_eligibility
 
 
+@traced("tool.inspect_document")
 def inspect_document(
     document_id: str,
     allowed_document_ids: set[str],

@@ -47,3 +47,12 @@ quality. See [method/results](SPECIALISTS.md) and raw benchmark JSON.
 Native Arabic PDF/table coverage, realistic held-out scans and real-model quality remain
 unverified. Unsupported inputs stay review-gated; never bypass source verification.
 TXT intake requires UTF-8, not arbitrary encodings. Real-model evaluation needs approval.
+
+M6 reran the fixed corpus after parser/security changes: native goldens still pass and
+scanned-field quality remains 75% English / 50% Arabic. The measured report includes
+per-language OCR/field/policy/timing results; scripted specialist reports include
+per-language calls/control timings. Real-provider token/cost quality is **unmeasured**.
+The release command separates passing regression checks from the deliberately unmet
+held-out/live-model quality gate. See [M6 OCR](benchmarks/bilingual-m6.json),
+[release checks](OBSERVABILITY.md#reproduce-evaluations-and-scans) and
+[verification](VERIFICATION.md). M6 does not certify accurate general Arabic extraction.

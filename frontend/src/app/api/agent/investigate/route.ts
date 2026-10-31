@@ -204,11 +204,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const reference = upstream.headers.get("x-request-id");
+    const responseHeaders = new Headers({"Cache-Control": "no-store"});
+    if (reference && /^[a-f0-9]{32}$/.test(reference)) responseHeaders.set("X-Request-ID", reference);
     return NextResponse.json(result, {
       status: upstream.status,
-      headers: {
-        "Cache-Control": "no-store",
-      },
+      headers: responseHeaders,
     });
   } catch {
     return errorResponse(

@@ -15,6 +15,7 @@ from app.agents.tools.evaluation_tools import evaluate_document_policy
 from app.agents.tools.policy_tools import get_policy_evidence
 from app.auth.security import Principal, require_document, require_policy
 from app.database.models import HumanReview, User
+from app.observability.tracing import traced
 from app.rag.search import search_evidence
 from app.review.documentation import documentation_checklist
 from app.review.eligibility import document_eligibility
@@ -141,6 +142,7 @@ def build_graph(checkpointer, *, sessions, actor_id, deadline, client_factory=No
             )
         return result
 
+    @traced("workflow.document")
     def document_node(state):
         db, _, document = checked(state)
         with db:
@@ -218,6 +220,7 @@ def build_graph(checkpointer, *, sessions, actor_id, deadline, client_factory=No
             "trace": event(state, "document_specialist", status),
         }
 
+    @traced("workflow.policy")
     def policy_node(state):
         db, _, _ = checked(state)
         with db:
@@ -246,6 +249,7 @@ def build_graph(checkpointer, *, sessions, actor_id, deadline, client_factory=No
             "trace": event(state, "policy_specialist", status),
         }
 
+    @traced("workflow.evaluate")
     def evaluate_node(state):
         db, actor, document = checked(state)
         with db:

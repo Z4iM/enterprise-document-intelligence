@@ -1,0 +1,67 @@
+{
+  "observed_at": "2026-10-31T00:40:06.542000+00:00",
+  "scope": "PR 7 dependency-audit remediation; prior M6 image/evaluation artifacts are historical snapshots.",
+  "initial_ci_run": 41150046020,
+  "initial_ci": {
+    "application_backend": "success",
+    "frontend_and_browser": "success",
+    "postgres": "success",
+    "containers_and_image_scans": "success",
+    "python_dependency_audit": "failure"
+  },
+  "affected_package": {
+    "name": "pyasn1",
+    "before": "0.6.4",
+    "after": "0.6.5",
+    "advisories": [
+      {
+        "id": "CVE-2026-119196",
+        "fixed_versions": [
+          "0.6.5"
+        ]
+      },
+      {
+        "id": "CVE-2026-119194",
+        "fixed_versions": [
+          "0.6.5"
+        ]
+      },
+      {
+        "id": "CVE-2026-119197",
+        "fixed_versions": [
+          "0.6.5"
+        ]
+      },
+      {
+        "id": "CVE-2026-119195",
+        "fixed_versions": [
+          "0.6.5"
+        ]
+      }
+    ]
+  },
+  "upstream_release": "https://github.com/pyasn1/pyasn1/releases/tag/v0.6.5",
+  "audit": {
+    "tool": "pip-audit 2.10.1",
+    "flags": "--no-deps --disable-pip --strict --format=json",
+    "before_advisory_entries": 4,
+    "after_advisory_entries": 0,
+    "dependencies_audited": 90,
+    "custom_ignores_added": false,
+    "manifest_sha256_lf": "30c0b25697a85c656e89ac19668d2a824028f5c38f92014af71deeb9711892d5",
+    "fixed_raw_report_sha256": "0bc37d861ab7c0c3e284288442d76c6741a45defe6a517fe793f32d40686ce43"
+  },
+  "limitations": "Advisory results are time-specific. No deployment, real-data migration or live model inference; broader product-quality blockers remain.",
+  "local_verification": {
+    "pip_check": "passed",
+    "ruff": "passed",
+    "pytest": {
+      "passed": 385,
+      "skipped_opt_in_postgres": 9,
+      "seconds": 145.96
+    },
+    "frontend_typescript": "passed",
+    "frontend_production_build": "passed",
+    "audit_platform": "win32"
+  }
+}

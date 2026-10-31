@@ -502,6 +502,8 @@ class WorkflowRun(Base):
 
 class ProcessingJob(Base):
     __tablename__ = "processing_jobs"
+    trace_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    parent_span_id: Mapped[str | None] = mapped_column(String, nullable=True)
     id: Mapped[str] = mapped_column(String, primary_key=True)
     kind: Mapped[str] = mapped_column(String, nullable=False)
     resource_id: Mapped[str] = mapped_column(String, nullable=False)
@@ -578,3 +580,17 @@ class DocumentationReview(Base):
     source_digest: Mapped[str] = mapped_column(String, nullable=False)
     note: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now_naive, nullable=False)
+
+
+class TelemetrySpan(Base):
+    __tablename__ = "telemetry_spans"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    trace_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    span_id: Mapped[str] = mapped_column(String, nullable=False)
+    parent_span_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    operation: Mapped[str] = mapped_column(String, nullable=False)
+    status: Mapped[str] = mapped_column(String, nullable=False)
+    duration_ms: Mapped[float] = mapped_column(Float, nullable=False)
+    measurements: Mapped[dict] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)

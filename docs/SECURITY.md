@@ -8,6 +8,14 @@ their manifest and never downloaded on requests. See [limits](RETRIEVAL.md).
 
 ## Identity and authority
 
+M6 diagnostics are read-only, administrator-only and organization-filtered before
+aggregation/trace reads. Browser/model correlation headers cannot select trusted trace
+identities. Logs/spans contain no source/prompt/response/credential/identity data; strict
+formatting discards raw messages and tracebacks. Telemetry is best effort and has no
+business authority. CI audits runtime dependencies and fixable high/critical image
+findings, with full-SHA actions and checksum-pinned scanner tools. See
+[observability and scan scope](OBSERVABILITY.md); this is not an independent security audit.
+
 M5 specialist intake/resume retains development flag, loopback, private token, sessions,
 CSRF and scoped resources. Each node/tool reloads the active account and permission scope.
 Role-specific tool allowlists reject model-supplied scope/approval arguments before

@@ -38,7 +38,7 @@ def test_fresh_upgrade_is_repeatable_and_matches_models(tmp_path):
         engine.dispose()
 
 
-@pytest.mark.parametrize("revision", [None, "20261030_jobs", "20261030_specialists"])
+@pytest.mark.parametrize("revision", [None, "20261030_jobs", "20261031_observability"])
 def test_readiness_requires_current_migration_without_exposing_db_errors(
     tmp_path, monkeypatch, revision
 ):
@@ -61,7 +61,7 @@ def test_readiness_requires_current_migration_without_exposing_db_errors(
         monkeypatch.setattr(main, "SessionLocal", sessionmaker(bind=engine))
         with TestClient(main.app, base_url="http://127.0.0.1:8000") as client:
             response = client.get("/ready")
-            assert response.status_code == (200 if revision == "20261030_specialists" else 503)
+            assert response.status_code == (200 if revision == "20261031_observability" else 503)
             assert "SELECT" not in response.text and "sqlite" not in response.text
             assert client.get("/health").status_code == 200
     finally:

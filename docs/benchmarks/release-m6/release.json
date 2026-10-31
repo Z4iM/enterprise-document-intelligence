@@ -1,0 +1,163 @@
+{
+  "regression_gate_passed": true,
+  "product_quality_gate_passed": false,
+  "regression_checks": [
+    {
+      "name": "en.native_fixture_count",
+      "passed": true,
+      "observed": 20,
+      "target": ">=20"
+    },
+    {
+      "name": "en.native.field_exact_accuracy",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "en.native.classification_accuracy",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "en.native.policy_decision_accuracy",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "en.keyword.recall_at_5",
+      "passed": true,
+      "observed": 0.5,
+      "target": 0.5
+    },
+    {
+      "name": "en.keyword.citation_integrity",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "en.keyword.unanswerable_abstention_rate",
+      "passed": true,
+      "observed": 1.0,
+      "target": 0.75
+    },
+    {
+      "name": "ar.native_fixture_count",
+      "passed": true,
+      "observed": 20,
+      "target": ">=20"
+    },
+    {
+      "name": "ar.native.field_exact_accuracy",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "ar.native.classification_accuracy",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "ar.native.policy_decision_accuracy",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "ar.keyword.recall_at_5",
+      "passed": true,
+      "observed": 0.5,
+      "target": 0.5
+    },
+    {
+      "name": "ar.keyword.citation_integrity",
+      "passed": true,
+      "observed": 1.0,
+      "target": 1
+    },
+    {
+      "name": "ar.keyword.unanswerable_abstention_rate",
+      "passed": true,
+      "observed": 0.75,
+      "target": 0.75
+    },
+    {
+      "name": "baseline.canonical_outcomes",
+      "passed": true,
+      "observed": "12/12",
+      "target": "12/12 or larger fixed golden corpus"
+    },
+    {
+      "name": "specialists.canonical_outcomes",
+      "passed": true,
+      "observed": "12/12",
+      "target": "12/12 or larger fixed golden corpus"
+    }
+  ],
+  "product_quality_checks": [
+    {
+      "name": "en.scan_sample_size",
+      "passed": false,
+      "observed": 4,
+      "target": ">=20 held-out scans/language"
+    },
+    {
+      "name": "en.scan_field_accuracy",
+      "passed": false,
+      "observed": 0.75,
+      "target": ">=0.90; sufficient held-out sample also required"
+    },
+    {
+      "name": "en.keyword_abstention",
+      "passed": true,
+      "observed": 1.0,
+      "target": ">=0.90"
+    },
+    {
+      "name": "ar.scan_sample_size",
+      "passed": false,
+      "observed": 4,
+      "target": ">=20 held-out scans/language"
+    },
+    {
+      "name": "ar.scan_field_accuracy",
+      "passed": false,
+      "observed": 0.5,
+      "target": ">=0.90; sufficient held-out sample also required"
+    },
+    {
+      "name": "ar.keyword_abstention",
+      "passed": false,
+      "observed": 0.75,
+      "target": ">=0.90"
+    },
+    {
+      "name": "live_model_quality_and_cost",
+      "passed": false,
+      "observed": "NOT RUN: separate explicit provider/data/quota approval required",
+      "target": "authorized held-out comparison with measured usage and latency"
+    },
+    {
+      "name": "held_out_ocr_corpus",
+      "passed": false,
+      "observed": "Current OCR report uses development templates",
+      "target": "independently held-out realistic receipts/invoices/policies"
+    }
+  ],
+  "limitations": "Regression success is not showcase/production certification. OCR/retrieval thresholds are initial engineering targets, not statistical guarantees. No inference is run by this command.",
+  "generated_at": "2026-10-30T23:59:31.269903+00:00",
+  "script_sha256": "b00b4da5206e7995926ca355740d6ace862465688c68b18c9613ddd55f07934b",
+  "provider_inference": "not_run",
+  "ocr_source": "existing_development_report",
+  "artifact_hash_normalization": "CRLF to LF before SHA256",
+  "artifact_sha256": {
+    "retrieval.json": "7d0d7caea7b3e469cf96d8c853c87d8b15c98af02ac5ce140342d43f6ff741d6",
+    "bilingual.json": "68c8fa47aac669ad6c324d6d746b93a7c1a10860b1e2225a7576846e0a6ee3fb",
+    "specialists.json": "e2d6461ed2708323e9e26abf60bed147f0330499934c6e1096ec907af5204c8e"
+  }
+}

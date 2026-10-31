@@ -1,8 +1,8 @@
-
 from sqlalchemy.orm import Session
 
 from app.agents.tools.document_tools import inspect_document
 from app.database.models import PolicyDocument
+from app.observability.tracing import traced
 from app.validation.approved_rule_repository import (
     PolicyRuleIntegrityError,
     load_approved_rules,
@@ -10,6 +10,7 @@ from app.validation.approved_rule_repository import (
 from app.validation.evaluation_service import evaluate_verified_rules
 
 
+@traced("tool.evaluate_document_policy")
 def evaluate_document_policy(
     document_id: str,
     policy_id: str,

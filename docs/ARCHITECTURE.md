@@ -1,5 +1,12 @@
 # Architecture — 2026-10-30
 
+M6 adds in-process context tracing, strict JSON logs, best-effort SQL span storage and
+read-only organization-scoped admin diagnostics. Trusted request IDs link queued work
+across processes; spans capture operation timing/status and reported provider counters.
+No source text/identities/credentials are stored in telemetry. Unknown usage/cost stays
+unknown; configured cost estimates are not invoices. No new runtime service/dependency.
+See [observability design and release gates](OBSERVABILITY.md).
+
 M4 adds organization/policy-scoped source search, separate fenced `policy_index` jobs
 and derived `PolicySearchIndex`/`SearchPassage` tables. SQL authorization precedes
 BM25/vector ranking; current chunk hashes/offsets are revalidated on reads. Optional local

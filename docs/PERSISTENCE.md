@@ -23,6 +23,12 @@ durable processing path. Test fixtures select their mode explicitly.
 migration head without exposing configuration. `EDI_DATA_ROOT` defaults to `data` and
 holds originals and SQLite LangGraph checkpoints; the business database can be PostgreSQL.
 
+M6 advances head to `20261031_observability`: nullable trusted job trace/parent linkage
+and content-free `telemetry_spans`. Back up/rehearse before applying to the real DB;
+development did not migrate real user data. Telemetry flushes after business transactions,
+uses a soft 20,000-row/organization cap and never deletes history automatically.
+See [configuration, coverage and rollback](OBSERVABILITY.md).
+
 M5 head is `20261030_specialists`: workflow metadata and append-only evidence attestations.
 The additional `specialist_checkpoints.sqlite` must be backed up with the business DB,
 originals and existing `langgraph_checkpoints.sqlite`. Import of referenced specialist

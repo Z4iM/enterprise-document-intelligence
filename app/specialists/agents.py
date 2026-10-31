@@ -7,6 +7,8 @@ import time
 from google import genai
 from google.genai import types
 
+from app.observability.tracing import generate_content
+
 DOCUMENT_TOOLS = {"inspect_document": {"document_id"}}
 POLICY_TOOLS = {
     "get_policy_evidence": {"policy_id"},
@@ -102,7 +104,7 @@ def specialist(
             break
         try:
             calls += 1
-            response = client.models.generate_content(
+            response = generate_content(client,
                 model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
                 contents=history,
                 config=config,

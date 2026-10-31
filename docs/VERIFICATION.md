@@ -1,6 +1,95 @@
-# Engineering verification — 2026-10-30
+# Engineering verification — 2026-10-31
 
-## Milestone 5 checkpoint
+
+## Milestone 6 checkpoint
+
+Implemented on `feat/edi-mlops-release-checks`, based on merged M5 PR #6
+(`a07e08b`). M5 remote workflow 41134793582 was observed successful. The user
+authorized the M6 commit, push and pull request. **M6 awaits PR review**; local
+verification below does not assert that its new remote CI has passed.
+
+PR #7's initial workflow **41150046020** subsequently passed the backend, frontend/browser,
+PostgreSQL and container/image-scan jobs. The dependency-audit job correctly failed on
+four advisories in `pyasn1==0.6.4`; the same result was reproduced locally with a fresh
+audit. The runtime pin is updated to **0.6.5**, the upstream security patch; the identical
+strict full-manifest audit now reports **zero advisory entries**, with no ignore rules
+or CI-gate changes. Earlier scan reports remain historical snapshots rather than current
+security guarantees. See [remediation evidence](benchmarks/security-m6-ci-fix.json) and
+[PR checks](https://github.com/Z4iM/enterprise-document-intelligence/pull/7/checks) for the
+latest remote result. The patched local environment passed `pip check`, full Ruff,
+**385 backend tests (9 opt-in PostgreSQL skipped) in 145.96 s**, frontend TypeScript
+and the optimized production build. No application/authorization behavior or audit gate
+was changed. Verification below records the original M6 checkpoint.
+
+No deployment, live model inference, private environment/document inspection or real-data
+migration. Verification accounts, files, databases and service projects were synthetic.
+
+- Full Ruff passed. Final backend: **385 passed, 9 opt-in PostgreSQL skipped in
+  156.54 s**. Dedicated current-code PostgreSQL: **9 passed in 15.56 s**, including
+  migration/model parity and checkpoint recovery. New tests cover trace isolation,
+  content-free logs, unknown-versus-zero usage, pricing coverage, best-effort/capped
+  persistence, disabled telemetry, format-specific parser startup, release gates,
+  scanner checksum refusal and replacement-worker claim fencing before dispatch.
+- Frontend TypeScript and optimized production build passed in a public source copy
+  on D: without private environment files. Production Playwright: **30 passed,
+  1 expected development-only skip in 49.4 s**. Final operations-specific mobile/role
+  checks: **3 passed in 12.6 s**. Development Arabic specialist journey: **1 passed
+  in 44.8 s**, including actual upload-reference to queued-job trace correlation.
+  Generation alone was scripted. Final desktop/390px Arabic and mobile operations
+  screenshots were visually inspected; quotations and review states are readable.
+  The operations latency table scrolls within its card on narrow screens.
+- Both container profiles passed all functional checks on run `c61031202604`, after
+  the final stale-claim guard: readiness, migrations, OCR packs, HTTP upload/search/
+  citations/originals/sessions, processing, specialist pause, full restart, review,
+  resume and normal cleanup. Runtime image hardening and scans are recorded below.
+- Refreshed multilingual ONNX retrieval: **87.5% hybrid Recall@5**, quotation integrity
+  **100%** on the same fixed 40-query synthetic corpus. Arabic unanswerable abstention
+  remains **50% (2/4)**. Native extraction passed all 40 supported templates. Actual
+  M6-image OCR on eight rendered scans remains **75% English / 50% Arabic** scanned
+  field accuracy, four scans/language. Arabic CER/WER: **0.4103 / 0.4033**, scanned
+  policy verification **0/1**. These are development fixtures, not held-out quality.
+- Low-memory failures were observed and investigated: concurrent Docker/native checks
+  exhausted host commit, causing parser/auth failures and one CLI cleanup failure.
+  Serial reruns, with the verified-idle Docker engine temporarily stopped for native
+  checks, passed. Parser imports now load only the requested format; password hashing,
+  parser limits, source/review gates and authorization were not weakened. No user apps,
+  images or volumes were deleted. See [resource guidance](OBSERVABILITY.md#resource-aware-verification).
+
+Final image hardening was rechecked on run `c61031202605`: **both profiles passed**
+with normal cleanup. The final frontend has no global npm/npx tree and starts with
+Node v22.23.4. The backend filesystem layers are identical to the scanned `04` image;
+only image configuration metadata differs. Linux Grype 0.121.0 using database
+v6.1.10 (built 2026-10-30) passed the fixable high/critical gate on both images:
+backend has 11 medium, 1 low and 1 negligible fixable matches; frontend has none.
+Unfixed findings remain, including Debian Bookworm util-linux CVE-2026-53615.
+The initial Windows scan raised duplicate binary/backport matches; the same archive
+and database passed the Linux cross-check, consistent with [upstream issue #5466](https://github.com/anchore/syft/issues/5466).
+No custom ignore rules were added. Runtime pip-audit reported **0 advisory entries**;
+application runtime npm audit reported **0 vulnerabilities**. Five pinned Python
+packages were patched. See [machine-readable scan scope/results](benchmarks/security-m6.json).
+
+The final release command passed **16/16 regression checks**. Requiring product quality
+correctly exited **1**: only 1/8 quality checks passed. Small/weak OCR scan coverage,
+Arabic abstention, missing held-out data and unmeasured live-model quality/cost remain
+explicit blockers. [Raw release reports](benchmarks/release-m6/release.json) retain
+corpus/script versions, per-language metrics, real timing and unknown provider usage.
+Artifact hashes normalize CRLF to LF so Git checkouts preserve their integrity.
+This is an implemented release gate, **not product-quality or production approval**.
+
+Final workflow YAML/action-pin, public JSON/report-hash and changed-file credential-pattern
+checks passed, along with `git diff --check` using repository line-ending settings.
+The credential-pattern check is limited; it is not an independent security assessment.
+Docker Desktop was restored; only its original idle BuildKit container remained running.
+
+Telemetry is content-free, bounded and best effort, not an authoritative audit, billing
+ledger or load-test SLO. The new `20261031_observability` migration was exercised only
+on synthetic databases. Back up the selected real database before an explicitly chosen
+migration; startup does not migrate it. To demonstrate M6 after migration/startup, sign
+in as an administrator, open **Operations**, upload a synthetic document and inspect
+its request/queue trace. Employees/reviewers are denied the operations API/UI. Missing
+provider usage/prices remain **Unknown**.
+
+## Milestone 5 checkpoint (historical local checkpoint)
 
 Implemented on `feat/edi-specialist-workflows`, based on merged milestone 4 PR #5
 (`5a7bb53`). M4's four remote CI jobs were subsequently observed passing. This milestone

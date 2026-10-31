@@ -157,13 +157,17 @@ async function proxy(
         signal: AbortSignal.timeout(10000),
       },
     );
+    const reference = upstream.headers.get("x-request-id");
+    const responseHeaders = new Headers({
+      "Content-Type":
+        upstream.headers.get("Content-Type") || "application/json",
+      "Cache-Control": "no-store",
+    });
+    if (reference && /^[a-f0-9]{32}$/.test(reference))
+      responseHeaders.set("X-Request-ID", reference);
     return new Response(upstream.body, {
       status: upstream.status,
-      headers: {
-        "Content-Type":
-          upstream.headers.get("Content-Type") || "application/json",
-        "Cache-Control": "no-store",
-      },
+      headers: responseHeaders,
     });
   } catch {
     return error(502, "Workflow service unavailable.");

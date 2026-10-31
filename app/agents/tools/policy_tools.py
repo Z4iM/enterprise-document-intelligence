@@ -1,13 +1,14 @@
-
 from sqlalchemy.orm import Session
 
 from app.database.models import PolicyDocument
+from app.observability.tracing import traced
 from app.validation.approved_rule_repository import (
     PolicyRuleIntegrityError,
     load_approved_rules,
 )
 
 
+@traced("tool.get_policy_evidence")
 def get_policy_evidence(
     policy_id: str,
     allowed_policy_ids: set[str],
