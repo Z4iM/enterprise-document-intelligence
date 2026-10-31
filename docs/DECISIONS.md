@@ -1,5 +1,7 @@
 # Engineering decisions
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 ## ADR 001 — Shared document eligibility (accepted, 2026-10-30)
 
 **Problem:** API evaluation accepted unreviewed/rejected records while agent and
@@ -25,6 +27,8 @@ decision contracts was unsafe. Reverting the code is possible, but restoring the
 official behavior would also restore the identified trust defect.
 
 ## ADR 003 — Preserve stack and minimize services (accepted)
+
+Implementation note: ADR 011 supersedes the initial pgvector direction below. Current authorized retrieval uses stored JSON vectors and bounded exact ranking; pgvector and Redis are not deployed dependencies.
 
 Keep FastAPI, Next.js, Gemini tools and LangGraph. Add database sessions with Argon2,
 scoped RBAC, PostgreSQL/Alembic, then pgvector/full-text retrieval and a small durable

@@ -1,5 +1,7 @@
 # Security contract — Milestone 3 (2026-10-30)
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 M4 extends this contract to search/citation/index routes: session/CSRF, organization/policy
 scope before ranking, staff-only maintenance, cancelled leases on removal, current-source
 hash/offset checks and bounded corpora. Retrieved instructions remain inert data; search

@@ -1,5 +1,7 @@
 # Operational evidence and release gates — milestone 6
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 ## What changes in the application
 
 Administrators get `/operations`: organization-only queue counts, failed/expired-lease

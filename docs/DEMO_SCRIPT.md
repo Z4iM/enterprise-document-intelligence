@@ -1,4 +1,6 @@
-# EDI employer demo — approximately 3 minutes
+# NEXUS EDI employer demonstration
+
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
 
 Use the isolated [showcase](SHOWCASE.md), native synthetic fixtures and visible scripted-
 generation banner. Capture only the application viewport, never terminals containing
@@ -21,9 +23,9 @@ Use short cuts between roles; label time compression. Keep the final requirement
 quotation visible long enough to read. Never replace real application screens with an
 AI-invented interface or imply that scripted calls measured Gemini reasoning quality.
 
-## Video production choice
+## Edited video and publication
 
-For the eventual LinkedIn edit, **[Hyperframes](https://github.com/heygen-com/hyperframes) is the preferred assembly tool**: it offers
+For the LinkedIn edit, **[Hyperframes](https://github.com/heygen-com/hyperframes) is the preferred assembly tool**: it offers
 deterministic HTML-based titles, captions, diagrams and precisely placed real screenshots/
 footage. Topview is an optional source of narration or short creative clips, subject to
 account access and credits. The application footage should stay authentic and readable.
@@ -33,3 +35,5 @@ Prepare a 16:9 master and a separate tighter mobile/social cut after the story i
 Use caption-safe spacing, high contrast, readable Arabic and restrained transitions.
 No generation, account upload, paid voice/music service or public posting is authorized
 by preparing this script. Confirm the final recording/edit scope separately.
+
+The current edited tour preview is 2:56.3, with actual browser interactions, male AI narration and short technical explanations. The earlier table is a recording guide, not its exact edit decision list. No final MP4 or public video URL is claimed here. See [companion post](LINKEDIN_POST.md) for synthetic/scripted-generation disclosure and music attribution. The edited version omits a persistent filming label at the owner’s request; its disclosure belongs in the accompanying post. The standard reproducible sandbox retains its visible notice.

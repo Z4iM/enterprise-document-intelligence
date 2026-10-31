@@ -1,5 +1,7 @@
 # Required English/Arabic document support
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 Arabic documents, including scans and mixed Arabic/English content, are part of the
 showcase acceptance criteria. This is a product requirement, not an inferred capability
 from Gemini. The interface can remain English; document content must read correctly.
@@ -16,7 +18,7 @@ from Gemini. The interface can remain English; document content must read correc
 - Keep Arabic originals unchanged. Do not normalize away Arabic letters or alter quoted
   evidence to make a rule pass verification.
 
-## Remaining acceptance by milestone
+## Milestone acceptance criteria
 
 | Milestone | Measurable acceptance |
 |---|---|

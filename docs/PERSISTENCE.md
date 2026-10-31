@@ -1,5 +1,7 @@
 # Local persistence, queue and import
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 ## Native Windows/local startup
 
 Use the same explicit `EDI_DATABASE_URL` and working directory for migration, bootstrap

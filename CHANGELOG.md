@@ -1,5 +1,14 @@
 # Changelog
 
+[NEXUS EDI](README.md) · [Documentation guide](docs/README.md)
+
+## Documentation refresh — NEXUS EDI (2026-10-31)
+
+- Reworked the employer-facing README and documentation navigation; moved complete native setup into a dedicated guide.
+- Corrected stale workflow, profile-name permissions and milestone status descriptions without changing runtime behavior.
+- Added a video-specific LinkedIn draft with explicit demonstration scope and required music attribution.
+- Preserved dated measurements, limitations, release boundaries and original engineering handoffs.
+
 ## Local UX follow-up — policy readiness
 
 - Explain investigation blockers and bounded stops with safe, actionable messages.

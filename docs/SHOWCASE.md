@@ -1,4 +1,6 @@
-# Reproduce the EDI showcase
+# Reproduce the NEXUS EDI showcase
+
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
 
 This local sandbox uses **synthetic data and scripted generation**. Sessions, CSRF,
 ownership, source verification, rule decisions, document/evidence review, the queue,

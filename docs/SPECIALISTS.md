@@ -1,5 +1,7 @@
 # Cooperating specialists — milestone 5
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 The existing three-tool investigator remains available. This adds a separate queued,
 development-only LangGraph workflow. Official results remain deterministic.
 

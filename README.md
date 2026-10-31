@@ -1,46 +1,61 @@
-# Enterprise Document Intelligence (EDI)
+# NEXUS EDI
 
-**AI-assisted document review and source-backed expense-policy checks.**
+**Enterprise Document Intelligence**
 
-EDI turns uploaded business documents into reviewed structured data, checks that data
-against verified company rules, and explains the result with original-source evidence.
-It combines FastAPI, a Next.js dashboard, bounded Gemini investigation tools,
-LangGraph human-review checkpoints and durable background processing.
+**From raw documents to traceable policy requirements—with human review at every important checkpoint.**
 
-**Status — October 31, 2026:** milestones 1–6 reviewed/merged; milestone 7 passed local rehearsal and awaits review.
-**Showcase target — November 6, 2026:** showcase materials are prepared; public release awaits
-history/license review. Product-quality gates retain explicit OCR/live-model blockers.
-Production readiness has separate gates.
+NEXUS EDI connects document ingestion, reviewed structured data, policy evidence and
+bounded AI investigation in one application. Its central engineering decision is simple:
+models propose and investigate; source verification, human review and deterministic
+Python determine official policy outcomes.
 
-[Architecture](docs/ARCHITECTURE.md) · [Verification evidence](docs/VERIFICATION.md) ·
-[Detailed roadmap](docs/ROADMAP.md) · [Security](docs/SECURITY.md) ·
-[Engineering decisions](docs/DECISIONS.md)
+Built with **FastAPI · Next.js · Gemini · LangGraph · PostgreSQL · Docker**.
 
-## The business workflow
+[![CI](https://github.com/Z4iM/enterprise-document-intelligence/actions/workflows/ci.yml/badge.svg)](https://github.com/Z4iM/enterprise-document-intelligence/actions/workflows/ci.yml)
 
-Consider a **$175 restaurant receipt** and a policy stating:
+[Quick start](#run-locally) · [Documentation](docs/README.md) ·
+[Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
+[Demo](docs/SHOWCASE.md) · [Roadmap](docs/ROADMAP.md)
+
+## See the workflow
+
+An employee uploads a **$175.50 receipt**. The approved policy says:
 “Meals above $100 require manager approval.”
 
-1. A reviewer uploads the policy. AI proposes supported numeric expense rules in one
-   bounded whole-policy pass; each candidate is independently checked against its source.
-2. The reviewer inspects the quotations and approves individual rules or confirms an
-   explicit batch. Model output alone cannot activate a rule.
-3. An employee uploads the receipt. A background worker extracts text, classifies the
-   document and attempts structured extraction; failures have bounded retries.
-4. A reviewer checks/corrects the fields. Original extraction provenance and review
-   history remain available.
-5. The deterministic evaluator compares the reviewed amount against approved rules and
-   returns **manager approval required**, with the supporting policy quotation.
-6. In local development, authorized users can ask the Gemini agent to investigate the
-   selected document/policy through restricted tools and inspect its evidence.
+1. A background worker extracts and classifies the document and proposes structured fields.
+2. A reviewer checks the original and corrects the fields; extraction provenance is retained.
+3. Policy upload automatically proposes rules across the document. A reviewer inspects
+   the source quotations and approves rules individually or confirms a batch.
+4. The evaluator applies the verified, approved rules to explicitly reviewed data.
+5. The result explains **manager approval required**, with the original policy quotation.
+6. The local investigation and specialist workflow expose scoped tools, review pauses,
+   resumable checkpoints and the evidence behind that requirement.
 
-Document-field review and policy-rule approval are distinct from expense approval.
-EDI does not approve reimbursements, execute payments or certify complete compliance.
+**Field review is not expense approval.** The application does not grant reimbursement,
+execute payments or certify complete compliance. Previously approved rules that fail
+current source verification block official decisions until the evidence is reviewed.
 
-![Synthetic policy evaluation with supporting evidence](docs/screenshots/milestone-2-policy-evidence.png)
+[![English specialist workflow using synthetic fixtures](docs/demo/screenshots/en-workflow-desktop.png)](docs/demo/screenshots/en-workflow-desktop.png)
 
-*Synthetic policy-evaluation scenario verified in Milestone 2. Milestone 3 adds
-background processing and persistence.*
+Actual application capture with scripted generation. Explore the
+[Arabic desktop](docs/demo/screenshots/ar-workflow-desktop.png),
+[Arabic mobile](docs/demo/screenshots/ar-workflow-mobile.png),
+[policy review](docs/demo/screenshots/ar-policy-review.png),
+[audit trail](docs/demo/screenshots/en-audit.png) and
+[operations](docs/demo/screenshots/en-operations.png) captures.
+
+## What to inspect as an engineer
+
+- **Authority boundaries:** shared document eligibility, source-verified rules,
+  explicit reviewer decisions and deterministic final evaluation.
+- **Controlled agents:** an investigation agent and separate document/policy specialists
+  with bounded tools; server-derived permissions are rechecked at each boundary.
+- **Recovery:** database-backed jobs, expiring leases, completion fencing and durable
+  LangGraph review checkpoints, including full-service restart verification.
+- **Evaluation:** reproducible bilingual development benchmarks, negative authorization
+  tests and separate regression versus product-quality release gates.
+- **Operations:** content-free correlated traces, queue/latency diagnostics and honest
+  handling of missing provider token/cost metadata.
 
 ## Engineering focus and current scope
 
@@ -97,220 +112,76 @@ flowchart TD
     API --> Agent[Gemini investigation: local development]
     Agent --> Tools[Three scoped read-only tools]
     Tools --> Evaluate
-    API --> Graph[LangGraph human-review workflow]
+    API --> Search[Authorized keyword / optional hybrid retrieval]
+    Search --> DB
+    API --> Graph[LangGraph coordinator and human-review checkpoints]
+    Graph --> DocAgent[Document specialist: scoped inspection]
+    Graph --> PolicyAgent[Policy specialist: scoped evidence]
+    DocAgent -->|Server-reloaded reviewed facts| PolicyAgent
     Graph --> Checkpoints[(SQLite checkpoints on persistent storage)]
     Graph --> Evaluate
 ```
 
-| Layer | Technology / responsibility |
-|---|---|
-| Frontend | Next.js App Router, React, TypeScript, Tailwind CSS, TanStack Query |
-| Backend | Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic |
-| AI and workflows | Gemini/configurable extraction provider, restricted Python tools, LangGraph |
-| Processing | Tesseract `eng+ara`, Poppler, format-specific parsers, bounded subprocesses |
-| Persistence | PostgreSQL through psycopg; optional SQLite; persistent originals and SQLite workflow checkpoints |
-| Execution and delivery | Database-backed queue, Docker Compose, compact profile, GitHub Actions definitions |
-| Verification | pytest, Ruff, TypeScript/build gates, Playwright, real PostgreSQL and container restart checks |
+The business database can be PostgreSQL or SQLite; workflow checkpoints currently use
+persistent SQLite storage. The queue avoids an additional broker for this single-host
+scope. Optional local ONNX embeddings support authorized hybrid retrieval; keyword
+search is the default. [Design decisions and trade-offs](docs/DECISIONS.md).
 
-## Delivery timeline
+## Evidence and limitations
 
-Completed rows use observed verification dates. Future windows are planning targets,
-subject to review and quality gates; the showcase date is not a production-release promise.
+Results below are dated development evidence, not general accuracy or production certification.
 
-| Milestone | Date / target window | Status | Measurable outcome |
-|---|---|---|---|
-| **1 — Trustworthy lifecycle** | Verified Oct 30, 2026 | Complete | Shared review/eligibility gates across API, tools and workflows; unsafe model-led official validation retired; durable review/resume checks |
-| **2 — Identity and security** | Verified Oct 30, 2026 | Complete | Real sessions/CSRF/RBAC, ownership isolation, bounded intake, source-verified rule review, account/profile flows and investigation authorization tests |
-| **3 — Persistence and recovery** | Verified Oct 30, 2026 | Complete | Real PostgreSQL and safe synthetic import; queued uploads/recovery/fencing; both Docker profiles built/started/restarted; authenticated HTTP intake and checkpoint/session/original persistence |
-| **4 — Authorized evidence retrieval** | Verified Oct 30, 2026 | Reviewed/merged | Scoped hybrid search, indexing/removal and 40 bilingual queries; all four PR CI jobs passed |
-| **5 — Cooperating specialists and bilingual understanding** | Verified Oct 30, 2026 | Reviewed/merged | Separate specialists, durable workflow UI/evidence review; 20 Arabic/20 English templates and eight OCR scans; narrow verified grammar, failure/injection/replay tests and scripted comparison |
-| **6 — MLOps and release checks** | Verified Oct 31, 2026 | Reviewed/merged | Scoped operations, correlated redacted traces, reported usage/optional cost coverage, explicit quality blockers and pinned security/evaluation CI gates |
-| **7 — Employer showcase** | Nov 6, 2026 target | Locally verified; awaiting review | Independent clean-start rehearsal, complete English/Arabic investigation scenario, evidence/audit/restart demonstration, screenshots, demo script and evidence-supported CV claims |
+| Evidence | Observed result | Scope |
+|---|---|---|
+| Latest backend checkpoint | 401 passed; 9 opt-in PostgreSQL skipped | Documentation refresh rerun on isolated synthetic data; dedicated PostgreSQL evidence is separate |
+| Latest frontend checkpoint | TypeScript/build passed; production browser 30 passed, 4 expected skips | Separate development journeys exercise guarded agents/workflows |
+| Retrieval | 87.5% hybrid Recall@5 | Fixed 40-query synthetic development benchmark |
+| Scanned field extraction | 75% English; 50% Arabic | Four development scans per language |
+| Recovery | Both Compose profiles passed | Authenticated intake, persisted originals/sessions and checkpoint resume after full-service restart |
 
-The showcase must demonstrate the integrated lifecycle, genuine specialist cooperation,
-measured quality and reproducible setup. Release progress depends on passing acceptance
-criteria; deferred scope will be documented explicitly.
-
-### Production readiness after the showcase
-
-| Track | Required acceptance before a production claim |
-|---|---|
-| Identity and security | Threat model, independent authorization/upload security review, SSO/MFA/recovery strategy and appropriate deployment controls |
-| Data operations | Retention/deletion policy, managed secrets, tested backups and restore, migration/rollback rehearsal and operational runbooks |
-| Deployment and scale | HTTPS, controlled release/rollback, sustained load against defined SLOs, alerting and a justified availability/checkpoint-scaling strategy |
-| Model quality | Broader representative English/Arabic corpora, measured failure/abstention rates, drift monitoring and reproducible model/configuration comparisons |
-
-These tracks are gate-based and currently unscheduled. See the [full roadmap](docs/ROADMAP.md)
-and [security contract](docs/SECURITY.md) for acceptance details and remaining risks.
-
-Approved rules are revalidated against their sources when used. The policy library flags
-previous approvals that fail current checks; investigations explain the specific blocker
-and link to policy/document review. A warning never changes or renews an approval.
-
-## Verification evidence
-
-Milestone 6 PR #7 merged after [all five CI jobs passed](https://github.com/Z4iM/enterprise-document-intelligence/actions/runs/41151690300).
-Verification uses synthetic fixtures; scripted generation is distinguished from live-model evidence.
-
-| Check | Observed M6 result |
-|---|---|
-| Full backend suite | **385 passed, 9 opt-in PostgreSQL skipped**; the dedicated CI database job separately passed **9 tests** |
-| Frontend | TypeScript and production build passed; production browser suite **30 passed, 1 expected dev-only skip**, plus a separate Arabic development workflow journey |
-| Container integration | Both profiles passed intake, source/citation/original access, sessions, full-service restart and checkpoint resume |
-| Security checks | Strict runtime dependency audit and both image high/critical fixable-finding gates passed; lower/unfixed findings remain documented |
-| Retrieval | **87.5% hybrid Recall@5** on 40 synthetic queries; Arabic unanswerable abstention **50% (2/4)** |
-| OCR | **75% English / 50% Arabic** scanned-field accuracy on four development scans per language |
-| Release gate | **16/16 regression checks pass**; held-out/live-model product-quality gate remains unmet |
-
-M7 fresh-install rehearsal passed **391 backend tests**, **9 dedicated PostgreSQL tests**,
-the production browser suite (**30 passed, 3 expected skips**), **3 separate development
-journeys**, TypeScript/build, and recovery in **both Docker profiles**.
-See [VERIFICATION.md](docs/VERIFICATION.md) for dated local/remote evidence. These are development benchmarks, not general accuracy or production certification.
-
-## Reproduce the employer demonstration
-
-The [showcase guide](docs/SHOWCASE.md) prepares a new public-source sandbox on a chosen
-drive, with fresh dependencies and no copied user dotenv/database/upload state. Its
-English/Arabic browser journeys begin with accounts only and exercise actual review,
-source verification, authorization, specialist tools, audit and trace lookup.
-**Model generation is scripted and visibly labeled.** Persistent restart/recovery is
-verified separately with the existing isolated Docker runner. No private key is required.
-
-- [Three-minute demo script and recording plan](docs/DEMO_SCRIPT.md)
-- [CV bullets, interview evidence and draft LinkedIn copy](docs/PORTFOLIO.md)
-- [Native synthetic English/Arabic fixtures](docs/demo/fixtures)
-
-### Application captures
-
-Actual synthetic browser captures; the visible banner identifies scripted generation.
-
-[![English specialist workflow](docs/demo/screenshots/en-workflow-desktop.png)](docs/demo/screenshots/en-workflow-desktop.png)
-
-[Arabic desktop](docs/demo/screenshots/ar-workflow-desktop.png) ·
-[Arabic mobile](docs/demo/screenshots/ar-workflow-mobile.png) ·
-[Policy review/search](docs/demo/screenshots/ar-policy-review.png) ·
-[Audit](docs/demo/screenshots/en-audit.png) ·
-[Operations](docs/demo/screenshots/en-operations.png)
-
-These materials are for a portfolio showcase. Public deployment, a final edited video,
-posting and broader model-quality improvements remain separately scoped work.
+See [dated commands and results](docs/VERIFICATION.md),
+[retrieval methodology](docs/RETRIEVAL.md), [bilingual quality](docs/ARABIC_SUPPORT.md)
+and [specialist measurements](docs/SPECIALISTS.md). Scripted model responses establish
+control-flow behavior, not live-model reasoning quality. Live multi-agent superiority,
+broad Arabic OCR/interpretation, held-out quality and production readiness remain unproven.
 
 ## Run locally
 
-### Docker Compose
-
-Requirements: Docker Engine with Compose. The credential-generation helper uses Python;
-Docker Desktop with its Linux backend is the locally verified Windows setup.
-
-From the repository root, for a fresh local environment:
+For a fresh Docker environment, from the repository root:
 
 ```powershell
 python scripts/init_local_secrets.py
 docker compose up --build
 ```
 
-In a second terminal, bootstrap the first administrator **only for a fresh database**:
+In another terminal, create the first administrator for that fresh database:
 
 ```powershell
 docker compose exec api python -m app.auth.bootstrap --email admin@edi.test
 ```
 
-Bootstrap prompts for your own 12–128 character password; there are no shipped login
-credentials. Open [the dashboard](http://127.0.0.1:3000), sign in and create local Employee/
-Reviewer accounts through **Users**. Only the frontend is published; API/DB stay private.
-Named volumes retain records, originals and checkpoints across restarts.
+Choose your own password when prompted; **there is no shipped administrator password**.
+Open [127.0.0.1:3000](http://127.0.0.1:3000). Originals, records and checkpoints persist
+in named volumes. Do not remove valued volumes to troubleshoot startup.
 
-Compose defaults to **disabled inference**: document processing uses review-gated fallback,
-and automatic AI policy-rule extraction requires a separately configured provider.
-The investigation gateway is intentionally unavailable in production frontend builds,
-including Docker. Use native development below to exercise that agent.
-
-The compact configuration runs the worker inside the API:
-
-```powershell
-docker compose -f compose.yaml -f compose.compact.yaml up --build
-```
-
-Normal/compact steady memory caps total approximately 1.9/1.4 GiB; workload requirements
-remain unmeasured. Do not use `down --volumes` on valued data.
-See [startup, persistence and safe import](docs/PERSISTENCE.md).
-
-<details>
-<summary>Native Windows setup and local Gemini investigation</summary>
+Compose defaults to disabled inference and review-gated fallback. AI rule extraction
+requires a configured provider. Investigation/workflow execution gateways deliberately
+remain disabled in production frontend builds, including Docker.
 
 ### Native Windows development
 
-Use Python **3.12** and Node **22**. Create a virtual environment only if absent, then:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-ci.txt
-cd frontend
-npm ci
-cd ..
-```
-
-Choose a new demo database; keep the same environment for migration, bootstrap and server:
-
-```powershell
-$env:PYTHON_DOTENV_DISABLED = '1'
-$env:EDI_ENV = 'development'
-$env:EDI_DATABASE_URL = 'sqlite:///data/edi-demo.db'
-$env:EDI_ALLOWED_ORIGINS = 'http://127.0.0.1:3000,http://127.0.0.1:8000'
-$env:LLM_PROVIDER = 'disabled'
-.\.venv\Scripts\python.exe -m alembic upgrade head
-.\.venv\Scripts\python.exe -m app.auth.bootstrap --email admin@edi.test
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-In another terminal, run `npm run dev` from `frontend` and open
-[127.0.0.1:3000](http://127.0.0.1:3000). The embedded worker starts with FastAPI.
-
-For local HTTP login, the **backend terminal** must keep `EDI_ENV=development` and
-the allowed loopback origins above, even when Next.js uses a production build. A 503
-`Configure HTTPS application origins.` means the backend is requiring HTTPS; it does
-not mean Next.js is offline. `/ready` returning `Database migrations required.` is a
-separate issue: back up the configured database and migrate it using the same database
-environment as the server. Do not change database URLs or bootstrap another account
-as a workaround; an unsigned `/auth/me` returning 401 is expected.
-OCR needs Tesseract with `eng` and `ara` packs; scanned PDFs also need Poppler on PATH.
-TXT/native DOCX processing needs neither binary nor a GPU. Backend API documentation is
-at [127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). `/health` is liveness; `/ready`
-checks DB connectivity/migration head, not model quality.
-
-Runtime pins are in `requirements-runtime.txt`; CI requirements add test tools.
-`requirements.txt` additionally includes the heavier experimental retrieval stack.
-The frontend uses `package-lock.json`. Variable names are documented in `.env.example`
-and `frontend/.env.example`; preserve private configuration and never put credentials
-in `NEXT_PUBLIC_*` variables.
+Use Python 3.12 and Node 22, as verified by the project CI environment. Follow
+[complete local setup](docs/LOCAL_SETUP.md#native-windows-development) for dependency
+installation, an isolated demo database, explicit migrations, bootstrap and startup.
 
 ### Local Gemini investigation
 
-With a privately configured extraction provider, the normal UI supports policy upload,
-pending rules, explicit approval and document review. Gemini investigation additionally
-requires these **server-only** settings:
+Follow [private development configuration](docs/LOCAL_SETUP.md#local-gemini-investigation).
+Use synthetic documents and keep provider credentials server-side. Do not weaken
+production, loopback, token, session, CSRF or ownership guards to enable a demonstration.
 
-| Backend | Frontend development server |
-|---|---|
-| `EDI_ENABLE_DEV_AGENT=true` | `EDI_ENABLE_DEV_AGENT_FRONTEND=true` |
-| `EDI_DEV_AGENT_TOKEN` — strong random shared secret | The same `EDI_DEV_AGENT_TOKEN` |
-| Valid `GEMINI_API_KEY` and `GEMINI_MODEL` | No browser-exposed API key |
-
-For Gemini-backed field/policy extraction, set backend `LLM_PROVIDER=gemini` with your
-private provider configuration. The disabled-inference quick start cannot generate AI rules.
-
-Restart the backend on loopback and use `npm run dev` at `http://127.0.0.1:3000`.
-Select authorized documents/policies by filename; account permissions supply scope,
-without manual ID environment lists. Official outcomes require explicitly reviewed fields
-and verified, human-approved rules. Live requests consume provider quota; use synthetic
-documents. Automated verification substitutes generation and makes no real LLM calls.
-
-`npm run build` / `npm start` exercises the local production frontend; normal business
-APIs work, but investigation remains disabled by its development guard. Local HTTP still
-requires backend `EDI_ENV=development`. Do not override `NODE_ENV` or weaken the guards.
-See [frontend/README.md](frontend/README.md) for routes and account/profile behavior.
-
-</details>
+For a no-key, reproducible walkthrough, use the [isolated showcase](docs/SHOWCASE.md).
+It substitutes generation while exercising real application review and authorization.
 
 ## Reproduce checks
 
@@ -320,39 +191,39 @@ See [frontend/README.md](frontend/README.md) for routes and account/profile beha
 cd frontend
 npm run lint
 npm run build
-$env:EDI_BROWSER_CHANNEL = 'msedge'
 npm run test:e2e
 cd ..
-.\.venv\Scripts\python.exe scripts/verify_compose.py
-.\.venv\Scripts\python.exe scripts/verify_containers.py
 git diff --check
 ```
 
-`npm run lint` currently runs TypeScript, not ESLint. Playwright uses one worker,
-isolated synthetic accounts/databases and loopback ports 3197/8197; it refuses to reuse
-existing servers. Edge was verified locally; CI configures Chromium. The container runner
-uses separate synthetic projects/volumes and stops them afterward. It does not reset
-your application database. See [verification](docs/VERIFICATION.md) for dedicated PostgreSQL
-commands and [persistence](docs/PERSISTENCE.md) for retained test artifacts.
+`npm run lint` currently means TypeScript checking. Browser tests require an installed
+supported browser and isolated ports; PostgreSQL/container checks have separate setup.
+See [verification](docs/VERIFICATION.md) and [persistence/recovery](docs/PERSISTENCE.md).
+CI does not require personal inference keys. Run heavy checks serially on small hosts.
 
-## Data safety and known limits
+## Project timeline
 
-- Business storage defaults to `data/database.db`, originals to `data/uploads` and
-  `data/policies`, checkpoints to `data/langgraph_checkpoints.sqlite`; `EDI_DATABASE_URL`
-  and `EDI_DATA_ROOT` configure alternatives. Docker uses its own named volumes.
-- Native schema upgrades are explicit. Before adopting existing data, back up the DB,
-  originals and checkpoints, rehearse on a separate copy and follow the
-  [safe import procedure](docs/PERSISTENCE.md). Legacy ownership is quarantined rather
-  than assigned automatically; rollback requires a reviewed compatible backup.
-- Production cookies require configured HTTPS origins; local HTTP requires explicit
-  `EDI_ENV=development`. A local production frontend build is not a public deployment.
-- File/page/time limits and parser subprocesses are not an OS security sandbox.
-  Retention, independent security review, production restore and load testing remain open.
-- Experimental global FAISS retrieval is outside official evaluation and is not tenant-safe.
-  Authorized hybrid retrieval is milestone 4 work; do not index valued data with the legacy script.
-- General policy understanding and complete Arabic semantics remain unfinished.
-  Unsupported evidence must stay review-gated; model fluency alone cannot establish authority.
+| Milestone | Outcome | Status |
+|---|---|---|
+| 1 | Consistent review and deterministic decision boundaries | Complete |
+| 2 | Sessions, CSRF, roles, ownership and account controls | Complete |
+| 3 | PostgreSQL, durable jobs, containers and restart recovery | Reviewed/merged |
+| 4 | Authorized bilingual evidence retrieval and benchmarks | Reviewed/merged |
+| 5 | Cooperating specialists, review checkpoints and bilingual fixtures | Reviewed/merged |
+| 6 | Observability, regression/quality gates and dependency/image checks | Reviewed/merged |
+| 7 | Reproducible employer showcase, evidence and portfolio materials | Merged in PR #8; video preview prepared separately |
 
-For implementation details, start with [ARCHITECTURE.md](docs/ARCHITECTURE.md),
-[DECISIONS.md](docs/DECISIONS.md), [API contract](frontend/docs/API_CONTRACT.md) and
-[CHANGELOG.md](CHANGELOG.md).
+**Showcase target: November 6, 2026.** Production readiness is a separate, gate-based
+roadmap covering independent security review, identity recovery/SSO, backups and restore,
+retention, deployment/rollback, load/SLOs and representative model-quality evaluation.
+See the [full roadmap](docs/ROADMAP.md) and [security/release boundaries](docs/SECURITY.md).
+
+## Explore further
+
+- [Documentation guide](docs/README.md): setup, architecture, security and evidence.
+- [Showcase guide](docs/SHOWCASE.md) and [demo script](docs/DEMO_SCRIPT.md): reproduce the lifecycle.
+- [Portfolio evidence](docs/PORTFOLIO.md) and [LinkedIn video post](docs/LINKEDIN_POST.md): supported claims and companion copy.
+- [API contract](frontend/docs/API_CONTRACT.md), [frontend guide](frontend/README.md) and [changelog](CHANGELOG.md).
+
+Only synthetic examples belong in public materials. Review existing Git history and
+license/release requirements before making additional publication or deployment claims.

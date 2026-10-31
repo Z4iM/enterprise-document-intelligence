@@ -1,4 +1,6 @@
-# Architecture — 2026-10-30
+# System architecture
+
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
 
 M6 adds in-process context tracing, strict JSON logs, best-effort SQL span storage and
 read-only organization-scoped admin diagnostics. Trusted request IDs link queued work
@@ -117,7 +119,7 @@ audit. Parser subprocesses have deadlines/input limits, not an OS permission san
 Container budgets/private networking and readiness are defined and locally verified:
 both images built cleanly, both profiles started and preserved data across full-service
 restarts. Production backups/restore rehearsal, deployment,
-retention, SSO and operational telemetry remain unfinished. Arabic Unicode/OCR/RTL
+retention and SSO remain unfinished. Bounded operational telemetry is implemented in M6; sustained operational validation remains open. Arabic Unicode/OCR/RTL
 foundations are present; semantic support and measured OCR/field/retrieval quality remain
 required release gates. Source verification supports narrow English/Arabic monetary grammar.
 
