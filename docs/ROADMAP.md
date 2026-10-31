@@ -9,8 +9,8 @@ Milestones stop for review; dates are planning windows, not completion claims.
 | 2: Identity and security | Oct 30–Nov 1 | Accepted for continuation | Sessions/CSRF/logout/password change; scoped Employee/Reviewer/Admin; names and role-specific personal stats; bounded uploads; automatic policy extraction and confirmed atomic bulk approval; account-derived investigation scope |
 | 3: Persistence/recovery | Nov 1–2 | Reviewed and merged | Both Docker profiles built/started/restarted; authenticated HTTP intake; safe synthetic SQLite import; real PostgreSQL; durable jobs/recovery; Arabic Unicode/OCR/RTL foundations |
 | 4: Evidence retrieval | Nov 2–3 | Reviewed and merged | Authorized hybrid search; incremental indexing/removal; fixed 40-query bilingual benchmark; English/Arabic Recall@5/MRR/citation/abstention results and baselines |
-| 5: Cooperating specialists | Nov 3–4 | Locally verified; awaiting review | Separate bounded tool-choosing roles; durable fenced checkpoints and workflow UI; 40 bilingual fixtures/eight actual scans; narrow Arabic verification; real review/evidence gates; scripted single-agent comparison. General OCR/model quality remains unproven. |
-| 6: MLOps/release checks | Nov 5 | Not started | Browser lifecycle test; redacted correlated logs; latency/error/token/cost metrics; evaluation/container CI gates |
+| 5: Cooperating specialists | Nov 3–4 | Reviewed and merged | Separate bounded tool-choosing roles; durable fenced checkpoints and workflow UI; 40 bilingual fixtures/eight actual scans; narrow Arabic verification; real review/evidence gates; scripted single-agent comparison. General OCR/model quality remains unproven. |
+| 6: MLOps/release checks | Nov 5 | Locally verified; awaiting review | Content-free correlated spans/logs; scoped admin operations; reported token/optional cost coverage; explicit regression versus product-quality gates; pinned dependency/image audits and CI artifacts. Live-model evidence remains unmeasured. |
 | 7: Showcase freeze | Nov 6 | Not started | Independent clean-start rehearsal; screenshots/demo; evidence-supported CV claims and published limitations |
 
 Security, evidence gates and honest verification outrank optional reranking, extra
@@ -77,4 +77,6 @@ Milestone 3 was subsequently reviewed and merged. The user approved milestone 4;
 its scoped retrieval implementation and measured benchmark are described in RETRIEVAL.md.
 Milestone 4 was subsequently reviewed/merged as PR #5; all four remote CI jobs passed.
 The user approved milestone 5. Its design, measurements and limitations are recorded
-in [SPECIALISTS.md](SPECIALISTS.md); no further milestone or publication is authorized.
+in [SPECIALISTS.md](SPECIALISTS.md). M5 was subsequently reviewed and merged as PR #6;
+its four CI jobs passed. The user approved M6 continuation. M6 local results are recorded
+in [VERIFICATION.md](VERIFICATION.md); M7 and M6 publication remain unauthorized.

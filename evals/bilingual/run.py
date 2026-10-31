@@ -37,7 +37,8 @@ def distance(reference, observed):
     return previous[-1]
 
 
-def inspect_record(record, text, method, latency_ms=0):
+def inspect_record(record, text, method, latency_ms=None):
+    started = time.perf_counter()
     observation = {
         "id": record["id"],
         "language": record["language"],
@@ -87,6 +88,11 @@ def inspect_record(record, text, method, latency_ms=0):
             / max(1, len(reference.split())),
             ocr_text=text,
         )
+    observation["latency_ms"] = (
+        round((time.perf_counter() - started) * 1000, 3)
+        if latency_ms is None
+        else latency_ms
+    )
     return observation
 
 
@@ -98,6 +104,18 @@ def summarize(rows):
     required = sum(row["required_values"] for row in fields)
     return {
         "observations": len(rows),
+        "latency_p50_ms": sorted(row["latency_ms"] for row in rows)[
+            max(0, (len(rows) + 1) // 2 - 1)
+        ]
+        if rows
+        else None,
+        "latency_p95_ms": sorted(row["latency_ms"] for row in rows)[
+            max(0, (95 * len(rows) + 99) // 100 - 1)
+        ]
+        if rows
+        else None,
+        "real_provider_tokens": None,
+        "real_provider_cost": None,
         "field_exact_accuracy": round(
             sum(row["fields_correct"] for row in fields) / total, 4
         )

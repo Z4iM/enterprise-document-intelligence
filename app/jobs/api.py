@@ -58,6 +58,7 @@ def resource_job(request, resource_id, kind, retry=False):
             return {"job_id": None, "state": state, "attempts": 0, "error": None}
         return {
             "job_id": job.id,
+            "trace_id": job.trace_id,
             "state": job.state,
             "attempts": job.attempts,
             "max_attempts": job.max_attempts,

@@ -3,9 +3,11 @@ import type { AuditEvent, DocumentDetail, DocumentSummary, PendingReview, Policy
 const ROOT = "/api/bridge";
 
 export class ApiError extends Error {
-  constructor(message: string, public readonly status: number, public readonly details: unknown) {
+  public readonly requestId?: string;
+  constructor(message: string, public readonly status: number, public readonly details: unknown, requestId?: string | null) {
     super(message);
     this.name = "ApiError";
+    this.requestId = requestId && /^[a-f0-9]{32}$/.test(requestId) ? requestId : undefined;
   }
 }
 
@@ -35,14 +37,14 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
   const body: unknown = await response.json().catch(() => null);
   if (response.status === 401 && path !== "/auth/login") window.dispatchEvent(new Event("edi-session-expired"));
-  if (!response.ok) throw new ApiError(detailMessage(body, `Request failed (${response.status})`), response.status, body);
+  if (!response.ok) throw new ApiError(detailMessage(body, `Request failed (${response.status})`), response.status, body, response.headers.get("x-request-id"));
   return body as T;
 }
 
 export async function csrfHeaders(): Promise<Record<string, string>> {
   const response = await fetch(`${ROOT}/auth/csrf`, { cache: "no-store" });
   const data: unknown = await response.json().catch(() => null);
-  if (!response.ok) throw new ApiError(detailMessage(data, `Cannot establish a secure session (${response.status}).`), response.status, data);
+  if (!response.ok) throw new ApiError(detailMessage(data, `Cannot establish a secure session (${response.status}).`), response.status, data, response.headers.get("x-request-id"));
   if (!data || typeof data !== "object" || !("csrf_token" in data) || typeof data.csrf_token !== "string" || !data.csrf_token) {
     throw new ApiError("The session service returned an invalid response.", response.status, null);
   }

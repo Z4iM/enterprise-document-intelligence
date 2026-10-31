@@ -65,6 +65,7 @@ async function workflowRequest<T>(path: string, payload?: object): Promise<T> {
       body.detail || "Workflow request failed.",
       response.status,
       body,
+      response.headers.get("x-request-id"),
     );
   return body as T;
 }

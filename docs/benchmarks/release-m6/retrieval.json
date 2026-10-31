@@ -1,0 +1,728 @@
+{
+  "index_ms": 94.89,
+  "methods": {
+    "lexical": {
+      "overall": {
+        "queries": 40,
+        "answerable": 32,
+        "unanswerable": 8,
+        "recall_at_5": 0.5,
+        "mrr_at_5": 0.8333,
+        "citation_integrity": 1.0,
+        "citation_relevance_precision_at_5": 0.2807,
+        "unanswerable_abstention_rate": 0.875,
+        "answerable_false_abstention_rate": 0.0312,
+        "warm_latency_p50_ms": 3.79,
+        "warm_latency_p95_ms": 3.95
+      },
+      "by_language": {
+        "en": {
+          "queries": 20,
+          "answerable": 16,
+          "unanswerable": 4,
+          "recall_at_5": 0.5,
+          "mrr_at_5": 0.9375,
+          "citation_integrity": 1.0,
+          "citation_relevance_precision_at_5": 0.2857,
+          "unanswerable_abstention_rate": 1.0,
+          "answerable_false_abstention_rate": 0.0,
+          "warm_latency_p50_ms": 3.77,
+          "warm_latency_p95_ms": 3.94
+        },
+        "ar": {
+          "queries": 20,
+          "answerable": 16,
+          "unanswerable": 4,
+          "recall_at_5": 0.5,
+          "mrr_at_5": 0.7292,
+          "citation_integrity": 1.0,
+          "citation_relevance_precision_at_5": 0.2759,
+          "unanswerable_abstention_rate": 0.75,
+          "answerable_false_abstention_rate": 0.0625,
+          "warm_latency_p50_ms": 3.82,
+          "warm_latency_p95_ms": 3.95
+        }
+      },
+      "per_query": [
+        {
+          "query_id": "meal-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 7.06,
+          "retrieved_policy_ids": [
+            "meal-en",
+            "parking-en",
+            "taxi-en",
+            "medical-en",
+            "mileage-en"
+          ]
+        },
+        {
+          "query_id": "meal-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.5,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.95,
+          "retrieved_policy_ids": [
+            "alcohol-ar",
+            "meal-ar",
+            "gift-ar",
+            "taxi-ar",
+            "parking-ar"
+          ]
+        },
+        {
+          "query_id": "hotel-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 2,
+          "verified_citations": 2,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.77,
+          "retrieved_policy_ids": [
+            "hotel-en",
+            "purchase-en"
+          ]
+        },
+        {
+          "query_id": "hotel-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.84,
+          "retrieved_policy_ids": [
+            "hotel-ar",
+            "purchase-ar",
+            "meal-ar",
+            "training-ar",
+            "mileage-ar"
+          ]
+        },
+        {
+          "query_id": "taxi-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.73,
+          "retrieved_policy_ids": [
+            "taxi-en",
+            "currency-en",
+            "parking-en",
+            "medical-en",
+            "mileage-en"
+          ]
+        },
+        {
+          "query_id": "taxi-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.3333333333333333,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.77,
+          "retrieved_policy_ids": [
+            "meal-ar",
+            "training-ar",
+            "taxi-ar",
+            "parking-ar",
+            "deadline-ar"
+          ]
+        },
+        {
+          "query_id": "flight-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.76,
+          "retrieved_policy_ids": [
+            "flight-en",
+            "lost-en",
+            "training-en",
+            "internet-en",
+            "parking-en"
+          ]
+        },
+        {
+          "query_id": "flight-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 3,
+          "verified_citations": 3,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 4.02,
+          "retrieved_policy_ids": [
+            "flight-ar",
+            "parking-ar",
+            "training-ar"
+          ]
+        },
+        {
+          "query_id": "mileage-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.5,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.79,
+          "retrieved_policy_ids": [
+            "medical-en",
+            "mileage-en",
+            "alcohol-en",
+            "currency-en",
+            "deadline-en"
+          ]
+        },
+        {
+          "query_id": "mileage-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.76,
+          "retrieved_policy_ids": [
+            "mileage-ar",
+            "parking-ar",
+            "alcohol-ar",
+            "mixed-ar",
+            "taxi-ar"
+          ]
+        },
+        {
+          "query_id": "purchase-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.79,
+          "retrieved_policy_ids": [
+            "purchase-en",
+            "mixed-en",
+            "deadline-en",
+            "meal-en",
+            "gift-en"
+          ]
+        },
+        {
+          "query_id": "purchase-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.94,
+          "retrieved_policy_ids": [
+            "purchase-ar",
+            "mixed-ar",
+            "meal-ar",
+            "training-ar",
+            "gift-ar"
+          ]
+        },
+        {
+          "query_id": "training-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.65,
+          "retrieved_policy_ids": [
+            "training-en"
+          ]
+        },
+        {
+          "query_id": "training-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.3333333333333333,
+          "citations": 3,
+          "verified_citations": 3,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.71,
+          "retrieved_policy_ids": [
+            "mixed-ar",
+            "mixed-en",
+            "training-ar"
+          ]
+        },
+        {
+          "query_id": "internet-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 2,
+          "verified_citations": 2,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.73,
+          "retrieved_policy_ids": [
+            "internet-en",
+            "alcohol-en"
+          ]
+        },
+        {
+          "query_id": "internet-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.82,
+          "retrieved_policy_ids": [
+            "internet-ar",
+            "alcohol-ar",
+            "medical-ar",
+            "parking-ar",
+            "training-ar"
+          ]
+        },
+        {
+          "query_id": "deadline-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.78,
+          "retrieved_policy_ids": [
+            "deadline-en",
+            "lost-en",
+            "taxi-en",
+            "hotel-en",
+            "training-en"
+          ]
+        },
+        {
+          "query_id": "deadline-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.5,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.77,
+          "retrieved_policy_ids": [
+            "internet-ar",
+            "deadline-ar",
+            "mileage-ar",
+            "alcohol-ar",
+            "taxi-ar"
+          ]
+        },
+        {
+          "query_id": "currency-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.73,
+          "retrieved_policy_ids": [
+            "currency-en"
+          ]
+        },
+        {
+          "query_id": "currency-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.88,
+          "retrieved_policy_ids": [
+            "currency-ar"
+          ]
+        },
+        {
+          "query_id": "lost-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 3,
+          "verified_citations": 3,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.73,
+          "retrieved_policy_ids": [
+            "lost-en",
+            "taxi-en",
+            "meal-en"
+          ]
+        },
+        {
+          "query_id": "lost-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.79,
+          "retrieved_policy_ids": [
+            "lost-ar"
+          ]
+        },
+        {
+          "query_id": "alcohol-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.5,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.7,
+          "retrieved_policy_ids": [
+            "meal-en",
+            "alcohol-en",
+            "lost-en",
+            "currency-en",
+            "deadline-en"
+          ]
+        },
+        {
+          "query_id": "alcohol-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.5,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.82,
+          "retrieved_policy_ids": [
+            "parking-ar",
+            "alcohol-ar",
+            "training-ar",
+            "meal-ar",
+            "mixed-ar"
+          ]
+        },
+        {
+          "query_id": "parking-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.94,
+          "retrieved_policy_ids": [
+            "parking-en",
+            "mixed-en",
+            "taxi-en",
+            "medical-en",
+            "mileage-en"
+          ]
+        },
+        {
+          "query_id": "parking-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 0.5,
+          "citations": 3,
+          "verified_citations": 3,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.91,
+          "retrieved_policy_ids": [
+            "alcohol-ar",
+            "parking-ar",
+            "mileage-ar"
+          ]
+        },
+        {
+          "query_id": "gift-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.84,
+          "retrieved_policy_ids": [
+            "gift-en"
+          ]
+        },
+        {
+          "query_id": "gift-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.81,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "medical-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.93,
+          "retrieved_policy_ids": [
+            "medical-en",
+            "mileage-en",
+            "parking-en",
+            "alcohol-en",
+            "internet-en"
+          ]
+        },
+        {
+          "query_id": "medical-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.91,
+          "retrieved_policy_ids": [
+            "medical-ar"
+          ]
+        },
+        {
+          "query_id": "mixed-en",
+          "language": "en",
+          "answerable": true,
+          "recall": 0.5,
+          "reciprocal_rank": 1.0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 1,
+          "abstained": false,
+          "latency_ms": 3.78,
+          "retrieved_policy_ids": [
+            "mixed-en"
+          ]
+        },
+        {
+          "query_id": "mixed-ar",
+          "language": "ar",
+          "answerable": true,
+          "recall": 1.0,
+          "reciprocal_rank": 1.0,
+          "citations": 5,
+          "verified_citations": 5,
+          "relevant_citations": 2,
+          "abstained": false,
+          "latency_ms": 3.86,
+          "retrieved_policy_ids": [
+            "mixed-ar",
+            "mixed-en",
+            "meal-ar",
+            "parking-ar",
+            "training-ar"
+          ]
+        },
+        {
+          "query_id": "negative-0",
+          "language": "en",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.81,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "negative-1",
+          "language": "en",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.83,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "negative-2",
+          "language": "en",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.71,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "negative-3",
+          "language": "en",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.71,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "negative-4",
+          "language": "ar",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.73,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "negative-5",
+          "language": "ar",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.73,
+          "retrieved_policy_ids": []
+        },
+        {
+          "query_id": "negative-6",
+          "language": "ar",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 1,
+          "verified_citations": 1,
+          "relevant_citations": 0,
+          "abstained": false,
+          "latency_ms": 3.86,
+          "retrieved_policy_ids": [
+            "medical-ar"
+          ]
+        },
+        {
+          "query_id": "negative-7",
+          "language": "ar",
+          "answerable": false,
+          "recall": 0,
+          "reciprocal_rank": 0,
+          "citations": 0,
+          "verified_citations": 0,
+          "relevant_citations": 0,
+          "abstained": true,
+          "latency_ms": 3.82,
+          "retrieved_policy_ids": []
+        }
+      ]
+    }
+  },
+  "corpus": "edi-synthetic-policy-retrieval-v1",
+  "corpus_sha256": "42ca6871173d3325ea95ce270561be9a63d0cb224639b797d25f05cd61e8885e",
+  "documents": 32,
+  "queries": 40,
+  "model_id": null,
+  "environment": {
+    "os": "Windows",
+    "python": "3.12.10",
+    "logical_cpus": 4,
+    "encoder_threads": 1
+  },
+  "scope": "Synthetic retrieval only; exact-source citation integrity is not answer correctness. No generative model/network inference. Timings exclude model load and include SQL/ranking; not a load test."
+}

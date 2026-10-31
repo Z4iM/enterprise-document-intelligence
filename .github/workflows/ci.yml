@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
           cache: pip
@@ -52,6 +52,17 @@ jobs:
           python evals/bilingual/run.py --check-native --output .local/bilingual-ci.json
           python evals/specialists/run.py --output .local/specialists-ci.json
 
+      - name: Enforce reproducible release regression gates (no provider inference)
+        run: python evals/release/run.py --output-directory .local/release --ocr-report docs/benchmarks/bilingual-m6.json
+
+      - name: Preserve measured reports and explicit quality blockers
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: synthetic-release-report
+          path: .local/release/*.json
+          retention-days: 7
+
   # ==========================================
   # Frontend: TypeScript and Production Build
   # ==========================================
@@ -65,10 +76,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
           cache: npm
@@ -77,6 +88,9 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
+      - name: Audit pinned frontend runtime dependencies
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Check TypeScript
         run: npm run lint
 
@@ -84,7 +98,7 @@ jobs:
         run: npm run build
 
       - name: Set up Python for synthetic browser backend
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
@@ -122,8 +136,8 @@ jobs:
           --health-cmd "pg_isready -U edi_ci -d postgres"
           --health-interval 5s --health-timeout 5s --health-retries 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - run: python -m pip install -r requirements-ci.txt
@@ -135,13 +149,50 @@ jobs:
   containers:
     name: Compose build and durable synthetic smoke test
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - name: Validate both Compose configurations using isolated dummy secrets
         run: python scripts/verify_compose.py
       - name: Build serially and verify both isolated profiles, HTTP intake and full restarts
-        run: python scripts/verify_containers.py
+        run: python scripts/verify_containers.py --run-id c61031202601
+
+      - name: Install checksum-pinned image scanner
+        id: scanner
+        run: python scripts/install_grype.py --directory .local/security-tools
+
+      - name: Scan backend image for fixable high/critical vulnerabilities
+        run: .local/security-tools/grype docker:edi-verification-backend:c61031202601 --only-fixed --fail-on high -o json --file .local/backend-vulnerabilities.json
+
+      - name: Scan frontend even if backend vulnerabilities are found
+        if: ${{ !cancelled() && steps.scanner.outcome == 'success' }}
+        run: .local/security-tools/grype docker:edi-verification-frontend:c61031202601 --only-fixed --fail-on high -o json --file .local/frontend-vulnerabilities.json
+
+      - name: Preserve image vulnerability reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: container-vulnerability-reports
+          path: .local/*-vulnerabilities.json
+          retention-days: 7
+
+  dependencies:
+    name: Pinned Python dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-security.txt
+      - name: Audit runtime pins without resolving or installing application dependencies
+        run: python -m pip_audit -r requirements-runtime.txt --no-deps --disable-pip --strict --format=json --output python-vulnerabilities.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: python-vulnerability-report
+          path: python-vulnerabilities.json
+          retention-days: 7

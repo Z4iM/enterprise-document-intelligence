@@ -215,6 +215,8 @@ def authorize_request(
     if actor is None:
         raise HTTPException(401, "Sign in required.")
     request.state.actor = actor
+    from app.observability.tracing import bind_organization
+    bind_organization(actor.organization_id)
     parts = request.url.path.strip("/").split("/")
     with session_factory(request)() as db:
         try:

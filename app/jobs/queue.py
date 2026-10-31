@@ -3,7 +3,7 @@
 import uuid
 from datetime import timedelta
 
-from sqlalchemy import and_, or_, select, update
+from sqlalchemy import and_, func, or_, select, update
 
 from app.database.models import (
     Document,
@@ -13,6 +13,7 @@ from app.database.models import (
     SpecialistWorkflow,
     utc_now_naive,
 )
+from app.observability.tracing import PARENT, trace_id
 
 LEASE_SECONDS = 180
 
@@ -31,6 +32,8 @@ def enqueue(db, kind, resource_id, actor):
         resource_id=resource_id,
         organization_id=actor.organization_id,
         actor_id=actor.id,
+        trace_id=trace_id() or uuid.uuid4().hex,
+        parent_span_id=PARENT.get(),
         state="queued",
     )
     db.add(job)
@@ -112,6 +115,7 @@ def claim(sessions):
                 state="running",
                 attempts=ProcessingJob.attempts + 1,
                 lease_token=token,
+                trace_id=func.coalesce(ProcessingJob.trace_id, uuid.uuid4().hex),
                 lease_until=now + timedelta(seconds=LEASE_SECONDS),
                 updated_at=now,
             )

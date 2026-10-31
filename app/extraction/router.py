@@ -61,6 +61,7 @@ def extract_structured_data(
             "using rule-based fallback.",
             document_type,
             type(error).__name__,
+            extra={"edi_failure_type": type(error).__name__},
         )
 
         fallback_data = extract_with_rules(

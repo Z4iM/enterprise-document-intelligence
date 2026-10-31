@@ -7,9 +7,10 @@ against verified company rules, and explains the result with original-source evi
 It combines FastAPI, a Next.js dashboard, bounded Gemini investigation tools,
 LangGraph human-review checkpoints and durable background processing.
 
-**Status — October 30, 2026:** milestones 1–4 reviewed; milestone 5 implemented and
-locally verified, awaiting review.
-**Showcase target — November 6, 2026:** broader MLOps/release checks and showcase rehearsal remain.
+**Status — October 31, 2026:** milestones 1–5 reviewed/merged; milestone 6 implemented and locally verified,
+awaiting review.
+**Showcase target — November 6, 2026:** final showcase rehearsal remains; automated
+product-quality gates still have explicit OCR/live-model blockers.
 Production readiness has separate gates.
 
 [Architecture](docs/ARCHITECTURE.md) · [Verification evidence](docs/VERIFICATION.md) ·
@@ -58,7 +59,7 @@ background processing and persistence.*
 | Area | Current implementation | Boundary / next step |
 |---|---|---|
 | Intake and extraction | Bounded PDF, DOCX, PPTX, UTF-8 TXT and image intake; OCR; heuristic classification; configured-model extraction and review-gated fallback | Accuracy is not established by functional tests; tables/scans need broader evaluation |
-| Policy checking | Automatic candidates, source verification, confirmed human decisions and cited deterministic evaluation | Current verifier supports a narrow set of English monetary expense statements |
+| Policy checking | Automatic candidates, source verification, confirmed human decisions and cited deterministic evaluation | Narrow English/Arabic monetary grammar; unsupported wording remains review-gated |
 | Identity and UI | Session login/logout, Employee/Reviewer/Admin roles, scoped accounts, admin-managed names, personal statistics, password changes and audit history | SSO/MFA/account recovery and independent security review remain production work |
 | Investigation | Existing bounded investigator plus distinct document/policy specialists with disjoint tools and canonical fact handoff | Local development only; live multi-agent quality/cost unmeasured |
 | Workflows | Queued LangGraph pause/resume, lease-isolated checkpoints, status/traces and explicit supporting-evidence review | Production gateway disabled; checkpoint retention and distributed orchestration remain |
@@ -66,12 +67,16 @@ background processing and persistence.*
 | Containers | Frontend/API/worker/PostgreSQL, private backend networking, loopback UI, readiness, volumes and normal/compact profiles | Both profiles passed local build/start/restart checks; public deployment is not certified |
 | Arabic | Unicode/RTL, conservative labeled fields/digits/money/dates, narrow source-verified policy grammar; 40 bilingual templates and eight actual scans measured | Arabic scanned field accuracy only 50% on four templates; broad OCR/model quality remains unproven |
 | Retrieval | Authorized policy search, optional pinned multilingual ONNX encoder, BM25/cosine/RRF, exact quotations and scoped index lifecycle | Synthetic benchmark: 87.5% Recall@5; Arabic unanswerable abstention only 50% (2/4); candidate sources, never decisions |
-| MLOps | Security/integration/browser/container checks and reproducible retrieval/bilingual/specialist control benchmarks | Held-out/live-model evaluation, correlated telemetry and real cost measurements remain planned |
+| MLOps | Content-free correlated logs/spans, admin operations/queue/latency/usage views, explicit regression/quality gates, dependency/image audits and CI reports | Live-model usage/cost and held-out Arabic quality remain unmeasured; telemetry is bounded/best effort |
 
 Workers execute jobs; model specialists independently choose their permitted tools.
 The coordinator enforces review and deterministic outcomes. See
 [specialist architecture, demo and measurements](docs/SPECIALISTS.md) and
 [Arabic acceptance](docs/ARABIC_SUPPORT.md) for measured scope and remaining requirements.
+
+[Operations and release checks](docs/OBSERVABILITY.md) explain the admin dashboard,
+private pricing configuration, redaction, storage caps, new migration and reproducible
+quality/security reports. Missing provider metadata/prices remain unknown, never fake zero.
 
 See [retrieval setup, metrics and limitations](docs/RETRIEVAL.md) to enable the optional
 267 MB local encoder. Default search is explicitly keyword-only; no request-time model
@@ -119,8 +124,8 @@ subject to review and quality gates; the showcase date is not a production-relea
 | **2 — Identity and security** | Verified Oct 30, 2026 | Complete | Real sessions/CSRF/RBAC, ownership isolation, bounded intake, source-verified rule review, account/profile flows and investigation authorization tests |
 | **3 — Persistence and recovery** | Verified Oct 30, 2026 | Complete | Real PostgreSQL and safe synthetic import; queued uploads/recovery/fencing; both Docker profiles built/started/restarted; authenticated HTTP intake and checkpoint/session/original persistence |
 | **4 — Authorized evidence retrieval** | Verified Oct 30, 2026 | Reviewed/merged | Scoped hybrid search, indexing/removal and 40 bilingual queries; all four PR CI jobs passed |
-| **5 — Cooperating specialists and bilingual understanding** | Verified Oct 30, 2026 | Awaiting review | Separate specialists, durable workflow UI/evidence review; 20 Arabic/20 English templates and eight OCR scans; narrow verified grammar, failure/injection/replay tests and scripted comparison |
-| **6 — MLOps and release checks** | Nov 5, 2026 | Planned | Correlated/redacted logs, latency/error/token/cost measurements, language-specific OCR/field/rule/retrieval evaluation and release CI gates |
+| **5 — Cooperating specialists and bilingual understanding** | Verified Oct 30, 2026 | Reviewed/merged | Separate specialists, durable workflow UI/evidence review; 20 Arabic/20 English templates and eight OCR scans; narrow verified grammar, failure/injection/replay tests and scripted comparison |
+| **6 — MLOps and release checks** | Verified Oct 31, 2026 | Awaiting review | Scoped operations, correlated redacted traces, reported usage/optional cost coverage, explicit quality blockers and pinned security/evaluation CI gates |
 | **7 — Employer showcase** | Nov 6, 2026 | Planned | Independent clean-start rehearsal, complete English/Arabic investigation scenario, evidence/audit/restart demonstration, screenshots, demo script and evidence-supported CV claims |
 
 The showcase must demonstrate the integrated lifecycle, genuine specialist cooperation,

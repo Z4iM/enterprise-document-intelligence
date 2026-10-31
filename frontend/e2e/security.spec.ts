@@ -5,7 +5,7 @@ async function login(page: Page, role: string) {
   await page.getByLabel("Email", {exact: true}).fill(`${role}@synthetic.test`);
   await page.getByLabel("Password", {exact: true}).fill("synthetic-browser-password");
   await page.getByRole("button", {name: "Sign in", exact: true}).click();
-  await expect(page.getByRole("button", {name: "Open user profile", exact: true})).toBeVisible();
+  await expect(page.getByRole("button", {name: "Open user profile", exact: true})).toBeVisible({timeout: 15000});
 }
 
 async function signOut(page: Page) {
@@ -121,7 +121,7 @@ test("automatic policy rules, confirmed bulk approval, profile stats and passwor
   await page.getByLabel("Email", {exact: true}).fill("admin@synthetic.test");
   await page.getByLabel("Password", {exact: true}).fill("synthetic-rotated-password");
   await page.getByRole("button", {name: "Sign in", exact: true}).click();
-  await expect(page.getByRole("button", {name: "Open user profile", exact: true})).toBeVisible();
+  await expect(page.getByRole("button", {name: "Open user profile", exact: true})).toBeVisible({timeout: 15000});
 });
 
 

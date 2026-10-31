@@ -1,16 +1,9 @@
 from io import BytesIO
 
-from docx import Document
-from pptx import Presentation
-from pypdf import PdfReader
-
-from app.ingestion.ocr import (
-    extract_image_text,
-    extract_scanned_pdf_text,
-)
-
 
 def extract_pdf_text(file_bytes: bytes) -> str:
+    from pypdf import PdfReader
+
     pdf_file = BytesIO(file_bytes)
 
     reader = PdfReader(pdf_file)
@@ -27,6 +20,8 @@ def extract_pdf_text(file_bytes: bytes) -> str:
 
 
 def extract_docx_text(file_bytes: bytes) -> str:
+    from docx import Document
+
     docx_file = BytesIO(file_bytes)
 
     document = Document(docx_file)
@@ -39,18 +34,22 @@ def extract_docx_text(file_bytes: bytes) -> str:
 
     return "\n".join(paragraphs)
 
-def extract_txt_text(file_bytes: bytes, encoding: str = 'utf-8') -> str:
+
+def extract_txt_text(file_bytes: bytes, encoding: str = "utf-8") -> str:
     try:
         return file_bytes.decode(encoding)
     except UnicodeDecodeError:
         # Fallback to a robust legacy encoding if UTF-8 fails
-        return file_bytes.decode('latin-1', errors='ignore')
+        return file_bytes.decode("latin-1", errors="ignore")
+
 
 def extract_pptx_text(file_bytes: bytes) -> str:
+    from pptx import Presentation
+
     pptx_file = BytesIO(file_bytes)
     prs = Presentation(pptx_file)
     text_parts = []
-    
+
     # 1. Loop through each slide
     for slide in prs.slides:
         # 2. Loop through every shape on the slide
@@ -60,8 +59,9 @@ def extract_pptx_text(file_bytes: bytes) -> str:
                 for paragraph in shape.text_frame.paragraphs:
                     if paragraph.text.strip():
                         text_parts.append(paragraph.text.strip())
-                        
+
     return "\n".join(text_parts)
+
 
 def shape_generator(slide):
     """Helper function to find shapes, including those nested inside groups."""
@@ -70,6 +70,7 @@ def shape_generator(slide):
             yield from shape.shapes
         else:
             yield shape
+
 
 def needs_ocr(text: str) -> bool:
     cleaned_text = text.strip()
@@ -86,20 +87,24 @@ def extract_text(file_bytes: bytes, file_type: str) -> str:
         native_text = extract_pdf_text(file_bytes)
 
         if not needs_ocr(native_text):
-            return native_text,"native_pdf"
+            return native_text, "native_pdf"
 
-        return extract_scanned_pdf_text(file_bytes),"OCR_PDF"
+        from app.ingestion.ocr import extract_scanned_pdf_text
+
+        return extract_scanned_pdf_text(file_bytes), "OCR_PDF"
 
     if file_type == "docx":
-        return extract_docx_text(file_bytes),"docx_parser"
+        return extract_docx_text(file_bytes), "docx_parser"
 
     if file_type == "txt":
-        return extract_txt_text(file_bytes),"txt_decoder"
+        return extract_txt_text(file_bytes), "txt_decoder"
 
     if file_type == "pptx":
-        return extract_pptx_text(file_bytes),"pptx_parser"
+        return extract_pptx_text(file_bytes), "pptx_parser"
 
     if file_type == "image":
-        return extract_image_text(file_bytes),"OCR_Image"
+        from app.ingestion.ocr import extract_image_text
+
+        return extract_image_text(file_bytes), "OCR_Image"
 
     raise ValueError(f"Unsupported extraction type: {file_type}")

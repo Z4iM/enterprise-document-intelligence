@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from google import genai
 
 from app.llm.base import LLMProvider
+from app.observability.tracing import generate_content
 
 
 class GeminiProvider(LLMProvider):
@@ -36,7 +37,7 @@ class GeminiProvider(LLMProvider):
         if not prompt or not prompt.strip():
             raise ValueError("Prompt cannot be empty.")
 
-        response = self.client.models.generate_content(
+        response = generate_content(self.client,
             model=self.model_name,
             contents=prompt,
         )

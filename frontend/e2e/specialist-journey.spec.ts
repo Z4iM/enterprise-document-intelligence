@@ -83,7 +83,10 @@ test("Arabic specialist workflow pauses, accepts reviewed existing receipt, resu
   await page
     .getByRole("button", { name: "Upload & analyze document", exact: true })
     .click();
-  const document = (await (await uploaded).json()).document_id as string;
+  const uploadResponse = await uploaded;
+  const requestReference = uploadResponse.headers()["x-request-id"];
+  expect(requestReference).toMatch(/^[a-f0-9]{32}$/);
+  const document = (await uploadResponse.json()).document_id as string;
   await expect
     .poll(
       async () =>
@@ -97,6 +100,13 @@ test("Arabic specialist workflow pauses, accepts reviewed existing receipt, resu
       { timeout: 45000 },
     )
     .toBe("completed");
+  expect(
+    (
+      await (
+        await page.request.get(`/api/bridge/documents/${document}/processing`)
+      ).json()
+    ).trace_id,
+  ).toBe(requestReference);
   await page.goto("/workflows");
   await page.getByLabel("Workflow document").selectOption(document);
   await page.getByLabel("Workflow policy").selectOption(policy);
@@ -196,7 +206,9 @@ test("Arabic specialist workflow pauses, accepts reviewed existing receipt, resu
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
     await page.evaluate(
-      () => globalThis.document.documentElement.scrollWidth <= window.innerWidth + 1,
+      () =>
+        globalThis.document.documentElement.scrollWidth <=
+        window.innerWidth + 1,
     ),
   ).toBe(true);
   await page.screenshot({

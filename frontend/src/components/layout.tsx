@@ -1,6 +1,7 @@
 "use client";
 
 import { ProfileMenu } from "@/components/profile-menu";
+import { useAuth } from "@/components/auth";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,9 +19,11 @@ const nav = [
   { href: "/policies", label: "Policy library", icon: BookOpenCheck },
   { href: "/investigate", label: "AI Investigation", icon: FileSearch },
   { href: "/workflows", label: "Agent workflows", icon: BrainCircuit },
+  { href: "/operations", label: "Operations", icon: Activity },
 ];
 
 function Sidebar({ close }: { close?: () => void }) {
+  const {user} = useAuth();
   const pathname = usePathname();
   return <div className="flex h-full flex-col bg-[#111728] text-[#a6aec3]">
     <div className="flex h-[90px] items-center gap-3 border-b border-white/[.075] px-7">
@@ -28,7 +31,7 @@ function Sidebar({ close }: { close?: () => void }) {
       <div><div className="text-[16px] font-extrabold tracking-[.035em] text-white">NEXUS <span className="text-[#a9a6ff]">EDI</span></div><div className="text-[10px] font-medium tracking-[.15em] text-[#77829d]">INTELLIGENCE PLATFORM</div></div>
     </div>
     <div className="px-5 pt-8"><div className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[.19em] text-[#65728b]">Workspace</div>
-      <nav className="space-y-1.5" aria-label="Primary navigation">{nav.map(({ href, label, icon: Icon }) => {
+      <nav className="space-y-1.5" aria-label="Primary navigation">{nav.filter(item => item.href !== "/operations" || user?.role === "admin").map(({ href, label, icon: Icon }) => {
         const active = href === "/" ? pathname === href : pathname === href || pathname.startsWith(href + "/");
         return <Link key={href} href={href} onClick={close} className={cn("group flex h-[44px] items-center gap-3 rounded-[11px] px-3.5 text-[13px] font-medium transition-all", active ? "bg-[#262d48] text-white shadow-inner ring-1 ring-white/[.05]" : "hover:bg-white/[.055] hover:text-white") }>
           <Icon size={18} strokeWidth={1.8} className={active ? "text-[#a8a2ff]" : "text-[#7b86a1] group-hover:text-white"}/><span>{label}</span>{active && <ChevronRight size={14} className="ml-auto text-[#848fa9]" />}

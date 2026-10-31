@@ -4,6 +4,7 @@ import requests
 from dotenv import load_dotenv
 
 from app.llm.base import LLMProvider
+from app.observability.tracing import traced
 
 load_dotenv()
 
@@ -20,6 +21,7 @@ class HTTPModelProvider(LLMProvider):
         if not self.api_key:
             raise ValueError("LLM_API_KEY is missing")
 
+    @traced("llm.generate")
     def generate(self, prompt: str) -> str:
 
         response = requests.post(

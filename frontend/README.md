@@ -70,3 +70,11 @@ The default browser run tests the production guard. A separate synthetic develop
 journey uses `EDI_E2E_WORKFLOW_DEV=true npx playwright test specialist-journey.spec.ts`
 (PowerShell: set `$env:EDI_E2E_WORKFLOW_DEV='true'` first). Only generation is mocked;
 real auth/CSRF, jobs, review, checkpoints and deterministic Arabic evaluation are exercised.
+
+Milestone 6 adds the administrator-only `/operations` page: organization-scoped queue
+health, sampled latency/errors, known token/pricing coverage and opaque trace lookup.
+Employees/reviewers are denied by the backend as well as the UI. Normal production
+builds can use this page with a valid admin session; investigation/workflow development
+guards remain unchanged. Errors show a validated correlation reference when supplied
+by the backend. Missing usage/cost stays Unknown. The backend database must explicitly
+be migrated through `20261031_observability`; see [observability](../docs/OBSERVABILITY.md).

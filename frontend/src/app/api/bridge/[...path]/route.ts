@@ -11,6 +11,8 @@ function isAllowed(method: string, path: string) {
       /^(health|ready)$/,
       /^auth\/(csrf|me|profile)$/,
       /^admin\/users$/,
+      /^operations\/summary$/,
+      /^operations\/traces\/[a-f0-9]{32}$/,
       /^policies$/,
       new RegExp(`^policies/${id}/index$`),
       new RegExp(`^evidence/citations/${id}$`),
@@ -103,6 +105,8 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       signal: AbortSignal.timeout(180000),
     });
     const returnHeaders = new Headers({ "Cache-Control": "no-store" });
+    const reference = upstream.headers.get("x-request-id");
+    if (reference && /^[a-f0-9]{32}$/.test(reference)) returnHeaders.set("X-Request-ID", reference);
     for (const name of ["content-type", "content-disposition"]) {
       const value = upstream.headers.get(name);
       if (value) returnHeaders.set(name, value);

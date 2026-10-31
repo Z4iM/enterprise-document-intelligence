@@ -1,0 +1,117 @@
+{
+  "observed_at": "2026-10-30T23:54:36.163412+00:00",
+  "scope": "Synthetic local verification only; advisory snapshots are not penetration testing or production certification.",
+  "python": {
+    "tool": "pip-audit 2.10.1",
+    "command_flags": "--no-deps --disable-pip --strict",
+    "manifest_sha256": "325ed58d540a912ca0a3e4bdddf38654522a94296769763b57257052cbbd0944",
+    "report_sha256": "63ede2275ba7014aa3a16503e9a94b18fff970f3f36e793290e5c3d90dbbe15e",
+    "dependencies_audited": 90,
+    "advisory_entries": 0
+  },
+  "npm": {
+    "scope": "Application runtime dependencies (--omit=dev)",
+    "report_sha256": "0c3ff0fde6f5d67d07141d12c147911687ef1c37692f23957dbd00743185fba0",
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "images": {
+    "backend": {
+      "runtime_tag": "edi-verification-backend:c61031202605",
+      "image_id": "sha256:980b1319cbbd97902d1bdbb5592bd81cea351677fc6f50924421613f23ecd5a3",
+      "rootfs_layers": [
+        "sha256:44a87794b739d471ec360bec56cc0ceac640d06bbf579ee7d9061a0b88d09818",
+        "sha256:576179aecba1384366d23a3e2b732dfd408128a7d2dd1f068d894730362e7947",
+        "sha256:8ed4cbb16557f194937089b065970b4bd118ed82d749a9e1d56261a930488b60",
+        "sha256:f8ff5ead77b71a3abea55b349b2f7acd000ef0a705870552e8b35720dd69145f",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:3a567949b40fefecbcb5868e1b68586df7c8e0284f9836764f971edcfb495103",
+        "sha256:75fed2d34e388fe7d8398495594c5aab148e9e62b3101dceb5f64a25415f06b4",
+        "sha256:cff0cd23304649000628b70fc62e84a6643c76733dfac0984dbf3b9c9d1bb7ed",
+        "sha256:49f13e686891a38bb954493e064e46cc9987264155bdc722be268e2d9152f37c",
+        "sha256:2a5bb9e699be9b0d1005283af5af6b7c252c8d62f1927ec8e3a7b6529146b407",
+        "sha256:ca31ef7f958135abf9552fdd50c535f05fe3db3a0a07c20292ac14611de0ee15",
+        "sha256:4282b5ea3c39567a7e63ce1372d6e7f1e3729f787f10481515ae0ce5fe1b4639",
+        "sha256:78371f51bb0cd291352abf6fc2245b144713da245a3b915c3c6fea2f370cb536"
+      ],
+      "scanner": "Grype 0.121.0 linux/amd64",
+      "database_schema": "v6.1.10",
+      "database_built": "2026-10-30T06:23:28Z",
+      "database_valid": true,
+      "flags": "--only-fixed --fail-on high",
+      "custom_ignore_rules_added": false,
+      "fixable_matches_by_severity": {
+        "Medium": 11,
+        "Low": 1,
+        "Negligible": 1
+      },
+      "high_critical_gate_passed": true,
+      "raw_report_sha256": "845256dae51c5e19a0e648a4defb8cf8399b01d0c98f65a1c0f66d9ff38de968",
+      "scanned_tag": "edi-verification-backend:c61031202604",
+      "same_rootfs_as_scanned_image": true
+    },
+    "frontend": {
+      "runtime_tag": "edi-verification-frontend:c61031202605",
+      "image_id": "sha256:91f4dadcd675ed1689a0a799283a13eaaee7a2b7d81bc58a447f525d9c0aa1d6",
+      "rootfs_layers": [
+        "sha256:44a87794b739d471ec360bec56cc0ceac640d06bbf579ee7d9061a0b88d09818",
+        "sha256:09282d8f6dc3f140ce030eb4e3846b30c465220b50fd0962514f40dfc5122fd4",
+        "sha256:985fa6649f64124b2ab93baeb7a549ac3877147f438dd5931a2c5179aa83eef3",
+        "sha256:d8d64e272e1628c506685a6d413e953de1128072f8d9f58e9f781e0ad6fdee9f",
+        "sha256:6b6d01cb4b38660434f1ec5ef231fd25b6585c18893e02231eb10d38f36b29c3",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:c21d5b696c7fc746dbde4925c642589d39588a64dd0ede10cffcdaef8882355c",
+        "sha256:99cac55c1b676f6b3b0f6e53e734d0adeef7bf75c829a1c7f5976b660ad63517",
+        "sha256:52cc38d7baff814eebb2f619112da1edf5c1aea7ef14b35e66ab9e5109147ba4",
+        "sha256:75a3453b3d47880bdc762681a1729cdade80a4dac785016eacd6ed080a2ab750"
+      ],
+      "scanner": "Grype 0.121.0 linux/amd64",
+      "database_schema": "v6.1.10",
+      "database_built": "2026-10-30T06:23:28Z",
+      "database_valid": true,
+      "flags": "--only-fixed --fail-on high",
+      "custom_ignore_rules_added": false,
+      "fixable_matches_by_severity": {},
+      "high_critical_gate_passed": true,
+      "raw_report_sha256": "f0f57e8293eda794ef3306ebe18ae00afcef84095595c2037d8bb04639c4a853"
+    }
+  },
+  "known_unfixed_example": {
+    "id": "CVE-2026-53615",
+    "source_package": "util-linux",
+    "installed_version": "2.38.1-5+deb12u3",
+    "vendor_fix_available_for_bookworm": false,
+    "excluded_by_only_fixed": true,
+    "vendor_advisory": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+  },
+  "native_windows_crosscheck": {
+    "backend_raw_report_sha256": "d2f423555ecaa7efabdbf3c3eadf2c6f254f944ae88a749b9c3159b41d57a89d",
+    "same_archive_and_database": true,
+    "linux_is_reference_environment": true,
+    "reason": "Windows Syft duplicate binary entries lose Debian ownership/backport context; no custom vulnerability suppressions added.",
+    "upstream_issue": "https://github.com/anchore/syft/issues/5466"
+  },
+  "remediation": {
+    "runtime_pins_updated": [
+      "certifi 2026.10.18",
+      "opentelemetry-api 1.45.1",
+      "Pillow 13.0.0",
+      "pypdf 6.21.4",
+      "filelock 4.2.1"
+    ],
+    "frontend_global_npm_npx_removed": true,
+    "frontend_node_version_observed": "v22.23.4",
+    "both_final_container_profiles_passed": "c61031202605"
+  },
+  "limitations": [
+    "Only fixable image findings are gated; unfixed and lower-severity findings remain.",
+    "Native dependency advisory audits do not cover OS packages or all build tools.",
+    "M6 remote CI has not run; no deployment or live model inference."
+  ]
+}

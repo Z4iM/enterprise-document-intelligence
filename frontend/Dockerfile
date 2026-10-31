@@ -10,6 +10,8 @@ RUN npm run lint && npm run build
 
 FROM node:22-bookworm-slim AS runtime
 WORKDIR /srv
+# Standalone Next.js needs node, not the base image's separate npm dependency tree.
+RUN rm -rf /usr/local/lib/node_modules/npm && rm -f /usr/local/bin/npm /usr/local/bin/npx
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=build --chown=node:node /srv/.next/standalone ./
 COPY --from=build --chown=node:node /srv/.next/static ./.next/static
