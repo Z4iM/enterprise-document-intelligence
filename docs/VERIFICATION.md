@@ -7,6 +7,20 @@ Implemented on `feat/edi-mlops-release-checks`, based on merged M5 PR #6
 (`a07e08b`). M5 remote workflow 41134793582 was observed successful. The user
 authorized the M6 commit, push and pull request. **M6 awaits PR review**; local
 verification below does not assert that its new remote CI has passed.
+
+PR #7's initial workflow **41150046020** subsequently passed the backend, frontend/browser,
+PostgreSQL and container/image-scan jobs. The dependency-audit job correctly failed on
+four advisories in `pyasn1==0.6.4`; the same result was reproduced locally with a fresh
+audit. The runtime pin is updated to **0.6.5**, the upstream security patch; the identical
+strict full-manifest audit now reports **zero advisory entries**, with no ignore rules
+or CI-gate changes. Earlier scan reports remain historical snapshots rather than current
+security guarantees. See [remediation evidence](benchmarks/security-m6-ci-fix.json) and
+[PR checks](https://github.com/Z4iM/enterprise-document-intelligence/pull/7/checks) for the
+latest remote result. The patched local environment passed `pip check`, full Ruff,
+**385 backend tests (9 opt-in PostgreSQL skipped) in 145.96 s**, frontend TypeScript
+and the optimized production build. No application/authorization behavior or audit gate
+was changed. Verification below records the original M6 checkpoint.
+
 No deployment, live model inference, private environment/document inspection or real-data
 migration. Verification accounts, files, databases and service projects were synthetic.
 
