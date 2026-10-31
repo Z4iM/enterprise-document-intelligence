@@ -114,6 +114,3 @@ documents. Automated verification substitutes generation and makes no real LLM c
 APIs work, but investigation remains disabled by its development guard. Local HTTP still
 requires backend `EDI_ENV=development`. Do not override `NODE_ENV` or weaken the guards.
 See [frontend/README.md](../frontend/README.md) for routes and account/profile behavior.
-
-
-
