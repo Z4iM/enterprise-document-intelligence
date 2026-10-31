@@ -121,6 +121,14 @@ jobs:
           EDI_E2E_WORKFLOW_DEV: "true"
         run: npx playwright test specialist-journey.spec.ts
 
+      - name: Rehearse empty English and Arabic showcase with scripted generation
+        env:
+          EDI_BROWSER_CHANNEL: chromium
+          EDI_TEST_PYTHON: python
+          EDI_E2E_WORKFLOW_DEV: "true"
+          EDI_E2E_SHOWCASE: "true"
+        run: npx playwright test showcase.spec.ts
+
   postgres:
     name: Real PostgreSQL migrations, import and recovery
     runs-on: ubuntu-latest

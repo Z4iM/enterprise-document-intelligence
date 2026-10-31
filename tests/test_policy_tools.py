@@ -254,3 +254,48 @@ def test_wrong_policy_source_chunk_is_rejected(db):
 
     assert result["status"] == "needs_review"
     assert result["rules"] == []
+
+
+@pytest.mark.parametrize("language", ["en", "ar"])
+def test_rule_list_flags_stale_approval_without_changing_it(db, monkeypatch, language):
+    from app import main
+    from app.validation.approved_rule_repository import (
+        PolicyRuleIntegrityError,
+        load_approved_rules,
+    )
+
+    add_policy(db)
+    add_rule(db)
+    stored = db.get(StoredPolicyRule, "stored-rule-001")
+    quote = (
+        "Meals above $100 may require manager approval."
+        if language == "en"
+        else "مصروفات الوجبات التي تتجاوز ١٠٠ جنيه مصري قد تتطلب موافقة المدير."
+    )
+    stored.rule_data = {**stored.rule_data, "source_quote": quote, "currency": "USD" if language == "en" else "EGP"}
+    db.get(PolicyChunk, "chunk-rule-001").text = quote
+    db.commit()
+    before = (stored.approval_status, stored.approved_by, stored.approved_at, stored.verification_status)
+    monkeypatch.setattr(main, "SessionLocal", lambda: Session(db.bind))
+    result = main.list_policy_rules("policy-001")
+    assert result["invalid_approved_rule_count"] == 1
+    health = result["rules"][0]["current_validation"]
+    assert health["status"] == "invalid"
+    assert health["reason"] in {"policy_wording_unsupported", "policy_source_semantics_invalid"}
+    with pytest.raises(PolicyRuleIntegrityError):
+        load_approved_rules(db, "policy-001")
+    db.refresh(stored)
+    assert (stored.approval_status, stored.approved_by, stored.approved_at, stored.verification_status) == before
+
+
+def test_rule_list_distinguishes_current_validity_from_pending_approval(db, monkeypatch):
+    from app import main
+
+    add_policy(db)
+    add_rule(db)
+    add_rule(db, rule_id="pending-rule", approval_status="pending")
+    monkeypatch.setattr(main, "SessionLocal", lambda: Session(db.bind))
+    result = main.list_policy_rules("policy-001")
+    assert result["invalid_approved_rule_count"] == 0
+    statuses = {rule["rule_id"]: rule["current_validation"]["status"] for rule in result["rules"]}
+    assert statuses == {"rule-001": "valid", "pending-rule": "not_active"}

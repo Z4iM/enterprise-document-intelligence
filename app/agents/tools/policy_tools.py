@@ -41,11 +41,12 @@ def get_policy_evidence(
             db=db,
             policy_id=policy_id,
         )
-    except PolicyRuleIntegrityError:
+    except PolicyRuleIntegrityError as error:
         return {
             "status": "needs_review",
             "policy_id": policy_id,
             "reason": "approved_policy_evidence_invalid",
+            "blocker": error.code,
             "rules": [],
         }
 

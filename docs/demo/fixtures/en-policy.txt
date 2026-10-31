@@ -1,0 +1,2 @@
+Meals above $100 require manager approval.
+For all expenses of $25 or more, receipts are required.

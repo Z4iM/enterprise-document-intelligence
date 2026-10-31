@@ -150,6 +150,7 @@ def run_investigation(
             ):
                 return {
                     "status": "needs_review",
+                    "reason": result.get("blocker") or result.get("reason") or "document_not_verified",
                     "tool_trace": trace,
                 }
 

@@ -70,10 +70,11 @@ def evaluate_document_policy(
             db=db,
             policy_id=policy_id,
         )
-    except PolicyRuleIntegrityError:
+    except PolicyRuleIntegrityError as error:
         return {
             "status": "needs_review",
             "reason": "invalid_policy_evidence",
+            "blocker": error.code,
         }
 
     if not approved_rules:

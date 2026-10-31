@@ -1,5 +1,24 @@
 # Changelog
 
+## Local UX follow-up — policy readiness
+
+- Explain investigation blockers and bounded stops with safe, actionable messages.
+- Flag previously approved rules that fail current verification, with recovery guidance.
+- Share read-only evidence checks; preserve approval history and fail-closed decisions.
+
+## Unreleased — Milestone 7 (2026-10-31)
+
+- Added isolated public-source preparation with fresh dependency installation and fail-closed private-path/link checks. Existing destinations are never overwritten.
+- Added an account-only, visibly scripted English/Arabic showcase and end-to-end checks for review, evidence, scoped access, audit and trace lookup.
+- Added reproducible fixtures, demo script, portfolio claims and draft LinkedIn copy; refreshed stale verification/status documentation.
+- Untracked three legacy runtime artifacts while preserving their on-disk files. Existing history requires owner review before public release; no history rewrite or publishing performed.
+
+## Milestone 6 — merged PR #7 (2026-10-31)
+
+- Added bounded content-free telemetry, admin Operations, explicit quality/regression gates and dependency/image audits.
+- Patched advisory-affected dependencies, including pyasn1 0.6.5 after the initial CI audit failure. All five PR CI jobs subsequently passed.
+- Kept missing model usage/cost unknown and recorded weak Arabic scan/abstention results.
+
 ## Unreleased — Milestone 4 (2026-10-30)
 
 - Restored the overview introduction's purple gradient and increased text contrast;

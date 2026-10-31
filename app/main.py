@@ -987,10 +987,14 @@ def list_policy_rules(policy_id: str):
         )
 
         stored_rules = db.scalars(statement).all()
+        from app.validation.approved_rule_repository import approved_rule_health
+        health = {rule.id: approved_rule_health(db, rule, policy_id) for rule in stored_rules}
+        invalid_count = sum(item["status"] == "invalid" for item in health.values())
 
         return {
             "policy_id": policy_id,
             "total_rules": len(stored_rules),
+            "invalid_approved_rule_count": invalid_count,
             "extraction_status": policy.rule_extraction_status,
             "extraction_message": policy.rule_extraction_message,
             "rules": [
@@ -998,6 +1002,7 @@ def list_policy_rules(policy_id: str):
                     "id": rule.id,
                     "rule_id": rule.rule_id,
                     "rule_data": rule.rule_data,
+                    "current_validation": health[rule.id],
                     "verification_status": rule.verification_status,
                     "approval_status": rule.approval_status,
                     "approved_by": rule.approved_by,

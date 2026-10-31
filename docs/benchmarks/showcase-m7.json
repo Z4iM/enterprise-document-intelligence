@@ -1,0 +1,87 @@
+{
+  "milestone": 7,
+  "date": "2026-10-31",
+  "branch": "feat/edi-showcase-release",
+  "base_commit": "a264ec8ec62e2d3f5f606387ed6a114688785ab1",
+  "state": "local checkpoint before authorized branch push/PR; review required",
+  "rehearsal": {
+    "source": "public working-source export, subsequently synchronized; not a clean remote clone",
+    "fresh_python_environment": true,
+    "fresh_npm_ci": true,
+    "pip_check": "passed",
+    "npm_audit_vulnerabilities": 0,
+    "personal_environment_or_runtime_state_copied": false,
+    "model_generation": "scripted and visibly disclosed",
+    "real_model_calls": 0
+  },
+  "checks": {
+    "ruff": "passed",
+    "backend": {
+      "passed": 391,
+      "opt_in_postgres_skipped": 9,
+      "seconds": 169.86
+    },
+    "postgres": {
+      "passed": 9,
+      "seconds": 17.24
+    },
+    "typescript": "passed",
+    "production_build": "passed",
+    "production_browser": {
+      "passed": 30,
+      "expected_skipped": 3,
+      "seconds": 49.2
+    },
+    "existing_arabic_development_browser": {
+      "passed": 1,
+      "seconds": 36.0
+    },
+    "english_arabic_showcase_browser": {
+      "passed": 2,
+      "english_seconds": 30.3,
+      "arabic_seconds": 29.3,
+      "reported_total": "1.2m"
+    },
+    "container_recovery": {
+      "run_id": "c71031202601",
+      "default": "all checks passed",
+      "compact": "all checks passed",
+      "owned_services_stopped": true,
+      "volumes_deleted": false
+    },
+    "release_regression_checks": 16,
+    "product_quality_gate": false,
+    "m7_remote_ci": "not observed at local checkpoint; check PR for subsequent results",
+    "final_export_security_tests": {
+      "passed": 6,
+      "seconds": 4.87
+    },
+    "final_staged_and_unstaged_diff_check": "passed",
+    "docker_desktop_restored": true,
+    "demo_ports_after_teardown": "3197 and 8197 not listening"
+  },
+  "screenshots": {
+    "ar-policy-review.png": "dc7df98c15e525aff53099dfe55144e9bc1220e972c6a13cbd51f09eee3097e4",
+    "ar-workflow-desktop.png": "58496a1a2887b74224061d7ae0c548d5752f25665c115adc39d77bc5865d23ee",
+    "ar-workflow-mobile.png": "fb3d511e2e6ccf808d4b3048570c0c72af9798b0d0b0bc200597effb5583ad81",
+    "en-audit.png": "429271d5ce76ae50e54d1ed620722932fd96e271d84b57ba829090b6742de97a",
+    "en-operations.png": "f59ce7fc0c8356eb49878bdaa2d620569b58626daa38538f284c6c6eba5d5968",
+    "en-workflow-desktop.png": "a7a57226110c2c4d69aa158ce8c1084e7859d42a4d3df7687febb3ac059c0a02"
+  },
+  "limitations": [
+    "Synthetic native-text journeys do not establish scan/OCR or live-model semantic quality.",
+    "No new accuracy benchmark or production-readiness certification.",
+    "No finished video edit, public deployment, post or license grant."
+  ],
+  "public_release_holds": [
+    "Owner review of three legacy tracked runtime artifacts in Git history and any required remediation. Files retained on disk; contents not inspected; history unchanged.",
+    "Owner choice of repository license.",
+    "PR review and a separate decision for merge and public release."
+  ],
+  "review": {
+    "credential_pattern_findings_in_changed_public_text": 0,
+    "local_markdown_missing_links": 0,
+    "ci_actions_full_sha_pinned": true,
+    "sessions_csrf_ownership_roles_eligibility_and_production_guards": "preserved; exercised by tests"
+  }
+}

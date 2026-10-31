@@ -7,10 +7,9 @@ against verified company rules, and explains the result with original-source evi
 It combines FastAPI, a Next.js dashboard, bounded Gemini investigation tools,
 LangGraph human-review checkpoints and durable background processing.
 
-**Status — October 31, 2026:** milestones 1–5 reviewed/merged; milestone 6 implemented and locally verified,
-awaiting review.
-**Showcase target — November 6, 2026:** final showcase rehearsal remains; automated
-product-quality gates still have explicit OCR/live-model blockers.
+**Status — October 31, 2026:** milestones 1–6 reviewed/merged; milestone 7 passed local rehearsal and awaits review.
+**Showcase target — November 6, 2026:** showcase materials are prepared; public release awaits
+history/license review. Product-quality gates retain explicit OCR/live-model blockers.
 Production readiness has separate gates.
 
 [Architecture](docs/ARCHITECTURE.md) · [Verification evidence](docs/VERIFICATION.md) ·
@@ -125,8 +124,8 @@ subject to review and quality gates; the showcase date is not a production-relea
 | **3 — Persistence and recovery** | Verified Oct 30, 2026 | Complete | Real PostgreSQL and safe synthetic import; queued uploads/recovery/fencing; both Docker profiles built/started/restarted; authenticated HTTP intake and checkpoint/session/original persistence |
 | **4 — Authorized evidence retrieval** | Verified Oct 30, 2026 | Reviewed/merged | Scoped hybrid search, indexing/removal and 40 bilingual queries; all four PR CI jobs passed |
 | **5 — Cooperating specialists and bilingual understanding** | Verified Oct 30, 2026 | Reviewed/merged | Separate specialists, durable workflow UI/evidence review; 20 Arabic/20 English templates and eight OCR scans; narrow verified grammar, failure/injection/replay tests and scripted comparison |
-| **6 — MLOps and release checks** | Verified Oct 31, 2026 | Awaiting review | Scoped operations, correlated redacted traces, reported usage/optional cost coverage, explicit quality blockers and pinned security/evaluation CI gates |
-| **7 — Employer showcase** | Nov 6, 2026 | Planned | Independent clean-start rehearsal, complete English/Arabic investigation scenario, evidence/audit/restart demonstration, screenshots, demo script and evidence-supported CV claims |
+| **6 — MLOps and release checks** | Verified Oct 31, 2026 | Reviewed/merged | Scoped operations, correlated redacted traces, reported usage/optional cost coverage, explicit quality blockers and pinned security/evaluation CI gates |
+| **7 — Employer showcase** | Nov 6, 2026 target | Locally verified; awaiting review | Independent clean-start rehearsal, complete English/Arabic investigation scenario, evidence/audit/restart demonstration, screenshots, demo script and evidence-supported CV claims |
 
 The showcase must demonstrate the integrated lifecycle, genuine specialist cooperation,
 measured quality and reproducible setup. Release progress depends on passing acceptance
@@ -144,24 +143,57 @@ criteria; deferred scope will be documented explicitly.
 These tracks are gate-based and currently unscheduled. See the [full roadmap](docs/ROADMAP.md)
 and [security contract](docs/SECURITY.md) for acceptance details and remaining risks.
 
+Approved rules are revalidated against their sources when used. The policy library flags
+previous approvals that fail current checks; investigations explain the specific blocker
+and link to policy/document review. A warning never changes or renews an approval.
+
 ## Verification evidence
 
-Results are recorded as of October 30, 2026; verification uses synthetic data and no real model calls.
+Milestone 6 PR #7 merged after [all five CI jobs passed](https://github.com/Z4iM/enterprise-document-intelligence/actions/runs/41151690300).
+Verification uses synthetic fixtures; scripted generation is distinguished from live-model evidence.
 
-| Check | Observed result |
+| Check | Observed M6 result |
 |---|---|
-| Full backend suite | **296 passed, 8 skipped**; skips are opt-in PostgreSQL tests without a supplied dedicated cluster |
-| Dedicated PostgreSQL suite | **8 passed** in a separate isolated run, including migrations, authorization, import and recovery |
-| Playwright runner | **13 passed**: four browser journeys, eight gateway checks and one gateway-to-real-backend investigation with synthetic model generation |
-| Clean Linux containers | Backend dependency installation/`pip check` and Node 22 TypeScript/production build passed |
-| Container integration | Both normal and compact profiles passed startup, real authenticated HTTP upload, worker processing and full-service restart/persistence checks |
-| Static/config checks | Ruff, Compose validation and `git diff --check` passed |
+| Full backend suite | **385 passed, 9 opt-in PostgreSQL skipped**; the dedicated CI database job separately passed **9 tests** |
+| Frontend | TypeScript and production build passed; production browser suite **30 passed, 1 expected dev-only skip**, plus a separate Arabic development workflow journey |
+| Container integration | Both profiles passed intake, source/citation/original access, sessions, full-service restart and checkpoint resume |
+| Security checks | Strict runtime dependency audit and both image high/critical fixable-finding gates passed; lower/unfixed findings remain documented |
+| Retrieval | **87.5% hybrid Recall@5** on 40 synthetic queries; Arabic unanswerable abstention **50% (2/4)** |
+| OCR | **75% English / 50% Arabic** scanned-field accuracy on four development scans per language |
+| Release gate | **16/16 regression checks pass**; held-out/live-model product-quality gate remains unmet |
 
-GitHub Actions defines backend, frontend/browser, PostgreSQL and container jobs.
-Current remote run results are available in [Actions](https://github.com/Z4iM/enterprise-document-intelligence/actions).
-Model accuracy, Arabic OCR CER/WER, live Gemini cost and sustained load have **not** been
-benchmarked yet. Passing synthetic functional tests is not an accuracy benchmark.
-Commands, fixture scope, dated results and limitations: [VERIFICATION.md](docs/VERIFICATION.md).
+M7 fresh-install rehearsal passed **391 backend tests**, **9 dedicated PostgreSQL tests**,
+the production browser suite (**30 passed, 3 expected skips**), **3 separate development
+journeys**, TypeScript/build, and recovery in **both Docker profiles**.
+See [VERIFICATION.md](docs/VERIFICATION.md) for dated local/remote evidence. These are development benchmarks, not general accuracy or production certification.
+
+## Reproduce the employer demonstration
+
+The [showcase guide](docs/SHOWCASE.md) prepares a new public-source sandbox on a chosen
+drive, with fresh dependencies and no copied user dotenv/database/upload state. Its
+English/Arabic browser journeys begin with accounts only and exercise actual review,
+source verification, authorization, specialist tools, audit and trace lookup.
+**Model generation is scripted and visibly labeled.** Persistent restart/recovery is
+verified separately with the existing isolated Docker runner. No private key is required.
+
+- [Three-minute demo script and recording plan](docs/DEMO_SCRIPT.md)
+- [CV bullets, interview evidence and draft LinkedIn copy](docs/PORTFOLIO.md)
+- [Native synthetic English/Arabic fixtures](docs/demo/fixtures)
+
+### Application captures
+
+Actual synthetic browser captures; the visible banner identifies scripted generation.
+
+[![English specialist workflow](docs/demo/screenshots/en-workflow-desktop.png)](docs/demo/screenshots/en-workflow-desktop.png)
+
+[Arabic desktop](docs/demo/screenshots/ar-workflow-desktop.png) ·
+[Arabic mobile](docs/demo/screenshots/ar-workflow-mobile.png) ·
+[Policy review/search](docs/demo/screenshots/ar-policy-review.png) ·
+[Audit](docs/demo/screenshots/en-audit.png) ·
+[Operations](docs/demo/screenshots/en-operations.png)
+
+These materials are for a portfolio showcase. Public deployment, a final edited video,
+posting and broader model-quality improvements remain separately scoped work.
 
 ## Run locally
 

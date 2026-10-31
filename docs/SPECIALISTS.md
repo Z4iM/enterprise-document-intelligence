@@ -56,7 +56,7 @@ append-only; exact retries do not duplicate them. Historical rows/audit events r
 ## Local demo and migration
 
 Back up first; apply `python -m alembic upgrade head` to the same DB/root used by API and
-worker. New head: `20261030_specialists`. Development did not migrate real user data.
+worker. Current head: `20261031_observability` (M6 includes the specialist migration). Development did not migrate real user data.
 Ambiguous historical approvals can now fail source-semantic revalidation and need
 review; existing records are not silently rewritten.
 

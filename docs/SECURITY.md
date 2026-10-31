@@ -171,3 +171,33 @@ This milestone is not a production certification, penetration test or public dep
 Design references: [FastAPI password hashing](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/),
 [OWASP sessions](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html),
 [OWASP CSRF](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html).
+
+## M7 public-source rehearsal and release hold
+
+The showcase preparation tool rejects private paths, credential configuration files,
+symlinks/junctions/hard links and existing destinations. It copies public working source,
+not user state; the fixed synthetic `tests/data/policy_benchmark.json` is explicitly allowed.
+Its path filters are not a semantic secret scanner. Review source and history before release.
+
+The rehearsal discovered three legacy tracked runtime artifacts under root `data/`.
+M7 removes them from the tracked index while preserving their original files on disk;
+their contents were not inspected. Existing Git history can still contain those artifacts.
+**Owner review/history remediation is required before public release**; this milestone
+performs no history rewrite, file deletion or publication and makes no claim that old
+history is sanitized.
+
+The optional frontend showcase notice labels scripted generation. It grants no permission,
+changes no backend scope and never enables production investigation/workflow gateways.
+The account-only fixture server is loopback-bound and temporary; its published synthetic
+password must never be used to provision a normal or publicly exposed application.
+
+
+### Current evidence warnings
+
+The policy rules GET response includes read-only current validation and the number
+of invalid active approved rules. It uses the same source/semantic validator as
+official evaluation, behind the existing session and policy-access checks. It never
+mutates approval records or skips invalid approved evidence. Investigation blocker
+messages use an explicit server-code allowlist; source quotations, raw exceptions and
+model drafts are not inserted into failure messages. Existing authorized policy
+quotation views are unchanged.
