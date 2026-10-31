@@ -10,5 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><Providers><SessionGate><AppShell>{children}</AppShell></SessionGate></Providers></body></html>;
+  const showcase = process.env.EDI_SHOWCASE_MODE === "synthetic-scripted";
+  return <html lang="en"><body>{showcase && <aside aria-label="Synthetic showcase notice" className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs text-amber-950">Synthetic demo · Scripted model generation · Real authorization, human review and deterministic evaluation</aside>}<Providers><SessionGate><AppShell>{children}</AppShell></SessionGate></Providers></body></html>;
 }

@@ -1,6 +1,106 @@
 # Engineering verification — 2026-10-31
 
 
+## PR publication authorization
+
+The user subsequently authorized the M7/UX commit, branch push and PR for review.
+Local results below are pre-publication checkpoints; the new remote CI result is
+pending and must be read from the PR checks. No merge, deployment or social posting
+is authorized by this branch publication.
+
+## UX follow-up — current policy evidence and investigation blockers
+
+Added after the M7 showcase checkpoint on the same review branch.
+The policy library reports current source validity independently of historical
+approval. Invalid active approved rules are individually flagged and block policy
+use. Read-only checks share the official loader's validator; no approval or source
+record is changed. Investigation replies use allowlisted blocker/stop codes and
+link to policy/document review; unknown diagnostics stay generic and drafts remain hidden.
+
+Observed in the isolated public-source sandbox on D:, with personal dotenv loading
+disabled and synthetic fixtures only:
+
+- Full Ruff passed. Full backend: **401 passed, 9 opt-in PostgreSQL skipped in
+  209.74 s**. New coverage includes stale English/Arabic source semantics, current
+  versus historical approval, preserved records, blocked evaluation, specific stop
+  reasons and refusal to expose unrecognized error/draft content.
+- Frontend TypeScript and optimized production build passed. Production Playwright:
+  **30 passed, 4 expected development-only skips in 46.6 s**. Development browser:
+  **2 passed in 52.0 s**, including the existing Arabic specialist review/resume
+  journey and the new warning/actionable-investigation display test. English/Arabic
+  showcase journeys: **2 passed in 1.2 min** (33.8 s / 27.3 s).
+- The new display test supplies a synthetic stale-validation API response to exercise
+  historical badges, warning text and review links without modifying fixture approvals
+  or calling a model. Backend tests exercise the real read-only verifier and API payload.
+  Its first label assertion assumed title case; it was corrected to match the existing
+  badge presentation. This did not change product behavior or weaken a check.
+- Final warning-display rerun passed **1/1 in 19.6 s**; both new UI captures were
+  visually inspected. Final TypeScript and staged/unstaged diff checks passed.
+
+At local verification, no new dependencies or schema changes, live inference,
+real-data mutation, commit/push, deployment or production-readiness claim. Existing Docker results belong
+to the M7 checkpoint; container images were not rebuilt for this follow-up. Restart
+the local backend to load these code changes, then refresh Policies/Investigation.
+Previously invalid rules remain blocked until new source-backed candidates are
+explicitly reviewed; retrying extraction on an existing copy does not erase approvals.
+
+## Milestone 7 local showcase checkpoint
+
+Implemented on `feat/edi-showcase-release`, based on M6 merge
+`a264ec8ec62e2d3f5f606387ed6a114688785ab1`. M6 remote run
+[41151690300](https://github.com/Z4iM/enterprise-document-intelligence/actions/runs/41151690300)
+passed all five jobs. **At this local checkpoint M7 was uncommitted/unpushed;
+its new CI step had not run remotely.** No deployment, public posting, finished video or paid
+creative generation was performed.
+
+- A public working-source export on D: installed a **new Python virtual environment
+  and fresh `npm ci` dependencies**. `pip check` passed; npm reported zero
+  vulnerabilities. This is a source export with an explicitly dirty base manifest,
+  subsequently synchronized for fixes/materials, **not a remote clean-clone or
+  cold-cache/network reproducibility claim**. No user dotenv/database/uploads/models
+  were copied. Export refusal, overwrite/nesting denial, hard-link denial and install
+  environment filtering have six synthetic regression tests.
+- Fresh full backend: **391 passed, 9 opt-in PostgreSQL skipped in 169.86 s**.
+  Dedicated isolated PostgreSQL: **9 passed in 17.24 s**. Full Ruff, frontend TypeScript
+  and optimized production build passed. No schema/dependency change in M7.
+- Production browser suite: **30 passed, 3 expected development-only skips**;
+  the existing Arabic specialist development journey separately passed, as did the
+  **two new English/Arabic empty-account showcase journeys**. These perform actual
+  policy upload/source verification/confirmed approval, keyword evidence retrieval,
+  receipt intake, human correction, reviewed documentation, workflow pause/resume,
+  deterministic outcome, audit/trace lookup, role denial and colleague ownership
+  denial. Native UTF-8 fixtures do not certify scan/OCR or live Arabic reasoning.
+- Docker run **`c71031202601`** passed **all default and compact profile checks**
+  from the exported source, including HTTP intake/search/original access, persisted
+  sessions, processing, specialist checkpoint, full restart and reviewed resume.
+  Both profiles reported Arabic text preservation and **zero real model calls**.
+  Only owned verification services were stopped; images/volumes were retained.
+- The existing release-gate reproduction passed **16 regression checks**; the
+  product-quality gate remains **false**. No new OCR, retrieval-quality or live-model
+  accuracy measurement was made. Prior benchmark limitations still apply.
+- Six raw screenshots from passing synthetic browser journeys were visually reviewed,
+  including 390px Arabic. Visible banners disclose scripted generation; policy/source
+  review and deterministic evaluation remain real. See [showcase guide](SHOWCASE.md),
+  [script](DEMO_SCRIPT.md), [portfolio drafts](PORTFOLIO.md) and
+  [machine-readable evidence](benchmarks/showcase-m7.json).
+
+The rehearsal found and corrected three test/operational issues: a workflow button's
+accessible name includes its status; navigating before the review POST completed
+raced eligibility checks; and a five-second login UI assertion could expire while
+sign-in was pending. Tests now wait for successful HTTP acknowledgements and recorded
+review state. No authorization, approval or eligibility rule was loosened. Automated
+Next.js servers now bind explicitly to `127.0.0.1`. Final exporter tests passed
+**6/6 in 4.87 s**; Ruff and staged/unstaged diff checks passed. Docker Desktop
+was restored with only its original idle BuildKit container; demo ports were closed.
+
+**Public release hold:** export initially refused three legacy tracked root `data/`
+artifacts before creating its target. They were removed from Git's index while all
+three remain on disk; their contents were not inspected and history was not rewritten.
+Their presence does not establish whether their contents are private. Owner review
+and any necessary history remediation are required before publication. A repository
+license must also be chosen; none was silently added. This milestone does not certify
+production readiness or remove the M6 security/product-quality limitations.
+
 ## Milestone 6 checkpoint
 
 Implemented on `feat/edi-mlops-release-checks`, based on merged M5 PR #6

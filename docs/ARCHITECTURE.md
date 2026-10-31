@@ -135,3 +135,15 @@ evidence has immutable reviewer attestations, same-uploader scope and input fing
 file/rule/field/access changes invalidate confirmation. Confirmation is not expense
 approval. No extra service/dependency; business DB can remain PostgreSQL while the
 single-host checkpoint volume is SQLite. See [bounds/trade-offs](SPECIALISTS.md).
+
+## M7 showcase boundary
+
+`scripts/prepare_showcase.py` exports public source and optionally installs new dependencies
+outside the repository. It never migrates the selected user database or starts a service.
+`tests/e2e_server.py --showcase-empty` creates temporary, loopback-only synthetic accounts
+without seeded documents/rules/reviews. Its scripted providers replace generation only;
+all authorization, source verification, review, queue/checkpoint and evaluation paths
+remain the application code. A server-controlled frontend notice labels this mode and
+its development indicator is hidden only for this recording mode. The notice grants no
+capability and production workflow gateways remain disabled. Persistent recovery is
+verified with the separate isolated Docker runner. See SHOWCASE.md and ADR 014.

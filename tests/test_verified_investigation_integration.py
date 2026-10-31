@@ -279,7 +279,7 @@ def test_unauthorized_document_stops_pipeline(db):
     )
 
     assert result["status"] == "not_ready"
-    assert result["reason"] == "investigation_incomplete"
+    assert result["reason"] == "investigation_access_blocked"
 
     assert result["tool_trace"][0]["status"] == (
         "access_denied"
@@ -338,3 +338,46 @@ def test_tampered_policy_evidence_stops_pipeline(db):
 
     assert "answer" not in result
     assert client.models.generate_content.call_count == 1
+
+
+def test_stale_policy_reason_reaches_verified_boundary_without_draft(db):
+    seed_database(db)
+    stored = db.get(StoredPolicyRule, "stored-meal-rule")
+    quote = "Meals above $100 may require manager approval."
+    stored.rule_data = {**stored.rule_data, "source_quote": quote}
+    db.get(PolicyChunk, "chunk-meal-rule").text = quote
+    db.commit()
+    client = fake_client(tool_response("get_policy_evidence", {"policy_id": POLICY_ID}))
+    result = investigate(db, client)
+    assert result["status"] == "not_ready"
+    assert result["reason"] == "policy_wording_unsupported"
+    assert "answer" not in result and "model_draft_unverified" not in result
+    assert client.models.generate_content.call_count == 1
+
+
+def test_unrecognized_blocker_never_exposes_raw_errors(db, monkeypatch):
+    import app.agents.verified_investigation as verified
+
+    monkeypatch.setattr(verified, "run_investigation", lambda **kwargs: {
+        "status": "needs_review", "reason": "synthetic-private-error-detail", "tool_trace": [],
+        "model_draft_unverified": "synthetic-private-draft",
+    })
+    result = investigate(db, Mock())
+    assert result == {"status": "not_ready", "reason": "investigation_incomplete", "tool_trace": []}
+
+
+@pytest.mark.parametrize(("status", "reason"), [
+    ("tool_limit_reached", "investigation_tool_limit"),
+    ("model_turn_limit_reached", "investigation_turn_limit"),
+    ("insufficient_evidence", "investigation_no_evaluation"),
+    ("tool_result_too_large", "investigation_evidence_limit"),
+    ("invalid_model_response", "investigation_invalid_response"),
+])
+def test_bounded_investigation_stops_have_specific_safe_reasons(db, monkeypatch, status, reason):
+    import app.agents.verified_investigation as verified
+
+    monkeypatch.setattr(verified, "run_investigation", lambda **kwargs: {
+        "status": status, "tool_trace": [], "model_draft_unverified": "synthetic-private-draft",
+    })
+    result = investigate(db, Mock())
+    assert result == {"status": "not_ready", "reason": reason, "tool_trace": []}

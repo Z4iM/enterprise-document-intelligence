@@ -8,7 +8,9 @@ async function login(page: Page, role: string) {
   await page
     .getByLabel("Password", { exact: true })
     .fill("synthetic-browser-password");
+  const signedIn = page.waitForResponse(response => response.url().endsWith("/api/bridge/auth/login") && response.request().method() === "POST", {timeout: 15000});
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  expect((await signedIn).status()).toBe(200);
   await expect(
     page.getByRole("button", { name: "Open user profile" }),
   ).toBeVisible();

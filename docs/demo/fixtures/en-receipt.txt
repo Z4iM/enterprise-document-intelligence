@@ -1,0 +1,6 @@
+Receipt
+Merchant: Synthetic Harbor Cafe
+Date: 2026-10-31
+Total: USD 175.50
+Payment method: cash
+Category: meal

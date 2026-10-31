@@ -246,3 +246,41 @@ Keep these requirements visibly blocked until measured, authorized evidence exis
 Audit runtime dependencies and built images; use full-SHA actions/checksummed scanner
 binaries. Patch advisory-affected pins and verify both native and Linux compatibility.
 See OBSERVABILITY.md for limits, configuration, migration and scan scope.
+
+## ADR 014 — Isolated, explicitly scripted portfolio rehearsal (2026-10-31)
+
+Use a fresh public working-source export and fresh dependency environments for the
+showcase rehearsal. Reject private paths/linked files and existing destinations;
+never copy application dotenv files, uploads or databases. Keep explicit file hashes
+and distinguish an uncommitted source bundle from a published clean Git release.
+
+Reuse the browser fixture's real session/CSRF, source-verification, worker, review,
+checkpoint and evaluation paths. The showcase variant starts with accounts only and
+labels scripted model generation on every page. It has no production login seed,
+model credential or authority shortcut. Production workflow guards remain unchanged.
+
+Native UTF-8 bilingual fixtures make the review story reproducible without a provider
+quota. They do not improve or certify OCR/model quality. Persistent restart/resume
+uses the separate owned-container rehearsal; the temporary browser fixture intentionally
+does not preserve its data after exit. No automatic cleanup of persistent volumes or
+published deployment is part of this milestone. See SHOWCASE.md and PORTFOLIO.md.
+
+
+## ADR 015 — Separate historical approval from current evidence validity
+
+The approved-rule loader and policy-library diagnostics share the same read-only
+rule validator. Listing rules reports current validity without changing approvals,
+quotes or review history. One invalid active approved rule keeps the policy fail-closed;
+we do not silently evaluate a remaining subset. Existing pending/unverified filtering
+and all organization/ownership/role checks remain in place.
+
+Integrity failures carry fixed reason codes. The verified investigation boundary
+allowlists actionable blocker codes and bounded-stop codes; raw provider exceptions,
+validation payloads and unverified model drafts remain excluded. Historical status
+badges become “Previously Approved” / “Revalidation Failed” when evidence is invalid.
+A new policy upload and explicit candidate review is the recovery path. Retrying
+extraction on the old copy preserves existing records and cannot clear invalid approvals.
+
+The UI report is a snapshot, not an authorization grant: evaluation rechecks evidence
+at use time. No new dependencies, migrations, automated approvals or live inference
+are required for these diagnostics.

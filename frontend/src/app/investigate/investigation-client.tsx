@@ -28,6 +28,7 @@ import {
   type InvestigationResult,
 } from "@/lib/agent-api";
 import { labelize } from "@/lib/utils";
+import { investigationReasons } from "@/lib/investigation-reasons";
 
 const toolNames: Record<string, string> = {
   inspect_document: "Inspect reviewed document",
@@ -35,20 +36,7 @@ const toolNames: Record<string, string> = {
   evaluate_document_policy: "Evaluate policy requirements",
 };
 
-const reasonMessages: Record<string, string> = {
-  investigation_incomplete:
-    "The investigation could not establish a verified decision.",
-  missing_policy_result:
-    "No authoritative policy evaluation was returned.",
-  missing_evaluation:
-    "The policy evaluation is missing.",
-  missing_evidence:
-    "Required supporting evidence is missing.",
-  missing_action_evidence:
-    "A required action does not have supporting policy evidence.",
-  invalid_evaluation:
-    "The policy evaluation was inconsistent or invalid.",
-};
+const reasonMessages = investigationReasons;
 
 export default function InvestigationClient({unavailableReason}: {unavailableReason: string | null}) {
   const [documentId, setDocumentId] = useState("");
@@ -419,8 +407,9 @@ export default function InvestigationClient({unavailableReason}: {unavailableRea
 
               <p className="mt-2 text-[11px] text-muted">
                 EDI did not return an official policy decision.
-                Review the tool trace before trying again.
+                Follow the guidance above and review the tool trace before trying again.
               </p>
+              <div className="mt-3 flex flex-wrap gap-4 text-sm font-semibold text-primary"><Link href="/policies">Review policy evidence</Link><Link href="/reviews">Review document fields</Link></div>
             </Card>
           )}
 

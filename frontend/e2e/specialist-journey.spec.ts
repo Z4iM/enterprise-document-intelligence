@@ -133,9 +133,11 @@ test("Arabic specialist workflow pauses, accepts reviewed existing receipt, resu
       payment_method: "cash",
     }),
   );
+  const savedReview = page.waitForResponse(response => response.url().endsWith(`/api/bridge/documents/${document}/review`) && response.request().method() === "POST");
   await page
     .getByRole("button", { name: "Save review decision", exact: true })
     .click();
+  expect((await savedReview).status()).toBe(200);
   await page.goto(`/documents/${document}`);
   await page.getByLabel("Organization policy").selectOption(policy);
   const checklist = page
@@ -215,4 +217,37 @@ test("Arabic specialist workflow pauses, accepts reviewed existing receipt, resu
     path: test.info().outputPath("arabic-specialist-workflow-mobile.png"),
     fullPage: true,
   });
+});
+
+
+test("stale policy evidence shows historical approval warning and actionable investigation failure", async ({page}) => {
+  await login(page, "admin");
+  await page.route("**/api/bridge/policies/synthetic-policy/rules", async route => {
+    const response = await route.fetch();
+    const data = await response.json();
+    data.invalid_approved_rule_count = 1;
+    data.rules[0].approval_status = "approved";
+    data.rules[0].approved_by_name = "Synthetic Reviewer";
+    data.rules[0].current_validation = {status: "invalid", reason: "policy_wording_unsupported"};
+    await route.fulfill({response, json: data});
+  });
+  await page.goto("/policies");
+  await page.getByRole("button", {name: "synthetic_policy.docx", exact: true}).click();
+  await expect(page.getByText("Previously approved policy evidence needs review", {exact: true})).toBeVisible();
+  await expect(page.getByText(/^previously approved$/i)).toBeVisible();
+  await expect(page.getByText(/Retrying extraction on this copy preserves existing approvals/)).toBeVisible();
+  await expect(page.getByRole("alert").filter({hasText: /negation, exceptions or discretionary wording/})).toBeVisible();
+  await page.screenshot({path: test.info().outputPath("stale-policy-warning.png"), fullPage: true});
+  await page.route("**/api/agent/investigate", route => route.fulfill({json: {
+    status: "not_ready", reason: "policy_wording_unsupported",
+    tool_trace: [{tool: "get_policy_evidence", status: "needs_review"}],
+  }}));
+  await page.goto("/investigate");
+  await page.getByLabel("Your question", {exact: true}).fill("What requirements apply to this synthetic receipt?");
+  await page.getByRole("button", {name: "Run investigation", exact: true}).click();
+  await expect(page.getByRole("heading", {name: "Verified decision unavailable", exact: true})).toBeVisible();
+  await expect(page.getByText(/A previously approved rule fails current verification because/)).toBeVisible();
+  await expect(page.getByRole("link", {name: "Review policy evidence", exact: true})).toHaveAttribute("href", "/policies");
+  await expect(page.getByRole("link", {name: "Review document fields", exact: true})).toHaveAttribute("href", "/reviews");
+  await page.screenshot({path: test.info().outputPath("investigation-blocker-guidance.png"), fullPage: true});
 });

@@ -9,6 +9,7 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8197)
+    parser.add_argument("--showcase-empty", action="store_true", help="Start with synthetic accounts only; no seeded documents, reviews or rules.")
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="edi-browser-") as directory:
         root = Path(__file__).resolve().parents[1]
@@ -50,11 +51,14 @@ def main():
 
         with SessionLocal() as db:
             hashed = passwords.hash("synthetic-browser-password")
-            for identifier, role in [
+            accounts = [
                 ("employee", "employee"),
                 ("reviewer", "reviewer"),
                 ("admin", "admin"),
-            ]:
+            ]
+            if args.showcase_empty:
+                accounts.append(("colleague", "employee"))
+            for identifier, role in accounts:
                 db.add(
                     User(
                         id=identifier,
@@ -66,38 +70,39 @@ def main():
                         active=True,
                     )
                 )
-            seed_database(db)
-            doc = db.get(Document, DOCUMENT_ID)
-            doc.organization_id, doc.owner_id = "browser-org", "employee"
-            policy = db.get(PolicyDocument, POLICY_ID)
-            policy.organization_id, policy.owner_id = "browser-org", "reviewer"
-            from docx import Document as WordDocument
+            if not args.showcase_empty:
+                seed_database(db)
+                doc = db.get(Document, DOCUMENT_ID)
+                doc.organization_id, doc.owner_id = "browser-org", "employee"
+                policy = db.get(PolicyDocument, POLICY_ID)
+                policy.organization_id, policy.owner_id = "browser-org", "reviewer"
+                from docx import Document as WordDocument
 
-            original = (
-                Path(directory)
-                / "data"
-                / "policies"
-                / POLICY_ID
-                / "synthetic_policy.docx"
-            )
-            original.parent.mkdir(parents=True)
-            source = WordDocument()
-            statements = [
-                "Meals above $100 require manager approval.",
-                "Expenses of $25 or more require receipts.",
-            ]
-            for statement in statements:
-                source.add_paragraph(statement)
-            source.save(original)
-            policy.stored_file_path = str(original)
-            policy.mime_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            policy.extracted_text = "\n".join(statements)
-            rule = db.get(StoredPolicyRule, "stored-meal-rule")
-            rule.approval_status, rule.approved_by, rule.approved_at = (
-                "pending",
-                None,
-                None,
-            )
+                original = (
+                    Path(directory)
+                    / "data"
+                    / "policies"
+                    / POLICY_ID
+                    / "synthetic_policy.docx"
+                )
+                original.parent.mkdir(parents=True)
+                source = WordDocument()
+                statements = [
+                    "Meals above $100 require manager approval.",
+                    "Expenses of $25 or more require receipts.",
+                ]
+                for statement in statements:
+                    source.add_paragraph(statement)
+                source.save(original)
+                policy.stored_file_path = str(original)
+                policy.mime_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                policy.extracted_text = "\n".join(statements)
+                rule = db.get(StoredPolicyRule, "stored-meal-rule")
+                rule.approval_status, rule.approved_by, rule.approved_at = (
+                    "pending",
+                    None,
+                    None,
+                )
             db.commit()
         # Only model generation is synthetic; upload, verification, review and auth stay real.
         import json

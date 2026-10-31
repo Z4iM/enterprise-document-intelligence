@@ -110,6 +110,7 @@ export interface StoredRule {
   };
   verification_status: string;
   approval_status: string;
+  current_validation: {status: "valid" | "invalid" | "not_active"; reason: string | null};
   approved_by: string | null;
   approved_by_name: string | null;
 }
@@ -117,6 +118,7 @@ export interface StoredRule {
 export interface PolicyRulesResponse {
   policy_id: string;
   total_rules: number;
+  invalid_approved_rule_count: number;
   extraction_status: string;
   extraction_message: string | null;
   rules: StoredRule[];

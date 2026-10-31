@@ -10,8 +10,8 @@ Milestones stop for review; dates are planning windows, not completion claims.
 | 3: Persistence/recovery | Nov 1–2 | Reviewed and merged | Both Docker profiles built/started/restarted; authenticated HTTP intake; safe synthetic SQLite import; real PostgreSQL; durable jobs/recovery; Arabic Unicode/OCR/RTL foundations |
 | 4: Evidence retrieval | Nov 2–3 | Reviewed and merged | Authorized hybrid search; incremental indexing/removal; fixed 40-query bilingual benchmark; English/Arabic Recall@5/MRR/citation/abstention results and baselines |
 | 5: Cooperating specialists | Nov 3–4 | Reviewed and merged | Separate bounded tool-choosing roles; durable fenced checkpoints and workflow UI; 40 bilingual fixtures/eight actual scans; narrow Arabic verification; real review/evidence gates; scripted single-agent comparison. General OCR/model quality remains unproven. |
-| 6: MLOps/release checks | Nov 5 | Locally verified; awaiting review | Content-free correlated spans/logs; scoped admin operations; reported token/optional cost coverage; explicit regression versus product-quality gates; pinned dependency/image audits and CI artifacts. Live-model evidence remains unmeasured. |
-| 7: Showcase freeze | Nov 6 | Not started | Independent clean-start rehearsal; screenshots/demo; evidence-supported CV claims and published limitations |
+| 6: MLOps/release checks | Nov 5 | Reviewed and merged (PR #7; five CI jobs passed) | Content-free correlated spans/logs; scoped admin operations; reported token/optional cost coverage; explicit regression versus product-quality gates; pinned dependency/image audits and CI artifacts. Live-model evidence remains unmeasured. |
+| 7: Showcase freeze | Nov 6 | Locally verified; awaiting review | Independent clean-start rehearsal; screenshots/demo; evidence-supported CV claims and published limitations |
 
 Security, evidence gates and honest verification outrank optional reranking, extra
 agents or dashboards. Docker availability/disk headroom and approval turnaround are
@@ -79,4 +79,8 @@ Milestone 4 was subsequently reviewed/merged as PR #5; all four remote CI jobs p
 The user approved milestone 5. Its design, measurements and limitations are recorded
 in [SPECIALISTS.md](SPECIALISTS.md). M5 was subsequently reviewed and merged as PR #6;
 its four CI jobs passed. The user approved M6 continuation. M6 local results are recorded
-in [VERIFICATION.md](VERIFICATION.md); M7 and M6 publication remain unauthorized.
+in [VERIFICATION.md](VERIFICATION.md); M6 was subsequently merged as PR #7 after all five CI jobs passed. M7 passed local
+rehearsal on a fresh dependency installation, including both Docker recovery profiles.
+The user authorized its commit, branch push and PR for review. Remote CI is pending;
+merge, deployment and public announcements remain separate actions. See VERIFICATION.md
+and SHOWCASE.md.
