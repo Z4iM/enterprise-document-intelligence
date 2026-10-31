@@ -1,4 +1,6 @@
-# Frontend / FastAPI contract — Milestone 3
+# Frontend / FastAPI contract
+
+[NEXUS EDI](../../README.md) · [Documentation guide](../../docs/README.md)
 
 All business requests require FastAPI session identity. The bridge is allowlisted and
 forwards only session cookies, CSRF/origin metadata and content type. It returns server
@@ -10,7 +12,7 @@ bodies even without Content-Length. Direct backend routes enforce the same autho
 | Login challenge | GET `/auth/csrf` | Public, origin/rate checked; returns CSRF token and HttpOnly session |
 | Login | POST `/auth/login` | Pre-login cookie + CSRF; `{email,password}` |
 | Current account / logout | GET `/auth/me`, POST `/auth/logout` | Session; writes require CSRF |
-| Profile | GET/POST `/auth/profile` | Session; POST `{display_name}` only; GET user plus server-computed scoped stats |
+| Profile | GET/POST `/auth/profile` | Session; POST `{display_name}` is admin-only; GET user plus server-computed role-specific stats |
 | Change password | POST `/auth/change-password` | Session + CSRF + current password; `{current_password,new_password}`; rotates credential and revokes old sessions |
 | Documents/upload | GET `/documents`, POST `/documents/upload` | Scoped list; upload ownership from session |
 | Detail/original/audit/reviews | GET `/documents/{id}` and suffixes | Own document or organization staff |
@@ -45,14 +47,14 @@ and CSRF; browser JSON supplies a question and optionally a paired `document_id`
 selection. Each ID must be currently accessible to the session; selections only narrow
 server-derived DB permissions and never grant access. Unknown grant/role/model fields
 remain forbidden. Legacy ID environment settings are ignored. Workflow APIs retain local/token
-checks and verify run ownership/linked resources; dashboard controls are later work.
+checks and verify run ownership/linked resources; the specialist dashboard supports guarded execution, review checkpoints and resume.
 
 Browser regression tests exercise login/upload/review/approval/source-download/evidence/
 logout plus local account administration. See root docs/VERIFICATION.md for observed
-results. Public deployment, live Gemini quality/cost and container readiness are not claimed.
+results. Public deployment and general live Gemini quality/cost are not claimed. Both container profiles have dated local recovery evidence in the verification log.
 
 User responses include `display_name` (existing accounts initially have an empty name).
-Account creation accepts `display_name`; self/admin updates require a nonblank name of
+Account creation accepts `display_name`; name updates are admin-only, including self-profile updates, and require a nonblank name of
 at most 100 characters. The UI renders names, while `reviewer`/`approved_by` retain stable
 IDs and additive `reviewer_name`/`approved_by_name` fields supply scoped labels. Audit
 responses include `actor_name`; known legacy human-review ID suffixes are resolved at read

@@ -1,5 +1,7 @@
 # Authorized policy evidence retrieval (M4)
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 In Policy library, select a policy and **Update search index** for older uploads, then
 search in English or Arabic. New uploads enqueue indexing automatically, independently
 of AI rule extraction. Employees search organization policies; reviewers/admins reindex

@@ -1,17 +1,19 @@
 # Roadmap and acceptance
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 Showcase target: **2026-11-06**. Production readiness is a later evidence-based gate.
 Milestones stop for review; dates are planning windows, not completion claims.
 
 | Milestone | Window | Status | Acceptance |
 |---|---|---|---|
 | 1: Trustworthy local lifecycle | Oct 30 | Complete | Consistent API/tool/workflow eligibility; TXT upload; validated fallback correction and durable resume; legacy route retired; full quality gates |
-| 2: Identity and security | Oct 30–Nov 1 | Accepted for continuation | Sessions/CSRF/logout/password change; scoped Employee/Reviewer/Admin; names and role-specific personal stats; bounded uploads; automatic policy extraction and confirmed atomic bulk approval; account-derived investigation scope |
+| 2: Identity and security | Oct 30–Nov 1 | Complete | Sessions/CSRF/logout/password change; scoped Employee/Reviewer/Admin; names and role-specific personal stats; bounded uploads; automatic policy extraction and confirmed atomic bulk approval; account-derived investigation scope |
 | 3: Persistence/recovery | Nov 1–2 | Reviewed and merged | Both Docker profiles built/started/restarted; authenticated HTTP intake; safe synthetic SQLite import; real PostgreSQL; durable jobs/recovery; Arabic Unicode/OCR/RTL foundations |
 | 4: Evidence retrieval | Nov 2–3 | Reviewed and merged | Authorized hybrid search; incremental indexing/removal; fixed 40-query bilingual benchmark; English/Arabic Recall@5/MRR/citation/abstention results and baselines |
 | 5: Cooperating specialists | Nov 3–4 | Reviewed and merged | Separate bounded tool-choosing roles; durable fenced checkpoints and workflow UI; 40 bilingual fixtures/eight actual scans; narrow Arabic verification; real review/evidence gates; scripted single-agent comparison. General OCR/model quality remains unproven. |
 | 6: MLOps/release checks | Nov 5 | Reviewed and merged (PR #7; five CI jobs passed) | Content-free correlated spans/logs; scoped admin operations; reported token/optional cost coverage; explicit regression versus product-quality gates; pinned dependency/image audits and CI artifacts. Live-model evidence remains unmeasured. |
-| 7: Showcase freeze | Nov 6 | Locally verified; awaiting review | Independent clean-start rehearsal; screenshots/demo; evidence-supported CV claims and published limitations |
+| 7: Showcase freeze | Nov 6 target | Implemented; merged as PR #8 | Independent clean-start rehearsal; screenshots/demo; evidence-supported CV claims and published limitations |
 
 Security, evidence gates and honest verification outrank optional reranking, extra
 agents or dashboards. Docker availability/disk headroom and approval turnaround are
@@ -81,6 +83,4 @@ in [SPECIALISTS.md](SPECIALISTS.md). M5 was subsequently reviewed and merged as 
 its four CI jobs passed. The user approved M6 continuation. M6 local results are recorded
 in [VERIFICATION.md](VERIFICATION.md); M6 was subsequently merged as PR #7 after all five CI jobs passed. M7 passed local
 rehearsal on a fresh dependency installation, including both Docker recovery profiles.
-The user authorized its commit, branch push and PR for review. Remote CI is pending;
-merge, deployment and public announcements remain separate actions. See VERIFICATION.md
-and SHOWCASE.md.
+The user authorized its commit, branch push and PR for review; PR #8 was subsequently merged as `82ed42c`. This documentation refresh does not assert a new remote CI result. Deployment and public announcements remain separate actions. See [verification](VERIFICATION.md) and [showcase](SHOWCASE.md).

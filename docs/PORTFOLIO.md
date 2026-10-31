@@ -1,8 +1,10 @@
 # Evidence-supported portfolio material
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
+
 ## Project description
 
-Enterprise Document Intelligence is a bilingual AI-assisted document review and expense-
+NEXUS EDI (Enterprise Document Intelligence) is a bilingual AI-assisted document review and expense-
 policy investigation portfolio project. It separates model suggestions from authority:
 official outcomes use reviewed document fields and source-verified, human-approved rules.
 The existing investigator and two restricted specialists work with durable LangGraph
@@ -44,21 +46,6 @@ measured customer savings or a completed public deployment. Arabic scan-field ac
 **50% on four development scans**; unanswerable Arabic retrieval abstention is **50% (2/4)**.
 Model-generated results still require source and human review gates.
 
-## Draft LinkedIn project announcement
+## LinkedIn video companion
 
-> I built Enterprise Document Intelligence, an AI-assisted document review and policy
-> investigation portfolio project supporting English and Arabic workflows.
->
-> The engineering focus is on traceable decisions: source-verified rules, explicit human
-> review, restricted specialist tools, durable processing/recovery and organization-scoped
-> access. FastAPI, Next.js, LangGraph, PostgreSQL and Docker connect the full lifecycle.
->
-> I evaluated retrieval on a fixed synthetic bilingual corpus and documented the results,
-> including weaker Arabic scan extraction and abstention. Automated tests cover normal
-> operation, authorization failures and restart/resume behavior.
->
-> I’ll share a short application walkthrough and repository with the setup instructions,
-> architecture decisions and measured limitations.
-
-Replace the final sentence with verified release/demo links only when they exist and you
-choose to publish. This is draft copy, not a posted announcement or authorization to post.
+Use the [video-specific post](LINKEDIN_POST.md), which describes the recorded workflow and includes filming disclosure and music attribution. The edited preview is prepared separately from this repository; add a public video URL only after export approval and publication. Do not publish a localhost preview or a machine-specific file path.

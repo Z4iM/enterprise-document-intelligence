@@ -1,4 +1,6 @@
-# EDI frontend
+# NEXUS EDI frontend
+
+[NEXUS EDI](../README.md) · [Documentation guide](../docs/README.md)
 
 Existing Next.js App Router / React / TypeScript dashboard. Use Node 22 (CI).
 
@@ -18,7 +20,7 @@ organization/ownership checks; page hiding is not the security boundary. The bri
 forwards session cookies/CSRF/origin, not client roles or arbitrary upstream URLs.
 
 Routes: `/`, `/documents`, `/documents/[id]`, `/upload`, `/reviews`, `/policies`,
-`/investigate`, `/workflows`, `/users`. Policies come from the scoped backend. Reviewers
+`/investigate`, `/workflows`, `/users`, `/operations`. Policies come from the scoped backend. Reviewers
 correct fields and approve verified rules; admins create/disable organization accounts.
 Policy uploads automatically extract all supported rules, with a confirmation before
 bulk approval and individual decisions still available. Existing policies have a
@@ -26,12 +28,12 @@ whole-policy retry. Uploads return 202 with a saved original and durable backgro
 document/policy screens poll processing state and offer retry for terminal failures.
 Extracted text and quotations use automatic direction for Arabic/English content.
 Arabic semantic extraction quality remains a later acceptance gate.
-The user icon opens editable names, scoped activity by role,
-password changes and logout; admins can name existing users as well.
+The user icon opens account details, role-specific activity, password changes and logout.
+Only administrators may edit names, including their own; employees and reviewers see assigned names.
 The production investigation gateway intentionally remains 404. Workflow execution UI
-is planned; existing backend APIs retain their local/token guards plus authentication.
+is implemented with specialist traces, review checkpoints and resume; execution retains development/token guards plus authentication.
 The investigation page disables submission and explains production unavailability.
-To run the existing agent, follow **Local AI investigation** in the root README and
+To run the existing agent, follow **Local Gemini investigation** in the root README and
 use `npm run dev` at `127.0.0.1:3000` with both server-side flags, the shared private token,
 backend Gemini configuration. Pick documents/policies by filename; account permissions
 provide the scope automatically. Never bypass `NODE_ENV` guards.
@@ -56,7 +58,7 @@ the queue/profile migrations are explicit, never performed by frontend/backend s
 Local HTTP uses backend `EDI_ENV=development`, independent of the Next.js build mode.
 
 Styling remains Tailwind 4 through `@tailwindcss/postcss`. See root README and
-`docs/SECURITY.md` for current limits and deployment caveats.
+[security guidance](../docs/SECURITY.md) for current limits and deployment caveats.
 
 Milestone 5 adds `/workflows`: independent document/policy specialist traces, durable
 pause/resume and explicit supporting-evidence review. Controls require `npm run dev`,

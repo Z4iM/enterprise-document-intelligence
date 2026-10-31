@@ -1,12 +1,20 @@
 # Engineering verification — 2026-10-31
 
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
 
-## PR publication authorization
 
-The user subsequently authorized the M7/UX commit, branch push and PR for review.
-Local results below are pre-publication checkpoints; the new remote CI result is
-pending and must be read from the PR checks. No merge, deployment or social posting
-is authorized by this branch publication.
+## Current documentation checkpoint
+
+Observed documentation-refresh checks (2026-10-31):
+
+- Ruff passed; full backend suite **401 passed, 9 opt-in PostgreSQL skipped in 446.91 seconds**. No dedicated PostgreSQL/container/browser rerun was needed for Markdown-only edits; their earlier evidence remains dated below.
+- Frontend `npm run lint` passed. A public-source export on D: completed a fresh `npm ci` (zero npm-reported vulnerabilities) and the standard optimized `npm run build`, including TypeScript and route generation. The active application's build directory was untouched.
+- The initial sandbox build rejected an external dependency junction under Turbopack's filesystem boundary. That verification-only junction was replaced with a fresh local dependency installation; the standard build then passed. Application code/configuration was not changed to bypass the boundary.
+- Checked **23 repository Markdown files** for local link targets and balanced code fences: no issues. `git diff --check` passed; final diff contains Markdown only. Original engineering instruction/handoff files are preserved.
+- No real provider inference, migration, private-data inspection, deployment or LinkedIn publication occurred. The user authorized this documentation commit and branch push; remote CI is not a locally observed result.
+
+
+PR #8 was merged into `main` (merge commit `82ed42c`). The results below retain their original dates and scopes; a merge is not a fresh test run or production certification. The subsequent documentation refresh changes no application code. Its observed verification is recorded with that documentation commit, separately from the M7/UX results.
 
 ## UX follow-up — current policy evidence and investigation blockers
 

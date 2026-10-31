@@ -1,5 +1,6 @@
+# LangGraph workflow design
 
-# EDI — LangGraph Workflow Design
+[NEXUS EDI](../README.md) · [Documentation guide](README.md)
 
 ## Objective
 Orchestrate existing EDI document and policy services using
@@ -64,10 +65,12 @@ Resume reloads the document; a resume signal is never approval.
 - Missing or invalid structured data.
 - Corrected document eligible for re-evaluation.
 
-## Future Enhancements
+## Implemented since the initial design
 - Persistent workflow checkpoints.
 - Human-review resume.
 - Durable background execution.
 - Workflow audit history and idempotency.
 - API and frontend integration.
-- Arabic/English evaluation and broader benchmarks.
+- Synthetic English/Arabic evaluation and documented scan-quality limits.
+
+Broader held-out benchmarks, distributed checkpoint scaling and production hardening remain future work. For the current specialist system, see [SPECIALISTS.md](SPECIALISTS.md).
